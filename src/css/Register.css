@@ -1,0 +1,31 @@
+.cardRegister{
+  background-color:rgb(242, 244, 248);
+  border: none; 
+}
+p{
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+  font-weight: 600;
+   font-size: 14px;
+}
+
+p:after {
+    color: #cb2431;
+    content: "*";
+    padding-left: 5px;
+}
+
+span{
+  color: #586069;
+    font-size: 12px;
+
+}
+
+.form-group {
+    margin-bottom: 0rem;
+}
+
+.Wrapper{
+  height: 754px;
+
+}

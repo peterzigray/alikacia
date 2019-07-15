@@ -1,0 +1,25 @@
+.errorTitle {
+   margin-bottom: 0px;
+}
+
+.alert {
+  font-size: 12px;
+    padding-left: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 3px;
+    padding-top: 0px;
+}
+.nonErrorTitle{
+ margin-top: 0;
+ margin-bottom: 1rem;
+}
+
+.errorMessagecover{
+    margin-bottom: 0rem;
+}
+.errorMessage{
+  margin-top: -7px;
+  margin-bottom: 5px;
+}
+
+   

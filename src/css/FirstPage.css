@@ -1,0 +1,167 @@
+.cardInFirstPage{
+background-color: rgb(242, 244, 248);
+height: 370px;
+margin-top: auto;
+margin-bottom: auto;
+width: 400px;
+/* background-color:black !important; */
+  /* box-shadow: 0.5px 0.5px 3px 0px rgb(207, 202, 202); */
+  border: none;
+}
+
+  .card-header {
+    padding-bottom: 0px;
+  }
+
+.card-header p{
+    margin-bottom: 3px;
+  }
+.card-body {
+  padding-top: 20px;
+}
+
+{/*
+  //////////////////////// ICONS FOR SOCIAL MEDIA
+  */}
+.social_icon span{
+font-size: 60px;
+margin-left: 10px;
+color: rgb(35, 34, 31);
+}
+
+.social_icon .face:hover{
+color:#3578E5;
+background: #eee;
+cursor: pointer;
+}
+
+.social_icon .goo:hover{
+color:#DB4437;
+cursor: pointer;
+}
+
+.social_icon .twit:hover{
+color:#55acee;
+cursor: pointer;
+}
+
+
+.fp-submit-btn{
+color: black;
+background-color: #FFC312;
+width: 100px;
+}
+
+.fp-submit-btn:hover{
+color: black;
+background-color: #eee;
+}
+#register:hover {
+color: black;
+background-color: white;
+}
+
+
+
+
+
+.leftsidelogin{
+    background-image: url('../pics/undraw_voice_interface_eckp_new2.svg');
+    /* height: 100%; */
+    width: 50%;
+
+  background-repeat: no-repeat;
+}
+.rightsidelogin{
+   padding-left: 9rem;
+   padding-top: 20rem;
+}
+.Wrapper{
+  height: 754px;
+
+}
+.row {
+   height: 100%;
+}
+.col-md-12{
+  padding-left: 0%;
+}
+.login{
+     padding-top: 15rem;
+     padding-left: 5rem;
+     padding-right: 5rem;
+}
+.loginCard{
+  background-color:white;
+   /* border: none; */
+}
+.loginHeader{
+    /* background-color: rgb(90, 62, 204); */
+}
+
+{/*Everithing related to RERISTER*/}
+
+.cardRegister{
+  background-color: #eee;
+  border: none; 
+}
+
+.p-reg{
+  margin-bottom: 0.2rem;
+  margin-top: 0.5rem;
+  font-weight: 600;
+   font-size: 14px;
+}
+
+.p-reg:after {
+    color: #cb2431;
+    content: "*";
+    padding-left: 5px;
+}
+
+.span-reg{
+  color: #586069;
+    font-size: 12px;
+
+}
+
+.form-group-reg {
+    margin-bottom: 0rem;
+}
+
+.card-body-reg{
+padding-top: 8rem;
+}
+
+.btn-warning-Fp {
+ font-family: Helvetica,Arial,sans-serif;
+  font-size: 14px;
+      font-weight: 400;
+  color: black;
+  background-color: #FFC312;
+  letter-spacing: 1px;
+  line-height: 15px;
+  /* border: 2px solid rgba(240, 173, 78, 0.75); */
+  border-radius: 10px;
+ 
+  /* transition: all 0.3s ease 0s; */
+}
+
+.btn-warning-Fp:hover {
+  color: black;
+  background: #eee;
+  border: 0.5px solid rgba(240, 173, 78, 0.75);
+}
+
+
+	.st0{fill:#3F3D56;}
+	.st1{fill:#6C63FF;}
+	.st2{fill:#2F2E41;}
+	.st3{opacity:0.1;enable-background:new    ;}
+	.st4{fill:#A0616A;}
+	.st5{fill:#D0CDE1;}
+	.st6{fill:#F2F2F2;}
+	.st7{fill:none;}
+	.st8{stroke:#000000;stroke-miterlimit:10;}
+	.st9{font-family:'MyriadPro-Regular';}
+	.st10{font-size:36px;}

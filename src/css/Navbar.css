@@ -1,0 +1,18 @@
+/* .li-nav {
+ color: white;
+ padding-top: 6.3%;
+ padding-left: 15%;
+}
+
+.li-nav:hover{
+  text-decoration: none;
+  color:#FFC312;
+}  */
+
+.navbar {
+  /* position: fixed;
+  top: 0;
+  width: 100%; */
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
