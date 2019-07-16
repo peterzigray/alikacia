@@ -104,44 +104,49 @@ class dashboard extends Component {
     stateCopy.number = actualCounter;
 
     this.setState(stateCopy);
-    console.log(pathLenght - e.target.value.length)
+  //  console.log(pathLenght - e.target.value.length)
   }
 
 
   render() {
     const { users, debt, auth } = this.props;
-
+  
     if (debt && users) {
 
-      var newDebtRight = [];
-      var newDebtLeft = [];
+      var newDebtRight =[],newDebtLeft = [];
 
       for (var i in debt ) {
         newDebtRight.push(giveMePayer(debt[i], users))
         newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
       }
-   
+      
+
       // ASSIGN PAYER AND ACTUALDEBT TO EXIST DEBT BASED ON WHO I OWE TO 
       function giveMePayerForOvrview(debt, users) {
         let result = {}
-        var nieco = false;
+        var haveDebtWithPayer = false;
         var value;
+      // SEARCH EVERY DEBT AND RETURN MY USER
         debt.debtTo.forEach(d =>{
           if(d.id === auth.uid){
-            nieco = true;
+            haveDebtWithPayer = true;
             value = d.actualDebt
           }
         }
       )
+      
         users.forEach(user => {
-          if (debt.paidBy === user.id && debt.paidBy !== auth.uid && nieco) {
-            Object.assign(result, debt, { payer: user.firstName + user.lastName, actualDebt: value ? value: debt.balance })
+          if (debt.paidBy === user.id && debt.paidBy !== auth.uid && haveDebtWithPayer) {
+            Object.assign(result, debt, { payer: user.firstName + " " + user.lastName, actualDebt: value ? value: debt.balance })
           }
         }
       )
+      console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwww')
+    console.log(result)
         return result
-      }
-  
+    }
+    
+
       
       // FILTER OUT EMPTY OBJECTS
       newDebtLeft = newDebtLeft.filter(d => Object.keys(d).length !== 0)
@@ -164,33 +169,32 @@ class dashboard extends Component {
         }
       });
       console.log('oooooooooooooooooooooooooooooooooooooo')
-console.log(output)
+      console.log(output)
 
       function giveMePayer(debt, users) {
      
         let result = []
         var isDebtor = true;
         users.forEach(user => {
-          console.log(debt.paidBy)
-          console.log(auth.uid)
           if (debt.paidBy === user.id && debt.paidBy === auth.uid ) {
             result.push(debt.debtTo)
           } 
         }
         )
+        console.log('oaaaaaaaaaaaaaaa')
+        console.log(result)
         return result.flat()
-
+       
       }
 
 
       newDebtRight = newDebtRight.filter((d) => { return d.id !== auth.uid && Object.keys(d).length !== 0 }).flat()
 
       return (
-        <div className="row">
+        <div className="row h-100">
           <div className="col-md-6">
             <table className="table-borderless table-hover">
               <thead className="thead-inverse">
-
 
                 <tr>
                   <th>You owe</th>
@@ -279,9 +283,9 @@ console.log(output)
 
 
           
-        </div>
-      )
-    }
+    </div>
+  )
+}
 
 
     else {

@@ -333,7 +333,7 @@ class Clients extends Component {
                 <div className="btn pr-3" style={{ 'font-size': '1.1rem', color: 'white' }}>
                                   
                   <i class="fas fa-user-circle fa-lg clientAvatar"/>{' '}
-                  {currentUser[0].firstName}
+                  {/* {currentUser[0].firstName} */}
                   
                 </div>
               

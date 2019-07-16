@@ -17,9 +17,11 @@ class addDebt extends Component {
     debtTo: '',
     selectedOption: {},
     multi: true,
-    t: true,
     listOfUsers:'',
-    usersWithoutMe:''
+    usersWithoutMe:'',
+    isPayerChoosen: false,
+    isDebterChoosen: false,
+    isBalanceChoosen: false
   };
 
   componentDidMount = () => {
@@ -103,22 +105,8 @@ class addDebt extends Component {
   }
 
   onSubmit = e => {
-    // e.preventDefault();
-
-    // const {
-    //   state,
-    //   props: { firestore, history }
-    // } = this;
-
-    // const newClient = {
-    //   ...state,
-    //   balance: state.balance === "" ? "0" : state.balance
-    // };
-
-    // firestore
-    //   .add({ collection: "clients" }, newClient)
-    //   .then(() => history.push("/"));
     e.preventDefault();
+
 
     var stateCopy4 = Object.assign({}, this.state);
 
@@ -160,6 +148,16 @@ class addDebt extends Component {
   };
 
   onChange = (e,id) => {
+    console.log('--------------sem---------------')
+    this.setState({isBalanceChoosen: false})
+    
+    if(e.target.name === "balance" && e.target.value.match(/^[0-9]*$/g) ){
+    this.setState({isBalanceChoosen: true})
+    } else {
+      window.alert("balance must be only number :) ");
+    }
+
+
     const { auth , users ,firebase} = this.props
     this.setState({ [e.target.name]: e.target.value })
 }
@@ -169,8 +167,12 @@ class addDebt extends Component {
   // }
   // SET UP PERSON WHO CREATED DEPT
   onChange3 = (selectedOption, e) => {
-    console.log(selectedOption)
-    if (selectedOption[0]) {
+    this.setState({isPayerChoosen: false})
+    console.log('--------selected-----------')
+    console.log(selectedOption.length !== 0)
+    if (selectedOption.length !== 0) {
+      this.setState({isPayerChoosen: true})
+
       console.log('this is what I wanted')
       const { id } = selectedOption[0];
       console.log(id)
@@ -180,21 +182,16 @@ class addDebt extends Component {
   }
 
   handleChange = (selectedOption, e) => {
-    var stateCopy3 = Object.assign({}, this.state);
+    this.setState({isDebterChoosen: false})
+    
+    if(selectedOption.length !== 0){
+      var stateCopy3 = Object.assign({}, this.state);
     stateCopy3.debtTo = selectedOption;
+    stateCopy3.isDebterChoosen = true
     console.log('------------------')
-    if(e){
-      console.log(e)
+    console.log(selectedOption)
+      this.setState(stateCopy3);
     }
-  
-    this.setState(stateCopy3);
-    
-    
-   
-
-    
-
-    // console.log(`Option selected:`, selectedOption);
   };
 
   onEquallysplit = (e) => {
@@ -249,60 +246,19 @@ class addDebt extends Component {
               <div className="card-body">
                  <form onSubmit={this.onSubmit}>
                   <div className="form-group">
+
                     <label htmlFor="name">With you and</label>
-                    
-                    
                       <Select
                         value={selectedOption}
                         onChange={this.handleChange}
                         options={this.state.usersWithoutMe}
                         multi={this.state.multi}
-
-                        // clearOnSelect={this.state.t}
-                      searchable={this.state.t}
                       />
-              
-                   
                   </div>
 
-
-                  {/* <div className="form-group"> */}
-
-                    {/* <label htmlFor="name">Paid by</label>
-                    <div className="input-group mb-3">
-                      <div className="input-group-prepend">
-                        <label className="input-group-text" for="inputGroupSelect01">Options</label>
-                      </div>
-                      <select 
-                      className="custom-select" 
-                      id="inputGroupSelect01"
-                      onChange={this.onChange3} 
-                        ref="sStrike2"
-                      >
-                        <option selected>Choose...</option>
-                        {newUsers.map(user => (
-
-                          <option 
-                            // name="paidBy" 
-                            value={user.id}
-                          >{
-
-                            user.firstName
-
-                          }
-
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                  </div> */}
-
-              
+            
                     <label htmlFor="name">Payd by</label>
-
-
-                    <Select
+                      <Select
                       onChange={this.onChange3} 
                       value={selectedOption}
                       options={this.state.listOfUsers}
@@ -310,14 +266,7 @@ class addDebt extends Component {
                     />
 
               
-                  
-
-
-
-
-
-
-
+   
                   <div className="form-group">
                     <label htmlFor="description">Enter a description</label>
                     <input
@@ -376,31 +325,36 @@ class addDebt extends Component {
                       name="balance"
                       onChange={this.onChange}
                       value={this.state.balance}
+                      required
                       // disabled={disableBalanceOnAdd}
                     />
                   </div>
-                  <div className="div">
 
-                
-                  <tr>
-                    <td> 
-                      <button 
+                  <div className="row mb-3">
+
+                  <div className="col">
+                  <button 
                         type="button" 
-                        className="btn btn-outline-primary"
+                        className="btn btn-outline-primary btn-sm btn-block"
                         onClick={this.onEquallysplit}
                        >
                          Equally
                       </button>
-                    </td>
-                    <td> <button type="button" className="btn btn-outline-primary">Exact</button></td>
-                    <td> <button type="button" className="btn btn-outline-primary">Primary</button></td>
-                  </tr>
                   </div>
-                  <input
-                    type="submit"
-                    value="Submit"
-                    className="btn btn-dark btn-block"
-                  />
+                  <div className="col">
+                  <button type="button" className="btn btn-outline-primary btn-sm btn-block">Exact</button>
+                  </div>
+                 </div>
+
+                  {
+                    this.state.isPayerChoosen && this.state.isDebterChoosen && this.state.isBalanceChoosen ?
+                  <button
+                  type="submit"
+                  value="Submit"
+                  className="btn btn-dark btn-block">submit</button>:
+                  <button className="btn btn-dark btn-block" disabled>submit</button>                    
+                }
+
                 </form>
               </div>
             </div>
