@@ -8,8 +8,21 @@ import ReactDOM from 'react-dom';
 import Select from "react-dropdown-select";
 import { runInNewContext } from 'vm';
 import DatePicker from "react-datepicker";
+
+
  
 import "react-datepicker/dist/react-datepicker.css";
+
+function compare(selectedOption, listOfUsers) {
+  const finalArray = [...listOfUsers];
+  listOfUsers.forEach((e1) => selectedOption.forEach((e2) => {
+    if (e1.id === e2.id) {
+      finalArray.splice(listOfUsers.indexOf(e1), 1)
+    }
+  }))
+  return finalArray.filter(value => Object.keys(value).length !== 0);
+}
+
 class addDebt extends Component {
   state = {
     balance: '',
@@ -25,6 +38,10 @@ class addDebt extends Component {
     isPayerChoosen: false,
     isDebterChoosen: false,
     isBalanceChoosen: false,
+
+    valueField: 'email',
+    labelField: 'fistName',
+
 
     date: new Date()
   };
@@ -192,56 +209,49 @@ class addDebt extends Component {
   // }
   // SET UP PERSON WHO CREATED DEPT
   onChange3 = (selectedOption, e) => {
-    this.setState({isPayerChoosen: false})
-    console.log('--------selected-----------')
-    console.log(selectedOption.length !== 0)
-    if (selectedOption.length !== 0) {
-      this.setState({isPayerChoosen: true})
 
-      console.log('this is what I wanted')
-      const { id ,label } = selectedOption[0];
-      console.log(id)
-      console.log(label)
-      this.setState({ paidBy: {id: id, label: label} })
+    console.log('--------selectedOption----------')
+    console.log(selectedOption)
+    var stateCopy9 = Object.assign({}, this.state);
+
+    if (stateCopy9.listOfUsers) {
+      console.log('--------ano----------')
+      var listOfUnclicked = compare(selectedOption, stateCopy9.listOfUsers)
     }
+    console.log(listOfUnclicked)
+
+    stateCopy9.isPayerChoosen = false
+
+    if (selectedOption.length !== 0) {
+      stateCopy9.isPayerChoosen = true
+      const { id ,label } = selectedOption[0];
+      stateCopy9.paidBy = {id: id, label: label} 
+    }
+
+    stateCopy9.listOfUsers = listOfUnclicked
+    this.setState(stateCopy9)
    
   }
 
   handleChange = (selectedOption, e) => {
 
-    var debtTo = [{id: "DanQYVZ5beW8rkEgArhe4PSCgij2", label: "Maria Vargova", actualDebt: "3.50"}
-,{id: "o0zm6jC0dbPyjG9ru1Xyy78AUnl1", label: "Peter1 Testovy", actualDebt: "3.50"}];
-var listOfUsers = [
-{id: "8opyA98quZTWchrkkOOa3lzksUz1", label: "Natalia Blaskova"}
-,{id: "DanQYVZ5beW8rkEgArhe4PSCgij2", label: "Maria Vargova"}
-,{id: "iR9zALQNqMfo3gl6aRWT2U3C05P2", label: "Peter Zigray"}
-,{id: "kJ7hT0CzKZZ1foi6mLuEBKcr2ju2", label: "Peter Lecter"}
-,{id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Juro Svancara"}
-,{id: "o0zm6jC0dbPyjG9ru1Xyy78AUnl1", label: "Peter1 Testovy"}
-,{id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Miso Slezak"}
-]
-
-function compare(debtTo,listOfUsers){
-  const finalArray = [...listOfUsers];
-  listOfUsers.forEach((e1) => debtTo.forEach((e2) => {
-  	if(e1.id === e2.id){
-    	finalArray.splice(listOfUsers.indexOf(e1),1)
+    var stateCopy3 = Object.assign({}, this.state);
+    if (this.state.listOfUsers){
+      var listOfUnclickedUsers = compare(selectedOption, this.state.listOfUsers)
     }
-  }))
-  return finalArray
-}
-console.log(compare(debtTo,listOfUsers))
+   
+
 
     console.log('--------selectedOption----------')
     console.log(selectedOption)
-    console.log(this.state.listOfUsers)
-
+    console.log(listOfUnclickedUsers)
+    stateCopy3.listOfUsers = listOfUnclickedUsers 
    // this.setState({listOfUsers: false}
 
-    this.setState({isDebterChoosen: false})
+    stateCopy3.isDebterChoosen = false
     
     if(selectedOption.length !== 0){
-      var stateCopy3 = Object.assign({}, this.state);
+      
     stateCopy3.debtTo = selectedOption;
     stateCopy3.isDebterChoosen = true
     console.log('------------------')
@@ -321,6 +331,19 @@ console.log(compare(debtTo,listOfUsers))
                         options={this.state.listOfUsers}
                         multi={this.state.multi}
                       />
+                  </div>
+
+                  <div className="form-group">
+
+                    <label htmlFor="name">Testik...</label>
+                    <Select
+                      placeholder="Select peoples..."
+                      labelField={selectedOption}
+                      valueField={selectedOption}
+                      onChange={this.handleChange}
+                      options={this.state.listOfUsers}
+                      multi={this.state.multi}
+                    />
                   </div>
 
             
