@@ -7,11 +7,13 @@ import PropTypes from "prop-types";
 import ReactDOM from 'react-dom'; 
 import Select from "react-dropdown-select";
 import { runInNewContext } from 'vm';
-
+import DatePicker from "react-datepicker";
+ 
+import "react-datepicker/dist/react-datepicker.css";
 class addDebt extends Component {
   state = {
     balance: '',
-    date: '',
+   
     description: '',
     paidBy: '',
     debtTo: '',
@@ -19,30 +21,34 @@ class addDebt extends Component {
     multi: true,
     listOfUsers:'',
     usersWithoutMe:'',
+
     isPayerChoosen: false,
     isDebterChoosen: false,
-    isBalanceChoosen: false
+    isBalanceChoosen: false,
+
+    date: new Date()
   };
+  
 
   componentDidMount = () => {
-    var utc = new Date();
-    var dd = String(utc.getDate()).padStart(2, "0");
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-    ];
-    var currentDate = String(dd + " " + monthNames[utc.getMonth()]);
-    this.setState({ date: currentDate}) 
+    // var utc = new Date();
+    // var dd = String(utc.getDate()).padStart(2, "0");
+    // const monthNames = [
+    //   "January",
+    //   "February",
+    //   "March",
+    //   "April",
+    //   "May",
+    //   "June",
+    //   "July",
+    //   "August",
+    //   "September",
+    //   "October",
+    //   "November",
+    //   "December"
+    // ];
+    // var currentDate = String(dd + " " + monthNames[utc.getMonth()]);
+    // this.setState({ date: currentDate}) 
 
 
 
@@ -91,11 +97,19 @@ class addDebt extends Component {
 
   // DESTRACTURING ONLY NAME(LABEL) AND ID WITHOUT ACTUAL USER
     var usersWithoutMe = [...newar]
+    var deleteCount = 1;
     var count = usersWithoutMe.map(o => o.id).indexOf(auth.uid)
-    usersWithoutMe.splice(count, 1);
+
+    if(count === -1){
+      count = 0;
+          deleteCount = 0;
+     }
+    usersWithoutMe.splice(count, deleteCount);
    
 
     console.log('......userswithoyutme......')
+    console.log(count)
+    console.log(auth.uid)
     console.log(usersWithoutMe)
     console.log(newar)
     console.log('............')
@@ -126,10 +140,11 @@ class addDebt extends Component {
 
     const newDebt = {
       ...state,
-      balance: state.balance === "" ? "0" : state.balance
+      balance: state.balance === "" ? "0" : state.balance,
+      date: state.date === null ? new Date() : state.date
     };
 
-    const { selectedOption, multi, usersWithoutMe, listOfUsers, ...rest } = newDebt
+    const { selectedOption, multi, usersWithoutMe, listOfUsers,isPayerChoosen,isDebterChoosen,isBalanceChoosen, ...rest } = newDebt
     const nieco = {
       balance: '',
       date: '',
@@ -147,18 +162,28 @@ class addDebt extends Component {
       // ReactDOM.findDOMNode(this.refs.sStrike2).value = '-';
   };
 
-  onChange = (e,id) => {
-    console.log('--------------sem---------------')
-    this.setState({isBalanceChoosen: false})
-    
-    if(e.target.name === "balance" && e.target.value.match(/^[0-9]*$/g) ){
-    this.setState({isBalanceChoosen: true})
-    } else {
-      window.alert("balance must be only number :) ");
+  onDate(date, e) {
+    console.log('________________________date message')
+    console.log(date)
+    this.setState({
+      date: date
+    });
+  }
+
+  onChange = (e) => {
+
+    if(e.target.name === "balance" && e.target.value.length != 0){
+      this.setState({isBalanceChoosen: true}) 
     }
+    if(e.target.name === "balance" && e.target.value.length === 0 ){
+    this.setState({isBalanceChoosen: false}) 
+    } 
 
-
-    const { auth , users ,firebase} = this.props
+    if(e.target.name === "balance" && e.target.value.match(/[^0-9]/g) && e.target.value.length !== 0 ){
+    this.setState({isBalanceChoosen: false}) 
+    window.alert("balance must be only number :) ");
+    }
+   
     this.setState({ [e.target.name]: e.target.value })
 }
   // SET UP PERSON WHO IS IN DEPT
@@ -174,14 +199,45 @@ class addDebt extends Component {
       this.setState({isPayerChoosen: true})
 
       console.log('this is what I wanted')
-      const { id } = selectedOption[0];
+      const { id ,label } = selectedOption[0];
       console.log(id)
-      this.setState({ paidBy: id })
+      console.log(label)
+      this.setState({ paidBy: {id: id, label: label} })
     }
    
   }
 
   handleChange = (selectedOption, e) => {
+
+    var debtTo = [{id: "DanQYVZ5beW8rkEgArhe4PSCgij2", label: "Maria Vargova", actualDebt: "3.50"}
+,{id: "o0zm6jC0dbPyjG9ru1Xyy78AUnl1", label: "Peter1 Testovy", actualDebt: "3.50"}];
+var listOfUsers = [
+{id: "8opyA98quZTWchrkkOOa3lzksUz1", label: "Natalia Blaskova"}
+,{id: "DanQYVZ5beW8rkEgArhe4PSCgij2", label: "Maria Vargova"}
+,{id: "iR9zALQNqMfo3gl6aRWT2U3C05P2", label: "Peter Zigray"}
+,{id: "kJ7hT0CzKZZ1foi6mLuEBKcr2ju2", label: "Peter Lecter"}
+,{id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Juro Svancara"}
+,{id: "o0zm6jC0dbPyjG9ru1Xyy78AUnl1", label: "Peter1 Testovy"}
+,{id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Miso Slezak"}
+]
+
+function compare(debtTo,listOfUsers){
+  const finalArray = [...listOfUsers];
+  listOfUsers.forEach((e1) => debtTo.forEach((e2) => {
+  	if(e1.id === e2.id){
+    	finalArray.splice(listOfUsers.indexOf(e1),1)
+    }
+  }))
+  return finalArray
+}
+console.log(compare(debtTo,listOfUsers))
+
+    console.log('--------selectedOption----------')
+    console.log(selectedOption)
+    console.log(this.state.listOfUsers)
+
+   // this.setState({listOfUsers: false}
+
     this.setState({isDebterChoosen: false})
     
     if(selectedOption.length !== 0){
@@ -195,22 +251,31 @@ class addDebt extends Component {
   };
 
   onEquallysplit = (e) => {
+    e.preventDefault();
+    
     //IF PAYER IS ALSO DEBTOR
     const { paidBy, debtTo} = this.state
-    e.preventDefault();
-   
-    
+
+    var clicked = debtTo.filter(obj => {
+      return (obj.id === paidBy.id)
+    })
+
+    // IF EQUALLY WAS CLICKED DO NOTHING, OTHERWISE ADD PAYER TO DOBTOR AND SET ACTUALBALLANCE FOR ALL DEBTORS
+    if(clicked.length){
+      console.log('ok')
+    } else {
+  
+    // PAYER IS ALSO DEBTOR AND HERE I SET UP DEBT TO FOR HIM ALSO
     var stateCopy1 = Object.assign({}, this.state);
-    stateCopy1.debtTo.push({id: paidBy})
+    stateCopy1.debtTo.push({id: paidBy.id, label: paidBy.label})
     this.setState(stateCopy1);
 
     
-
+    // PAYER IS ALSO DEBTOR AND HERE I SPLIT TOTAL BALANCE FOR ALL DEBTORS AS ACTUALDEBT
     var stateCopy = Object.assign({}, this.state);
     var devidedBy = stateCopy.debtTo.length;
     var actualBalance = stateCopy.balance;
     
-
     if (this.state.balance && this.state.debtTo){
 
       const priceForOneDebtor = Number.parseFloat(actualBalance / devidedBy).toFixed(2);
@@ -225,6 +290,8 @@ class addDebt extends Component {
 
     console.log(this.state)
   }
+
+}
 
 
 
@@ -251,7 +318,7 @@ class addDebt extends Component {
                       <Select
                         value={selectedOption}
                         onChange={this.handleChange}
-                        options={this.state.usersWithoutMe}
+                        options={this.state.listOfUsers}
                         multi={this.state.multi}
                       />
                   </div>
@@ -283,16 +350,12 @@ class addDebt extends Component {
 
                   <div className="form-group">
                     <label htmlFor="date">Date</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="date"
-                      minLength="2"
-                      required
-                      onChange={this.onChange}
-                      value={this.state.date}
-                    />
+                      <DatePicker
+                        selected={this.state.date}
+                        onChange={this.onDate.bind(this)}
+                      />
                   </div>
+
 
                   {/* <div className="form-group">
                     <label htmlFor="paidBy">Paid by</label>
@@ -333,16 +396,36 @@ class addDebt extends Component {
                   <div className="row mb-3">
 
                   <div className="col">
-                  <button 
+
+
+                    {
+                        this.state.isPayerChoosen && this.state.isDebterChoosen && this.state.isBalanceChoosen ?
+                       <button 
                         type="button" 
                         className="btn btn-outline-primary btn-sm btn-block"
                         onClick={this.onEquallysplit}
                        >
                          Equally
-                      </button>
+                      </button> :
+
+                      <button 
+                      onClick={(e) => window.alert("Please set up your debt firstly :)")}
+                      type="button" 
+                      className="btn btn-outline-primary btn-sm btn-block"
+             
+                      
+                     >
+                       Equally
+                    </button>
+                  }
                   </div>
+
+                  
                   <div className="col">
-                  <button type="button" className="btn btn-outline-primary btn-sm btn-block">Exact</button>
+                  {
+                        this.state.isPayerChoosen && this.state.isDebterChoosen && this.state.isBalanceChoosen ?
+                  <button type="button" className="btn btn-outline-primary btn-sm btn-block">Exact</button> :
+                  <button type="button" className="btn btn-outline-primary btn-sm btn-block" onClick={(e) => window.alert("Please set up your debt firstly :)")}>Exact</button> }
                   </div>
                  </div>
 
