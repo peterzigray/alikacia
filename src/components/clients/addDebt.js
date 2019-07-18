@@ -39,8 +39,8 @@ class addDebt extends Component {
     isDebterChoosen: false,
     isBalanceChoosen: false,
 
-    valueField: 'email',
-    labelField: 'fistName',
+    valueField: 'id',
+    labelField: 'label',
 
 
     date: new Date()
@@ -326,6 +326,8 @@ class addDebt extends Component {
 
                     <label htmlFor="name">With you and</label>
                       <Select
+                      labelField={this.state.labelField}
+                      valueField={this.state.valueField}
                         value={selectedOption}
                         onChange={this.handleChange}
                         options={this.state.listOfUsers}
@@ -338,17 +340,21 @@ class addDebt extends Component {
                     <label htmlFor="name">Testik...</label>
                     <Select
                       placeholder="Select peoples..."
-                      labelField={selectedOption}
-                      valueField={selectedOption}
+                      labelField={this.state.labelField}
+                      valueField={this.state.valueField}
                       onChange={this.handleChange}
                       options={this.state.listOfUsers}
                       multi={this.state.multi}
-                    />
+
+                  
+                  />
                   </div>
 
             
                     <label htmlFor="name">Payd by</label>
                       <Select
+                    labelField={this.state.labelField}
+                    valueField={this.state.valueField}
                       onChange={this.onChange3} 
                       value={selectedOption}
                       options={this.state.listOfUsers}
