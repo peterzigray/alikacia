@@ -300,7 +300,7 @@ class Clients extends Component {
 
     if (debt && users) {
       return (
-        <div className='container m100' style={{'background-color': 'white'}} >
+        <div className='container' style={{'background-color': 'white'}} >
 
           <div className="row border-bottom mb-0 mt-2 m9" style={{ 'background-color': '#1D2439' }}>
             

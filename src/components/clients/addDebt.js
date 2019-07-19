@@ -161,7 +161,7 @@ class addDebt extends Component {
       date: state.date === null ? new Date() : state.date
     };
 
-    const { selectedOption, multi, usersWithoutMe, listOfUsers,isPayerChoosen,isDebterChoosen,isBalanceChoosen, ...rest } = newDebt
+    const { selectedOption, multi, usersWithoutMe, listOfUsers,isPayerChoosen,isDebterChoosen,isBalanceChoosen,valueField,labelField, ...rest } = newDebt
     const nieco = {
       balance: '',
       date: '',
@@ -228,7 +228,7 @@ class addDebt extends Component {
       stateCopy9.paidBy = {id: id, label: label} 
     }
 
-    stateCopy9.listOfUsers = listOfUnclicked
+    // stateCopy9.listOfUsers = listOfUnclicked
     this.setState(stateCopy9)
    
   }
@@ -245,7 +245,7 @@ class addDebt extends Component {
     console.log('--------selectedOption----------')
     console.log(selectedOption)
     console.log(listOfUnclickedUsers)
-    stateCopy3.listOfUsers = listOfUnclickedUsers 
+    // stateCopy3.listOfUsers = listOfUnclickedUsers 
    // this.setState({listOfUsers: false}
 
     stateCopy3.isDebterChoosen = false
@@ -303,21 +303,14 @@ class addDebt extends Component {
 
 }
 
-
-
-
-  
-
   render() {
    
-
-
     const { selectedOption } = this.state;
     return (
       <div>
-        <div className="row">
+        <div className="row mb-0 mt-2 m9">
           
-          <div className="col-md-6">
+          <div className="col-md-6 pl-4 mr-0 mt-2">
             <div className="card">
               <div className="card-header">Add an expense</div>
               <div className="card-body">
@@ -333,21 +326,6 @@ class addDebt extends Component {
                         options={this.state.listOfUsers}
                         multi={this.state.multi}
                       />
-                  </div>
-
-                  <div className="form-group">
-
-                    <label htmlFor="name">Testik...</label>
-                    <Select
-                      placeholder="Select peoples..."
-                      labelField={this.state.labelField}
-                      valueField={this.state.valueField}
-                      onChange={this.handleChange}
-                      options={this.state.listOfUsers}
-                      multi={this.state.multi}
-
-                  
-                  />
                   </div>
 
             
@@ -471,8 +449,9 @@ class addDebt extends Component {
               </div>
             </div>
           </div>
+
           <div className="col-md-6">
-            <img src={require("../../pics/app.jpg")} />
+            <img src={require("../../pics/app.jpg")} style={{height:"100%", width:"100%"}} />
           </div>
         
         </div>

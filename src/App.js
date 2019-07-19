@@ -27,7 +27,7 @@ class App extends Component {
         <Router>
           <div className="App">
             {/* <AppNavbar /> */}
-            <div className="container-fluid h100"
+            <div className="container-fluid"
               style={{ 'background-color': 'rgb(242, 244, 248)'}}>
               <Switch>
                 <Route
