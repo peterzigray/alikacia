@@ -11,6 +11,7 @@ import ClientOverview from './ClientOverview';
 import AddDebt from './addDebt';
 import Dashboard from './Dashboard';
 import Friends from './Friends';
+import { useMediaQuery } from 'react-responsive'
 
 const styles = {
   transition: "all 0.3s ease-out"
@@ -21,6 +22,7 @@ class Clients extends Component {
     totalOwed: null,
     youAreOwed: null,
     youOwed: null,
+    navbarOn: true,
 
     isAuthenticated: false,
     cards: [
@@ -198,6 +200,11 @@ class Clients extends Component {
     const { auth, isAuthenticated } = this.props;
     let settingsAndLogout = "";
 
+    const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block bg-light sidebar' : 'col-lg-1half d-block bg-light sidebar';
+    const mainClassName = this.state.navbarOn ? 'col-10' : 'col-11';
+    const iconChange = this.state.navbarOn ? 'fas fa-arrow-circle-left fa-2x' : 'fas fa-arrow-circle-right fa-2x';
+
+    
     if(users){
       var currentUser = users.filter(user => { return user.id === auth.uid })
       console.log('sdshcdsfhcksdjckjdkjfkjkjkjk')
@@ -300,62 +307,61 @@ class Clients extends Component {
 
     if (debt && users) {
       return (
-        <div className='container' style={{'background-color': 'white'}} >
+        <React.Fragment>
 
-          <div className="row border-bottom mb-0 mt-2 m9" style={{ 'background-color': '#1D2439' }}>
-            
-            <div className="col">
-              <div className="mt-1">
-                <div style={{ padding: '.375rem .75rem', 'font-size': '1.1rem',color:'yellow' }}>
-                  <i class="fas fa-euro-sign fa-lg"></i>
-                </div>
-              </div> 
-            </div>
+        
+        {/* <div className="row border-bottom mb-0 m9" style={{ 'background-color': '#1D2439' }}> */}
+          <nav className="navbar sticky-top flex-md-nowrap p-0" style={{ 'background-color': '#1D2439' }}>>
 
-            <div className="col p-1">
-              <div className="m-2">
-                <div className="" >
-                  <form class="form-inline active-pink-4 ">
-                    <input class="form-control form-control-sm mr-3 w-75" type="text" placeholder="Search"
-                      aria-label="Search" />
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                  </form>
-                </div>
-                
-               
-
-              </div>
-                
-            </div>
-            <div className="col mt-0" id="navIcons">
-
-              <div className="float-right mt-1">
-                <div className="btn pr-3" style={{ 'font-size': '1.1rem', color: 'white' }}>
-                                  
-                  <i class="fas fa-user-circle fa-lg clientAvatar"/>{' '}
-                  {/* {currentUser[0].firstName} */}
-                  
-                </div>
-              
-                <div className="btn pr-0 leftborder" style={{ 'font-size': '1.1rem', color: '#0069D9'}}>
-                  <i className="fas fa-bell fa-lg" />
-                  {/* <span class="button__badge">10</span> */}
-                </div>
-                <div className="btn pl-0" style={{ 'font-size': '1.1rem'}}>
-                  <i
-                    style={{ color: '#0069D9' }}
-                    className="btn fas fa-cog fa-lg"
-                    onMouseEnter={() =>
-                      this.setState({ showSettings: !showSettings })}
-                  />
-                </div>
-                  
-                  {settingsAndLogout}
+          <div className="col">
+            <div className="mt-1">
+              <div style={{ padding: '.375rem .75rem', 'font-size': '1.1rem', color: 'yellow' }}>
+                <i className="fas fa-euro-sign fa-lg"></i>
               </div>
             </div>
-         
+          </div>
 
-               {/* {isAuthenticated ? (
+          <div className="col p-1">
+            <div className="m-2">
+              <div className="" >
+                <form className="form-inline active-pink-4 ">
+                  <input className="form-control form-control-sm mr-3 w-75" type="text" placeholder="Search"
+                    aria-label="Search" />
+                  <i className="fas fa-search" aria-hidden="true"></i>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div className="col mt-0" id="navIcons">
+
+            <div className="float-right mt-1">
+              <div className="btn pr-3" style={{ 'font-size': '1.1rem', color: 'white' }}>
+
+                <i className="fas fa-user-circle fa-lg clientAvatar" />{' '}
+                {/* {currentUser[0].firstName} */}
+
+              </div>
+
+              <div className="btn pr-0 leftborder" style={{ 'font-size': '1.1rem', color: '#0069D9' }}>
+                <i className="fas fa-bell fa-lg" />
+                {/* <span className="button__badge">10</span> */}
+              </div>
+              <div className="btn pl-0" style={{ 'font-size': '1.1rem' }}>
+                <i
+                  style={{ color: '#0069D9' }}
+                  className="btn fas fa-cog fa-lg"
+                  onMouseEnter={() =>
+                    this.setState({ showSettings: !showSettings })}
+                />
+              </div>
+
+              {settingsAndLogout}
+            </div>
+          </div>
+
+
+          {/* {isAuthenticated ? (
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
                     <a href="#!" className="nav-link">
@@ -378,11 +384,80 @@ class Clients extends Component {
                   </li>
                 </ul>
                ) : null}{" "} */}
-               {/* <span className="text-primary">
+          {/* <span className="text-primary">
                 ${parseFloat(totalOwed).toFixed(2)}
                </span> */}
-            </div>
+        </nav>
+        <div className="container-fluid">
 
+        
+
+    <div className="wrapper">
+
+              
+              <nav className={navbarClassName} style={{height: '100rem'}}>
+               
+                <div class="sidebar-sticky">
+                  {this.state.navbarOn ?
+                   <React.Fragment>
+
+                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
+                        <li class="nav-item mt-3">
+                          <i class="fas fa-home fa-lg"></i> Dashboard
+                        </li>
+                        <li class="nav-item mt-3">
+                          <i class="fas fa-history fa-lg"></i> History
+                        </li>
+                      </ul>
+
+                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
+                        <li class="nav-item mt-3">
+                          <i class="fas fa-user-friends fa-lg"></i> Friends
+                        </li>
+                        <li class="nav-item mt-3">
+                          <i class="fas fa-plus fa-lg"></i> Add bills
+                        </li>
+                      </ul> 
+                    </React.Fragment>
+                  : 
+                 <React.Fragment>
+                
+                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
+                        <li class="nav-item mt-3">
+                            <i class="fas fa-home fa-lg"></i>
+                        </li>
+                        <li class="nav-item mt-3">
+                            <i class="fas fa-history fa-lg"></i>
+                        </li>
+                      </ul>
+
+                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
+                        <li class="nav-item mt-3">           
+                            <i class="fas fa-user-friends fa-lg"></i> 
+                        </li>
+                        <li class="nav-item mt-3">
+                            <i class="fas fa-plus fa-lg"></i> 
+                        </li>
+                      </ul> 
+                 </React.Fragment> 
+                  
+                }
+
+
+
+
+                </div>
+                <div className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted d-none">
+                  <i className={iconChange}
+                    onClick={(e) => this.setState({ navbarOn: !this.state.navbarOn })}
+                  ></i>
+                </div>
+                
+
+              </nav>
+
+              <main role="main" className={mainClassName}>
+        
           <div className="row border-bottom mb-2 mt-2" style={{ 'height': '15rem' }}>
             <div className="col p-5">
               <div className="mx-auto border-left pl-2" style={{width: '50%'}}>             
@@ -417,12 +492,12 @@ class Clients extends Component {
           </div>
 
             
-          <div className="row mt-4" style={{ 'height': '8rem' }}>
+            <div className="row mt-4 border-bottom" style={{ 'height': '10rem' }}>
               {cards.map(card => (
-                <div className="col">
+                <div className="col ">
                   <div
                     className="card"
-                    // style={{ width: "180rem", color: "red"}}
+                    style={{ width: "50%m"}}
                     onMouseEnter={this.onMouseOverHandler.bind(
                       this,
                       card.id
@@ -461,8 +536,8 @@ class Clients extends Component {
 
 
                     </div>
-                    <div class="card-footer">
-                      <small class="text-muted"><span style={{ color: "#a9a9a9" }}>
+                    <div className="card-footer">
+                      <small className="text-muted"><span style={{ color: "#a9a9a9" }}>
                         <i className={card.icon} />
                         {' '}{card.message}
                       </span></small>
@@ -479,7 +554,7 @@ class Clients extends Component {
             
         
 
-          <div className="row mt-4 m100">
+          <div className="row mt-4" style={{height: 'auto'}}>
         
        
             <div className="col">
@@ -488,7 +563,7 @@ class Clients extends Component {
                 style={{ width: "110px", height: "60px" }}
               > */}
                 <div className="d-flex ">
-                  {/* <i class="fas fa-bookmark" /> {' '} */}
+                  {/* <i className="fas fa-bookmark" /> {' '} */}
                   {showAddClient === 0 || !showAddClient ? (
                     <h5> Dashboard </h5>
                   ) : null}
@@ -515,7 +590,12 @@ class Clients extends Component {
               </div>
             </div>
           </div>
+          </main>
+            {/* </main> */}
+            </div>
+            
         </div>
+        </React.Fragment>
       );
     }
 

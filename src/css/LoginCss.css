@@ -3,11 +3,12 @@ html,body,#root,.App{
   height:100%;
 }
   .container-fluid {
-   height: 100%;
+    padding: 0px;
+   height: auto;
   }
   .container{
-    height: 100%;
+    height: auto;
   }
   .row{
-    height: 5%;
+    height: auto;
   }

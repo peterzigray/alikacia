@@ -25,7 +25,13 @@
         position: center;
     }
 
-
+.sidebar-sticky {
+  position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+    
+  padding: 0 15px;
+}
 
 svg{
     transform: rotate(-90deg)
@@ -187,4 +193,32 @@ stroke-width: 3;
 
 .leftborder {
   border-left: 1px solid white;
+}
+
+
+
+
+    .col-lg-1half {
+    width: 5.5rem!important;
+    padding-left: 1rem
+  }
+.col-lg-2half{
+   width: 10.5rem!important
+}
+
+
+
+ /* @media screen and (width: 480px) {
+
+    .col-lg-1half {
+
+    padding-left: -250px
+  }
+
+} */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
 }
