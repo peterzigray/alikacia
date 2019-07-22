@@ -11,7 +11,7 @@ import ClientOverview from './ClientOverview';
 import AddDebt from './addDebt';
 import Dashboard from './Dashboard';
 import Friends from './Friends';
-import { useMediaQuery } from 'react-responsive'
+
 
 const styles = {
   transition: "all 0.3s ease-out"
@@ -388,7 +388,7 @@ class Clients extends Component {
                 ${parseFloat(totalOwed).toFixed(2)}
                </span> */}
         </nav>
-        <div className="container-fluid">
+   
 
         
 
@@ -397,11 +397,35 @@ class Clients extends Component {
               
               <nav className={navbarClassName} style={{height: '100rem'}}>
                
-                <div class="sidebar-sticky">
+                <div className="sidebar-sticky" style={{'padding-top': '4rem'}}>
+
+
+                  
+
                   {this.state.navbarOn ?
                    <React.Fragment>
+                     <div className="logo">
+                  <div className="photo">
+                    <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+                  </div>
+                  {auth.email}  
+                  </div>
 
-                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
+                  <div className="logo">            
+                    <i class="fas fa-home fa-lg"></i> Dashboard               
+                  </div>
+
+                  <div className="logo">              
+                    <i class="fas fa-history fa-lg"></i> History                
+                  </div>
+                  <div className="logo">              
+                    <i class="fas fa-user-friends fa-lg"></i> Friends              
+                  </div>
+                  <div className="logo">              
+                    <i class="fas fa-plus fa-lg"></i> Add bills                
+                  </div>
+
+                      {/* <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
                         <li class="nav-item mt-3">
                           <i class="fas fa-home fa-lg"></i> Dashboard
                         </li>
@@ -417,12 +441,18 @@ class Clients extends Component {
                         <li class="nav-item mt-3">
                           <i class="fas fa-plus fa-lg"></i> Add bills
                         </li>
-                      </ul> 
+                      </ul>  */}
                     </React.Fragment>
                   : 
                  <React.Fragment>
-                
-                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
+                  
+                  
+                  <div className="photo">
+                    <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+                  </div> 
+              
+
+                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-3">
                         <li class="nav-item mt-3">
                             <i class="fas fa-home fa-lg"></i>
                         </li>
@@ -431,7 +461,7 @@ class Clients extends Component {
                         </li>
                       </ul>
 
-                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
+                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-3">
                         <li class="nav-item mt-3">           
                             <i class="fas fa-user-friends fa-lg"></i> 
                         </li>
@@ -443,15 +473,15 @@ class Clients extends Component {
                   
                 }
 
-
-
-
-                </div>
-                <div className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted d-none">
+<div className="nav flex-column mt-2 mb-3 mt-1 pl-1">
                   <i className={iconChange}
                     onClick={(e) => this.setState({ navbarOn: !this.state.navbarOn })}
                   ></i>
                 </div>
+
+
+                </div>
+               
                 
 
               </nav>
@@ -594,7 +624,7 @@ class Clients extends Component {
             {/* </main> */}
             </div>
             
-        </div>
+    
         </React.Fragment>
       );
     }

@@ -200,10 +200,10 @@ stroke-width: 3;
 
     .col-lg-1half {
     width: 5.5rem!important;
-    padding-left: 1rem
+    
   }
 .col-lg-2half{
-   width: 10.5rem!important
+   width: 15.5rem!important
 }
 
 
@@ -221,4 +221,23 @@ stroke-width: 3;
     display: flex;
     width: 100%;
     align-items: stretch;
+}
+
+.logo {
+  position: relative;
+  padding: .5rem .7rem;
+  z-index: 4;
+}
+
+.photo {
+  display: inline-block;
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.photo img {
+  width: 100%;
 }
