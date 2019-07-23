@@ -473,7 +473,7 @@ class Clients extends Component {
                   
                 }
 
-<div className="nav flex-column mt-2 mb-3 mt-1 pl-1">
+<div className="nav flex-column mt-2 pl-3">
                   <i className={iconChange}
                     onClick={(e) => this.setState({ navbarOn: !this.state.navbarOn })}
                   ></i>

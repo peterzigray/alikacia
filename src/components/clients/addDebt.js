@@ -236,18 +236,22 @@ class addDebt extends Component {
   handleChange = (selectedOption, e) => {
 
     var stateCopy3 = Object.assign({}, this.state);
-    if (this.state.listOfUsers){
-      var listOfUnclickedUsers = compare(selectedOption, this.state.listOfUsers)
-    }
+    // if (this.state.listOfUsers){
+    //   var listOfUnclickedUsers = compare(selectedOption, this.state.listOfUsers)
+    // }
    
 
 
     console.log('--------selectedOption----------')
-    console.log(selectedOption)
-    console.log(listOfUnclickedUsers)
+    
+    // console.log(listOfUnclickedUsers)
     // stateCopy3.listOfUsers = listOfUnclickedUsers 
    // this.setState({listOfUsers: false}
-
+   // IF THERE IS NO PICKED USER I SETTED UP "NONE" FOR SETUP EXACT SUM ON CUSTOMERS
+    if(selectedOption.length === 0){
+      selectedOption = [{label: 'none'}];
+    }
+    console.log(selectedOption)
     stateCopy3.isDebterChoosen = false
     
     if(selectedOption.length !== 0){
@@ -285,6 +289,7 @@ class addDebt extends Component {
     var stateCopy = Object.assign({}, this.state);
     var devidedBy = stateCopy.debtTo.length;
     var actualBalance = stateCopy.balance;
+
     
     if (this.state.balance && this.state.debtTo){
 
@@ -303,8 +308,11 @@ class addDebt extends Component {
 
 }
 
+
   render() {
    
+    console.log("---------------------------------ss-----s")
+    console.log(this.state.debtTo.length)
     const { selectedOption } = this.state;
     return (
       <div>
@@ -451,7 +459,54 @@ class addDebt extends Component {
           </div>
 
           <div className="col-md-6">
-            <img src={require("../../pics/app.jpg")} style={{height:"100%", width:"100%"}} />
+       
+            {/* <img src={require("../../pics/app.jpg")} style={{height:"100%", width:"100%"}} /> */}
+            {this.state.debtTo ? this.state.debtTo.map(name => 
+            <div className="card in-left">
+        
+            <ul className="list-group list-group-flush">
+              
+ 
+                <li className="list-group-item ">
+
+
+                  {/* <div className="photo">
+                    <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+                  </div> 
+                {name.label}
+                <div class="input-group">
+                    <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
+                    <div class="input-group-append">
+                      <span class="input-group-text">$</span>
+                      <span class="input-group-text">0.00</span>
+                    </div>
+                  </div> */}
+               
+
+               
+                  <div class="card-body">
+
+                  <div className="photo">
+                    <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+                  </div> 
+                  {name.label}
+                <div class="input-group">
+                    <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
+                    <div class="input-group-append">
+                      <span class="input-group-text">$</span>
+                      <span class="input-group-text">0.00</span>
+                    </div>
+                  </div>
+
+                  </div>
+               
+
+                </li>
+                </ul>
+            </div>
+
+              ) : null}
+            
           </div>
         
         </div>
