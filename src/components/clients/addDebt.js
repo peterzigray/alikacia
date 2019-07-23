@@ -318,9 +318,9 @@ class addDebt extends Component {
       <div>
         <div className="row mb-0 mt-2 m9">
           
-          <div className="col-md-6 pl-4 mr-0 mt-2">
+          <div className="col-md-4 pl-4 mr-0 mt-2">
             <div className="card">
-              <div className="card-header">Add an expense</div>
+              {/* <div className="card-header">Add an expense</div> */}
               <div className="card-body">
                  <form onSubmit={this.onSubmit}>
                   <div className="form-group">
@@ -457,57 +457,66 @@ class addDebt extends Component {
               </div>
             </div>
           </div>
-
-          <div className="col-md-6">
+         
        
-            {/* <img src={require("../../pics/app.jpg")} style={{height:"100%", width:"100%"}} /> */}
-            {this.state.debtTo ? this.state.debtTo.map(name => 
-            <div className="card in-left">
-        
-            <ul className="list-group list-group-flush">
-              
- 
-                <li className="list-group-item ">
+          <div className="col-md-4">
+       {this.state.debtTo ? this.state.debtTo.map(name => 
+       
+       <div className="card in-left">
+   
+       <ul className="list-group list-group-flush">
+         
+
+           <li className="list-group-item ">
 
 
-                  {/* <div className="photo">
-                    <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-                  </div> 
-                {name.label}
-                <div class="input-group">
-                    <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
-                    <div class="input-group-append">
-                      <span class="input-group-text">$</span>
-                      <span class="input-group-text">0.00</span>
-                    </div>
-                  </div> */}
-               
+             {/* <div className="photo">
+               <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+             </div> 
+           {name.label}
+           <div class="input-group">
+               <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
+               <div class="input-group-append">
+                 <span class="input-group-text">$</span>
+                 <span class="input-group-text">0.00</span>
+               </div>
+             </div> */}
+          
 
-               
-                  <div class="card-body">
+          
+             <div class="card-body">
 
-                  <div className="photo">
-                    <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-                  </div> 
-                  {name.label}
-                <div class="input-group">
-                    <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
-                    <div class="input-group-append">
-                      <span class="input-group-text">$</span>
-                      <span class="input-group-text">0.00</span>
-                    </div>
-                  </div>
+             <div className="photo">
+               <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+             </div> 
+             {name.label}
+           <div class="input-group">
+               <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
+               <div class="input-group-append">
+                 <span class="input-group-text">$</span>
+                 <span class="input-group-text">0.00</span>
+               </div>
+             </div>
 
-                  </div>
-               
+             </div>
+          
 
-                </li>
-                </ul>
-            </div>
+           </li>
+           </ul>
+       </div>
+      
+         ) : null}
+         </div>
+     
 
-              ) : null}
-            
-          </div>
+
+
+
+          {/* <div className="col-md-3">
+          <img src={require("../../pics/app.jpg")} style={{height:"100%", width:"100%"}} />
+          </div> */}
+
+          
         
         </div>
       </div>

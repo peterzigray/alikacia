@@ -242,6 +242,16 @@ stroke-width: 3;
   width: 100%;
 }
 
+.col-9{
+  padding-left: 15rem;
+  padding-right: 0rem;
+}
+
+
+.col-9{
+  padding-left: 15rem;
+  padding-right: 0rem;
+}
 
 
 /* @-webkit-keyframes fadeInLeft {

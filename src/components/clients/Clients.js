@@ -195,13 +195,12 @@ class Clients extends Component {
 
   render() {
     const { clients , users, debt} = this.props;
-    const { totalOwed, cards, showSettings, showAddClient, youAreOwed,
-      youOwed } = this.state;
+    const { totalOwed, cards, showSettings, showAddClient, youAreOwed, youOwed } = this.state;
     const { auth, isAuthenticated } = this.props;
     let settingsAndLogout = "";
 
     const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block bg-light sidebar' : 'col-lg-1half d-block bg-light sidebar';
-    const mainClassName = this.state.navbarOn ? 'col-10' : 'col-11';
+    const mainClassName = this.state.navbarOn ? 'col-9' : 'col-9';
     const iconChange = this.state.navbarOn ? 'fas fa-arrow-circle-left fa-2x' : 'fas fa-arrow-circle-right fa-2x';
 
     
@@ -411,17 +410,17 @@ class Clients extends Component {
                   {auth.email}  
                   </div>
 
-                  <div className="logo">            
+                  <div className="logo" onClick={this.onClickButton.bind(this, 0)}>            
                     <i class="fas fa-home fa-lg"></i> Dashboard               
                   </div>
 
-                  <div className="logo">              
+                  <div className="logo" onClick={this.onClickButton.bind(this, 2)}>              
                     <i class="fas fa-history fa-lg"></i> History                
                   </div>
-                  <div className="logo">              
+                  <div className="logo" onClick={this.onClickButton.bind(this, 3)}>              
                     <i class="fas fa-user-friends fa-lg"></i> Friends              
                   </div>
-                  <div className="logo">              
+                  <div className="logo" onClick={this.onClickButton.bind(this, 1)}>              
                     <i class="fas fa-plus fa-lg"></i> Add bills                
                   </div>
 
@@ -473,7 +472,10 @@ class Clients extends Component {
                   
                 }
 
+
+
 <div className="nav flex-column mt-2 pl-3">
+  
                   <i className={iconChange}
                     onClick={(e) => this.setState({ navbarOn: !this.state.navbarOn })}
                   ></i>
@@ -519,10 +521,10 @@ class Clients extends Component {
                 <p>View statement ></p>
               </div>
             </div> 
-          </div>
+  </div>
 
             
-            <div className="row mt-4 border-bottom" style={{ 'height': '10rem' }}>
+  {/* <div className="row mt-4 border-bottom" style={{ 'height': '10rem' }}>
               {cards.map(card => (
                 <div className="col ">
                   <div
@@ -578,7 +580,7 @@ class Clients extends Component {
 
             
             
-            </div>
+            </div> */}
             
 
             
