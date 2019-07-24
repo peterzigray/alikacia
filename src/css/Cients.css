@@ -242,14 +242,14 @@ stroke-width: 3;
   width: 100%;
 }
 
-.col-9{
+/* .col-9{
   padding-left: 15rem;
   padding-right: 0rem;
-}
+} */
 
 
 .col-9{
-  padding-left: 15rem;
+  padding-left: 8rem;
   padding-right: 0rem;
 }
 

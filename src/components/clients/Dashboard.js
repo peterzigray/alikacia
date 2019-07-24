@@ -11,6 +11,23 @@ import '../../css/Cients.css'
 import '../../pics/app.jpg'
 
 
+function giveMePayer(debt, users, auth) {
+
+  let result = []
+  var isDebtor = true;
+  users.forEach(user => {
+    if (debt.paidBy === user.id && debt.paidBy === auth.uid) {
+      result.push(debt.debtTo)
+    }
+  }
+  )
+  console.log('oaaaaaaaaaaaaaaa')
+  console.log(result)
+  return result.flat()
+
+}
+
+
 class dashboard extends Component {
   state = {
     totalOwed: null,
@@ -113,12 +130,35 @@ class dashboard extends Component {
   
     if (debt && users) {
 
-      var newDebtRight =[],newDebtLeft = [];
+      var newDebtRight2 = [],newDebtRight =[],newDebtLeft = [];
 
       for (var i in debt ) {
-        newDebtRight.push(giveMePayer(debt[i], users))
+        newDebtRight.push(giveMePayer(debt[i], users, auth))
+        newDebtRight2.push(giveMePayer2(debt[i], auth))
         newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
       }
+
+
+      function giveMePayer2(debt, auth){
+        const {id} = debt.paidBy;
+        var result = [];
+        
+        if(id === auth.uid){
+          console.log('preslo')
+          if(debt.debtTo.length !== 0){
+            debt.debtTo.forEach(d => result.push(d) )
+          }
+        }
+        var finalResult = result.filter((obj) => { return obj.id !== auth.uid}).flat()
+        console.log('result')
+        console.log(finalResult)
+        return finalResult
+      }
+      
+      var allDebtorsmerged = [].concat.apply([], newDebtRight2);
+      console.log('toto hladam')
+      console.log(allDebtorsmerged)
+      
       
 
       // ASSIGN PAYER AND ACTUALDEBT TO EXIST DEBT BASED ON WHO I OWE TO 
@@ -141,7 +181,7 @@ class dashboard extends Component {
           }
         }
       )
-      console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwww')
+      console.log('wwwwwwwwwwwwwresultwwwwwwwwwwwwwwww')
     console.log(result)
         return result
     }
@@ -168,24 +208,10 @@ class dashboard extends Component {
           output.push(item);
         }
       });
-      console.log('oooooooooooooooooooooooooooooooooooooo')
+      console.log('ooooooooooooooooooutputoooooooooooooooooooo')
       console.log(output)
 
-      function giveMePayer(debt, users) {
-     
-        let result = []
-        var isDebtor = true;
-        users.forEach(user => {
-          if (debt.paidBy === user.id && debt.paidBy === auth.uid ) {
-            result.push(debt.debtTo)
-          } 
-        }
-        )
-        console.log('oaaaaaaaaaaaaaaa')
-        console.log(result)
-        return result.flat()
-       
-      }
+      
 
 
       newDebtRight = newDebtRight.filter((d) => { return d.id !== auth.uid && Object.keys(d).length !== 0 }).flat()
