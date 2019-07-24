@@ -155,9 +155,43 @@ class dashboard extends Component {
         return finalResult
       }
       
-      var allDebtorsmerged = [].concat.apply([], newDebtRight2);
+      // merge all arrays with debtors into one array
+      var allDebtorsMerged = [].concat.apply([], newDebtRight2);
       console.log('toto hladam')
-      console.log(allDebtorsmerged)
+      console.log(allDebtorsMerged)
+
+      // SUM ALL NUMBERS WHERE ID IS SAME
+      console.log(allDebtorsMerged.filter(({id}) => id === "nXw3jJbQSfZy7WML3T19ksthRvg1")
+      .reduce((sum, record) => sum + Number(record.actualDebt), 0))
+
+      var pilots = [{actualDebt: "20", id: "8opyA98quZTWchrkkOOa3lzksUz1", label: "Nat"}
+      ,{actualDebt: "9", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
+      ,{actualDebt: "20", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
+      ,{actualDebt: "1", id: "iR9zALQNqMfo3gl6aRWT2U3C05P2", label: "Pet"}
+      ,{actualDebt: "1", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
+      ,{actualDebt: "1", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
+      ]
+      
+      const number = pilots.filter(({id}) => id === "nXw3jJbQSfZy7WML3T19ksthRvg1")
+                      .reduce((sum, record) => sum + Number(record.actualDebt), 0)
+      // CHANGE ACTUAL DEBT UNDER ONE NAME              
+      pilots.map(pilot => pilot.id === "nXw3jJbQSfZy7WML3T19ksthRvg1" ? Object.assign(pilot, {actualDebt: number}): null)
+      console.log(pilots)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       
       
 
