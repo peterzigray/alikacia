@@ -127,61 +127,112 @@ class dashboard extends Component {
 
   render() {
     const { users, debt, auth } = this.props;
+    
   
     if (debt && users) {
-
+    
       var newDebtRight2 = [],newDebtRight =[],newDebtLeft = [];
 
       for (var i in debt ) {
-        newDebtRight.push(giveMePayer(debt[i], users, auth))
+      //  newDebtRight.push(giveMePayer(debt[i], users, auth))
         newDebtRight2.push(giveMePayer2(debt[i], auth))
-        newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
+     //   newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
       }
 
 
       function giveMePayer2(debt, auth){
         const {id} = debt.paidBy;
         var result = [];
-        
         if(id === auth.uid){
-          console.log('preslo')
           if(debt.debtTo.length !== 0){
             debt.debtTo.forEach(d => result.push(d) )
           }
         }
         var finalResult = result.filter((obj) => { return obj.id !== auth.uid}).flat()
-        console.log('result')
-        console.log(finalResult)
         return finalResult
       }
-      
+
+      console.log(newDebtRight2)
       // merge all arrays with debtors into one array
       var allDebtorsMerged = [].concat.apply([], newDebtRight2);
       console.log('toto hladam')
+      
       console.log(allDebtorsMerged)
 
+  
+      console.log('toto som ja ' + ' ' + auth.uid)
       // SUM ALL NUMBERS WHERE ID IS SAME
-      console.log(allDebtorsMerged.filter(({id}) => id === "nXw3jJbQSfZy7WML3T19ksthRvg1")
-      .reduce((sum, record) => sum + Number(record.actualDebt), 0))
+      // console.log(allDebtorsMerged.filter(({id}) => id === "nXw3jJbQSfZy7WML3T19ksthRvg1")
+      // .reduce((sum, record) => sum + Number(record.actualDebt), 0))
 
-      var pilots = [{actualDebt: "20", id: "8opyA98quZTWchrkkOOa3lzksUz1", label: "Nat"}
-      ,{actualDebt: "9", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
-      ,{actualDebt: "20", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
-      ,{actualDebt: "1", id: "iR9zALQNqMfo3gl6aRWT2U3C05P2", label: "Pet"}
-      ,{actualDebt: "1", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
-      ,{actualDebt: "1", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
-      ]
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //   var pilots = [
+    //    {actualDebt: "20", id: "8opyA98quZTWchrkkOOa3lzksUz1", label: "Nat"}
+    //   ,{actualDebt: "9", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
+    //   ,{actualDebt: "20", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
+    //   ,{actualDebt: "1", id: "iR9zALQNqMfo3gl6aRWT2U3C05P2", label: "Pet"}
+    //   ,{actualDebt: "1", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
+    //   ,{actualDebt: "1", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
+    //   ]
+
+    //   // GIVE ME DUPLICATED RECORDS
+    //   const duplicated = pilots.filter((ele,indx) => {
+		// 		return indx!==pilots.map(p => p['id']).indexOf(ele['id'])
+		//     }
+	  //  )
+    //   console.log(duplicated.map(d => d.id))
+
+    //    // SUM ALL ACTUALDEBTS INTO ONE FOR CUSTOMER 
+    //   const number = pilots.filter(({id}) => id === "nXw3jJbQSfZy7WML3T19ksthRvg1")
+    //                   .reduce((sum, record) => sum + Number(record.actualDebt), 0)
+    //   // CHANGE ACTUAL DEBT UNDER ONE NAME              
+    //   pilots.map(pilot => pilot.id === "nXw3jJbQSfZy7WML3T19ksthRvg1" ? Object.assign(pilot, {actualDebt: number}): null)
+    //   console.log(pilots)
+
+    //   // FILTER ALL DOUBLED RECORDS AND REMIND FIRST ONE WITH ACTUALDEBT FROM ALL NONUNIQUE RECORDS
+    //   const allDebtors = pilots.filter((pilot,index,array)=>{
+    //     //console.log(array.map(a => a['id']).indexOf(pilot['id'])=== index)
+    //     return array.map(a => a['id']).indexOf(pilot['id']) === index
+    //   })
+    //     console.log(allDebtors)
+
+////////////////////////////////////////////////////////////////////////////////////////////////FUNGUJE/////////////////////////////////////////////////////////////////
+
+
+// var pilots = [{actualDebt: "20", id: "8opyA98quZTWchrkkOOa3lzksUz1", label: "Nat"}
+//       ,{actualDebt: "9", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
+//       ,{actualDebt: "20", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
       
-      const number = pilots.filter(({id}) => id === "nXw3jJbQSfZy7WML3T19ksthRvg1")
-                      .reduce((sum, record) => sum + Number(record.actualDebt), 0)
-      // CHANGE ACTUAL DEBT UNDER ONE NAME              
-      pilots.map(pilot => pilot.id === "nXw3jJbQSfZy7WML3T19ksthRvg1" ? Object.assign(pilot, {actualDebt: number}): null)
-      console.log(pilots)
+//       ,{actualDebt: "1", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
+// 	  ,{actualDebt: "1", id: "iR9zALQNqMfo3gl6aRWT2U3C05P2", label: "Pet"}
+//       ,{actualDebt: "1", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
+//       ]
+    
+       // filter only nonUnique id
+       var b = Array.from(Object.create(allDebtorsMerged)); 
 
+        const duplicated = b.filter((ele,indx) => {
+			  	return indx!==b.map(p => p['id']).indexOf(ele['id'])
+        }
+      )
+        const idecka = duplicated.map(d => d.id)
 
+      for(i in idecka){
+      	gimmeSum(b,idecka[i])
+      }
 
+      function gimmeSum (b, idecko){
+        const number = b.filter(({id}) => id === idecko).reduce((sum, record) => sum + Number(record.actualDebt), 0)
+        // CHANGE ACTUAL DEBT UNDER ONE NAME    
+        b.map(pilot => pilot.id === idecko ? Object.assign(pilot, {actualDebt: number}): null)
+     }
 
-
+     const nieco = b.filter((pilot,index,array)=>{
+       //console.log(array.map(a => a['id']).indexOf(pilot['id'])=== index)
+     	return array.map(a => a['id']).indexOf(pilot['id']) === index
+     })
+     console.log(nieco)
+     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
