@@ -133,11 +133,16 @@ class dashboard extends Component {
     
       var newDebtRight2 = [],newDebtRight =[],newDebtLeft = [];
 
-      for (var i in debt ) {
-      //  newDebtRight.push(giveMePayer(debt[i], users, auth))
-        newDebtRight2.push(giveMePayer2(debt[i], auth))
-     //   newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
+      function giveMeallPayers(debt, newDebtRight2){
+        for (var i = 0; i < debt.length; i++) {
+          //  newDebtRight.push(giveMePayer(debt[i], users, auth))
+          newDebtRight2.push(giveMePayer2(debt[i], auth))
+          //   newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
+        }
+        return newDebtRight2
       }
+
+      giveMeallPayers([...debt], newDebtRight2);
 
 
       function giveMePayer2(debt, auth){
@@ -154,7 +159,7 @@ class dashboard extends Component {
 
       console.log(newDebtRight2)
       // merge all arrays with debtors into one array
-      var allDebtorsMerged = [].concat.apply([], newDebtRight2);
+      var allDebtorsMerged = [].concat.apply([], [...newDebtRight2]);
       console.log('toto hladam')
       
       console.log(allDebtorsMerged)
@@ -209,30 +214,42 @@ class dashboard extends Component {
 //       ]
     
        // filter only nonUnique id
-       var b = Array.from(Object.create(allDebtorsMerged)); 
-
-        const duplicated = b.filter((ele,indx) => {
-			  	return indx!==b.map(p => p['id']).indexOf(ele['id'])
+       //const b = [];
+     
+        var b = JSON.parse(JSON.stringify(allDebtorsMerged));
+        //var b = [].concat(allDebtorsMerged);
+        console.log('toto je b')
+        console.log(allDebtorsMerged)
+        console.log(b)
+        const duplicated = b.filter((ele, indx) => {
+          return indx !== b.map(p => p['id']).indexOf(ele['id'])
         }
-      )
+        )
         const idecka = duplicated.map(d => d.id)
 
-      for(i in idecka){
-      	gimmeSum(b,idecka[i])
-      }
-
-      function gimmeSum (b, idecko){
-        const number = b.filter(({id}) => id === idecko).reduce((sum, record) => sum + Number(record.actualDebt), 0)
-        // CHANGE ACTUAL DEBT UNDER ONE NAME    
-        b.map(pilot => pilot.id === idecko ? Object.assign(pilot, {actualDebt: number}): null)
-     }
-
-     const nieco = b.filter((pilot,index,array)=>{
-       //console.log(array.map(a => a['id']).indexOf(pilot['id'])=== index)
-     	return array.map(a => a['id']).indexOf(pilot['id']) === index
-     })
-     console.log(nieco)
-     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
+      
+        for (var j = 0; j < idecka.length; j++) {
+            gimmeSum(b, idecka[j])
+        }
+     
+        function gimmeSum(ar, idecko) {
+          var number = ar.filter(({ id }) => id === idecko).reduce((sum, record) => sum + Number(record.actualDebt), 0)
+          console.log(number)
+          // CHANGE ACTUAL DEBT UNDER ONE NAME    
+            return ar.filter(obj => obj.id === idecko ? Object.assign(obj, { actualDebt: number }) : null)
+        }
+       
+        const debtors = b.filter((pilot, index, array) => {
+          //console.log(array.map(a => a['id']).indexOf(pilot['id'])=== index)
+          return array.map(a => a['id']).indexOf(pilot['id']) === index
+        })
+        console.log('vysledok')
+        console.log(debtors)
+      
+     
+       
+    //  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -244,7 +261,7 @@ class dashboard extends Component {
 
 
       
-      
+
 
       // ASSIGN PAYER AND ACTUALDEBT TO EXIST DEBT BASED ON WHO I OWE TO 
       function giveMePayerForOvrview(debt, users) {
@@ -358,13 +375,13 @@ class dashboard extends Component {
                 </tr>
               </thead>
               <React.Fragment>
-                {newDebtRight.map((w) => (
+                {debtors.map((w) => (
                   <React.Fragment>
                       <tbody >
                        <div style={{ 'height': '105px' }}>
                           <tr key={w.id} style={{'line-height': '25px'}}>          
                             <i class="fas fa-user-circle fa-3x clientAvatar" />
-                              <td>{w.label}{''}{w.lastName}{''}{'owes you'}{w.actualDebt}</td>
+                              <td>{w.label}{' '}{'owes you'}{' '}{w.actualDebt}</td>
                               <td>
                                 <button
                                   // to={`/client/${client.id}`}
