@@ -10,23 +10,48 @@ import '../../css/Cients.css'
 // import '../../css/LoginCss.css'
 import '../../pics/app.jpg'
 
-
-function giveMePayer(debt, users, auth) {
-
-  let result = []
-  var isDebtor = true;
-  users.forEach(user => {
-    if (debt.paidBy === user.id && debt.paidBy === auth.uid) {
-      result.push(debt.debtTo)
+//////////////////////////////////RIGHT DEBTORS//////////////////////////////////////////
+/**
+ * 
+ * @param {array} debt array of objects of debts
+ * @param {object} auth object mine authorization
+ */
+function listOfUsersWhoOweMe(debt,auth){
+  var result = [];
+  for (var i = 0; i < debt.length; i++) {
+    result.push(giveMePayer(debt[i], auth))
+  }
+  return result
+}
+/**
+ * 
+ * @param {object} debt one object od debt
+ * @param {object} auth object mine authorization
+ */
+function giveMePayer(debt, auth){
+  const {id} = debt.paidBy;
+  var result = [];
+  if(id === auth.uid){
+    if(debt.debtTo.length !== 0){
+      debt.debtTo.forEach(d => result.push(d) )
     }
   }
-  )
-  console.log('oaaaaaaaaaaaaaaa')
-  console.log(result)
-  return result.flat()
-
+  var finalResult = result.filter((obj) => { return obj.id !== auth.uid}).flat()
+  return finalResult
 }
+//function giveMePayer(a,b){var c=[];a.paidBy.id===b.uid&&0!==a.debtTo.length&&a.debtTo.forEach(function(a){return c.push(a)});return c.filter(function(a){return a.id!==b.uid}).flat()};
+/////////////////////////////////////////////////////////////////////////////////////////
 
+
+//////////////////////////////////LEFT DEBTORS//////////////////////////////////////////
+
+// function listOfUsersIOwe(debt,newDebtRight,auth){
+//   for (var i = 0; i < debt.length; i++) {
+//       newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
+//   }
+//   return newDebtRight
+// }
+/////////////////////////////////////////////////////////////////////////////////////////
 
 class dashboard extends Component {
   state = {
@@ -126,192 +151,136 @@ class dashboard extends Component {
 
 
   render() {
+
     const { users, debt, auth } = this.props;
-    
-  
+
     if (debt && users) {
-    
-      var newDebtRight2 = [],newDebtRight =[],newDebtLeft = [];
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//******************************ALL ABOUT DEBTORS DISPLAYED ON RIGHT SIDE OF THE SCREEN OF DASHBOARD************************************** */
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function giveMeallPayers(debt, newDebtRight2){
-        for (var i = 0; i < debt.length; i++) {
-          //  newDebtRight.push(giveMePayer(debt[i], users, auth))
-          newDebtRight2.push(giveMePayer2(debt[i], auth))
-          //   newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
-        }
-        return newDebtRight2
-      }
+      // STORE ALL RETURNED DEBTORS WITHOUT ME
+      var newDebtRight = listOfUsersWhoOweMe([...debt], auth);
 
-      giveMeallPayers([...debt], newDebtRight2);
+      // CONCAT ALL ARRAYS OF DEBTORS INTO ONE AND GET RID OF INNER ARRAYS SO RESULT IS --> [{},{},{}]
+      var allDebtorsMerged = [].concat.apply([], [...newDebtRight]);
+      // CREATE DEEP COPY OF DEBTORS ARRAY (NON MUTABLE)     
+      var b = JSON.parse(JSON.stringify(allDebtorsMerged));
 
-
-      function giveMePayer2(debt, auth){
-        const {id} = debt.paidBy;
-        var result = [];
-        if(id === auth.uid){
-          if(debt.debtTo.length !== 0){
-            debt.debtTo.forEach(d => result.push(d) )
-          }
-        }
-        var finalResult = result.filter((obj) => { return obj.id !== auth.uid}).flat()
-        return finalResult
-      }
-
-      console.log(newDebtRight2)
-      // merge all arrays with debtors into one array
-      var allDebtorsMerged = [].concat.apply([], [...newDebtRight2]);
-      console.log('toto hladam')
-      
-      console.log(allDebtorsMerged)
-
-  
-      console.log('toto som ja ' + ' ' + auth.uid)
-      // SUM ALL NUMBERS WHERE ID IS SAME
-      // console.log(allDebtorsMerged.filter(({id}) => id === "nXw3jJbQSfZy7WML3T19ksthRvg1")
-      // .reduce((sum, record) => sum + Number(record.actualDebt), 0))
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //   var pilots = [
-    //    {actualDebt: "20", id: "8opyA98quZTWchrkkOOa3lzksUz1", label: "Nat"}
-    //   ,{actualDebt: "9", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
-    //   ,{actualDebt: "20", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
-    //   ,{actualDebt: "1", id: "iR9zALQNqMfo3gl6aRWT2U3C05P2", label: "Pet"}
-    //   ,{actualDebt: "1", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
-    //   ,{actualDebt: "1", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
-    //   ]
-
-    //   // GIVE ME DUPLICATED RECORDS
-    //   const duplicated = pilots.filter((ele,indx) => {
-		// 		return indx!==pilots.map(p => p['id']).indexOf(ele['id'])
-		//     }
-	  //  )
-    //   console.log(duplicated.map(d => d.id))
-
-    //    // SUM ALL ACTUALDEBTS INTO ONE FOR CUSTOMER 
-    //   const number = pilots.filter(({id}) => id === "nXw3jJbQSfZy7WML3T19ksthRvg1")
-    //                   .reduce((sum, record) => sum + Number(record.actualDebt), 0)
-    //   // CHANGE ACTUAL DEBT UNDER ONE NAME              
-    //   pilots.map(pilot => pilot.id === "nXw3jJbQSfZy7WML3T19ksthRvg1" ? Object.assign(pilot, {actualDebt: number}): null)
-    //   console.log(pilots)
-
-    //   // FILTER ALL DOUBLED RECORDS AND REMIND FIRST ONE WITH ACTUALDEBT FROM ALL NONUNIQUE RECORDS
-    //   const allDebtors = pilots.filter((pilot,index,array)=>{
-    //     //console.log(array.map(a => a['id']).indexOf(pilot['id'])=== index)
-    //     return array.map(a => a['id']).indexOf(pilot['id']) === index
-    //   })
-    //     console.log(allDebtors)
-
-////////////////////////////////////////////////////////////////////////////////////////////////FUNGUJE/////////////////////////////////////////////////////////////////
-
-
-// var pilots = [{actualDebt: "20", id: "8opyA98quZTWchrkkOOa3lzksUz1", label: "Nat"}
-//       ,{actualDebt: "9", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
-//       ,{actualDebt: "20", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
-      
-//       ,{actualDebt: "1", id: "nXw3jJbQSfZy7WML3T19ksthRvg1", label: "Jur"}
-// 	  ,{actualDebt: "1", id: "iR9zALQNqMfo3gl6aRWT2U3C05P2", label: "Pet"}
-//       ,{actualDebt: "1", id: "z6PVhKeR1TMGLjGWJQkPHx5RmRT2", label: "Mi"}
-//       ]
-    
-       // filter only nonUnique id
-       //const b = [];
-     
-        var b = JSON.parse(JSON.stringify(allDebtorsMerged));
-        //var b = [].concat(allDebtorsMerged);
-        console.log('toto je b')
-        console.log(allDebtorsMerged)
-        console.log(b)
-        const duplicated = b.filter((ele, indx) => {
+      // STORE ALL DUPLICATE RECORDS
+      const duplicated = b.filter((ele, indx) => {
           return indx !== b.map(p => p['id']).indexOf(ele['id'])
-        }
-        )
-        const idecka = duplicated.map(d => d.id)
-
- 
+         }
+      )
+      // STORE IDECKA OF DUPLICATE RECORDS
+      const idecka = duplicated.map(d => d.id)
       
-        for (var j = 0; j < idecka.length; j++) {
-            gimmeSum(b, idecka[j])
-        }
+      // FOR FIRST RECORDS WHERE ID === DUPLICATED CHANGE ACTUAL DEBT TO SUM OF ALL RECORDS WHERE ID === PARTICULAR DUPLICATED ID
+      for (var j = 0; j < idecka.length; j++) {
+           gimmeSum(b, idecka[j])
+      }
      
         function gimmeSum(ar, idecko) {
           var number = ar.filter(({ id }) => id === idecko).reduce((sum, record) => sum + Number(record.actualDebt), 0)
-          console.log(number)
           // CHANGE ACTUAL DEBT UNDER ONE NAME    
-            return ar.filter(obj => obj.id === idecko ? Object.assign(obj, { actualDebt: number }) : null)
+           ar.filter(obj => obj.id === idecko ? Object.assign(obj, { actualDebt: number }) : null)
         }
-       
-        const debtors = b.filter((pilot, index, array) => {
-          //console.log(array.map(a => a['id']).indexOf(pilot['id'])=== index)
-          return array.map(a => a['id']).indexOf(pilot['id']) === index
-        })
-        console.log('vysledok')
-        console.log(debtors)
-      
+        
+      // STORE ALL DEBTORS WHERE DUPLICATED RECORD HAS BEEN FILTERED AND ONLY RECORD WHERE ACTUAL DEBT HAS BEEN STORED AS SUM OFF ALL RECORD REMAIN
+      const debtors = b.filter((pilot, index, array) => {return array.map(a => a['id']).indexOf(pilot['id']) === index})
+        
+      console.log('----debtors of the right side-----') 
+      console.log(debtors)    
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//******************************ALL ABOUT DEBTORS DISPLAYED ON LEFT SIDE OF THE SCREEN OF DASHBOARD************************************** */
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      
-       
-    //  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     // STORE ALL RETURNED DEBTORS WITHOUT ME
+     var debtLeft = JSON.parse(JSON.stringify(debt));
+
+     var newDebtLeft  = listOfUsersIOwe(debtLeft,auth);
+
+     var allMyDebtsMerged = [].concat.apply([], [...newDebtLeft]);
+     console.log('--newDebtLeft---')
+      console.log(allMyDebtsMerged)
 
 
 
+    function listOfUsersIOwe(debt,auth){
+      var result = [];
 
+  for (var i = 0; i < debt.length; i++) {
+    result.push(giveMePayerForOvrview(debt[i], users))
+  }
+  return result
+}
 
-
-
-
-
-
-      
-
-
+     
       // ASSIGN PAYER AND ACTUALDEBT TO EXIST DEBT BASED ON WHO I OWE TO 
       function giveMePayerForOvrview(debt, users) {
-        let result = {}
-        var haveDebtWithPayer = false;
-        var value;
-      // SEARCH EVERY DEBT AND RETURN MY USER
-        debt.debtTo.forEach(d =>{
-          if(d.id === auth.uid){
-            haveDebtWithPayer = true;
-            value = d.actualDebt
-          }
-        }
-      )
+        const {id} = debt.paidBy;
+        var res = [];
+        debt.debtTo.forEach((d) => {
+   
+              if(d.id === auth.uid && id !== auth.uid){
+                console.log('wwwwwwwwwwwwwresultwwwwwwwwwwwwwwww')
+                // console.log(debt.paidBy)
+                res.push(Object.assign(debt.paidBy,{actualDebt: d.actualDebt}) )
+              }
+          
+            }
+            
+          )
+          console.log(res)
+          return res
+      //   let result = {}
+      //   var haveDebtWithPayer = false;
+      //   var value;
+      // // SEARCH EVERY DEBT AND RETURN MY USER
+      //   debt.debtTo.forEach(d =>{
+      //     if(d.id === auth.uid){
+      //       haveDebtWithPayer = true;
+      //       value = d.actualDebt
+      //     }
+      //   }
+      // )
       
-        users.forEach(user => {
-          if (debt.paidBy === user.id && debt.paidBy !== auth.uid && haveDebtWithPayer) {
-            Object.assign(result, debt, { payer: user.firstName + " " + user.lastName, actualDebt: value ? value: debt.balance })
-          }
-        }
-      )
-      console.log('wwwwwwwwwwwwwresultwwwwwwwwwwwwwwww')
-    console.log(result)
-        return result
+      //   users.forEach(user => {
+      //     if (debt.paidBy === user.id && debt.paidBy !== auth.uid && haveDebtWithPayer) {
+      //       Object.assign(result, debt, { payer: user.firstName + " " + user.lastName, actualDebt: value ? value: debt.balance })
+      //     }
+      //   }
+      // )
+    //   console.log('wwwwwwwwwwwwwresultwwwwwwwwwwwwwwww')
+    // console.log(result)
+    //     return result
     }
     
 
       
-      // FILTER OUT EMPTY OBJECTS
-      newDebtLeft = newDebtLeft.filter(d => Object.keys(d).length !== 0)
+    //   // FILTER OUT EMPTY OBJECTS
+    //   newDebtLeft = newDebtLeft.filter(d => Object.keys(d).length !== 0)
   
-      var output = [];
+    //   var output = [];
 
-      //MERGE ALL OBJECT INTO ONE BESED ON WHO PAYD THE BILL
-      newDebtLeft.forEach(function (item) {
-        var existing = output.filter(function (v) {
-          return v.paidBy === item.paidBy;
-        });
-        if (existing.length) {
-          var existingIndex = output.indexOf(existing[0]);
-          var actualDebt = parseInt(output[existingIndex].actualDebt) + parseInt(item.actualDebt)
-          output[existingIndex].actualDebt = actualDebt
-        } else {
-          if (typeof item.actualDebt == 'string')
-            item.actualDebt = [item.actualDebt];
-          output.push(item);
-        }
-      });
-      console.log('ooooooooooooooooooutputoooooooooooooooooooo')
-      console.log(output)
+    //   //MERGE ALL OBJECT INTO ONE BESED ON WHO PAYD THE BILL
+    //   newDebtLeft.forEach(function (item) {
+    //     var existing = output.filter(function (v) {
+    //       return v.paidBy === item.paidBy;
+    //     });
+    //     if (existing.length) {
+    //       var existingIndex = output.indexOf(existing[0]);
+    //       var actualDebt = parseInt(output[existingIndex].actualDebt) + parseInt(item.actualDebt)
+    //       output[existingIndex].actualDebt = actualDebt
+    //     } else {
+    //       if (typeof item.actualDebt == 'string')
+    //         item.actualDebt = [item.actualDebt];
+    //       output.push(item);
+    //     }
+    //   });
+    //   console.log('ooooooooooooooooooutputoooooooooooooooooooo')
+    //   console.log(output)
 
       
 
@@ -321,44 +290,46 @@ class dashboard extends Component {
       return (
         <div className="row h-100">
           <div className="col-md-6">
-            <table className="table-borderless table-hover">
+          <table className="table-borderless">
               <thead className="thead-inverse">
-
                 <tr>
-                  <th>You owe</th>
+                  <th>You are owed</th>
                   <th />
                 </tr>
-
               </thead>
               <React.Fragment>
-                {output.map((d) => (
+                {allMyDebtsMerged.map((w) => (
                   <React.Fragment>
-                    {d.payer !== null ?
-                      <tbody>
-                        <div style={{ 'height': '105px'}}>
-                        <tr key={d.id}>
-                          
-                            <td>
-                            <i class="fas fa-user-circle fa-3x clientAvatar" />
-                            {d.payer}
-                            <p style={{color: 'red'}}>
-                                {'you owe'}{' '}{'$'}{d.actualDebt}
-                            </p>                      
-                            </td>                   
-                          <td>
-                            {/* <button
-                              // to={`/client/${client.id}`}
-                              onClick={this.settleUpLoan.bind(this, d.id)}
-                              className="btn btn-outline-primary btn-sm"
+           
 
-                            >
-                              <i className="fas fa-arrow-circle-right" />{" "}
-                              Settle up
-                             </button> */}
-                          </td>
-                        </tr>
-                      </div>
-                    </tbody>: null}
+                      <div className="card in-left">
+   
+   <ul className="list-group list-group-flush">
+     
+
+       <li className="list-group-item ">
+
+      
+
+      
+         <div class="card-body">
+
+         <div className="photo">
+           <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+         </div> 
+         
+         {'You owe '}{' '}{w.label}<p style={{color: 'red'}}>{w.actualDebt}</p>
+
+         </div>
+      
+
+       </li>
+       </ul>
+   </div>
+
+
+
+
                   </React.Fragment>
                 ))}
               </React.Fragment>
@@ -377,7 +348,7 @@ class dashboard extends Component {
               <React.Fragment>
                 {debtors.map((w) => (
                   <React.Fragment>
-                      <tbody >
+                      {/* <tbody >
                        <div style={{ 'height': '105px' }}>
                           <tr key={w.id} style={{'line-height': '25px'}}>          
                             <i class="fas fa-user-circle fa-3x clientAvatar" />
@@ -394,7 +365,48 @@ class dashboard extends Component {
                             </td>
                           </tr>
                         </div>
-                      </tbody>
+                      </tbody> */}
+
+                      <div className="card in-left">
+   
+   <ul className="list-group list-group-flush">
+     
+
+       <li className="list-group-item ">
+
+
+         {/* <div className="photo">
+           <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+         </div> 
+       {name.label}
+       <div class="input-group">
+           <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
+           <div class="input-group-append">
+             <span class="input-group-text">$</span>
+             <span class="input-group-text">0.00</span>
+           </div>
+         </div> */}
+      
+
+      
+         <div class="card-body">
+
+         <div className="photo">
+           <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+         </div> 
+         {w.label}
+         {'owes you'}{' '}<p style={{color: 'green'}}>{w.actualDebt}</p>
+
+         </div>
+      
+
+       </li>
+       </ul>
+   </div>
+
+
+
+
                   </React.Fragment>
                 ))}
               </React.Fragment>
