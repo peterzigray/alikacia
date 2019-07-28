@@ -145,12 +145,26 @@ class friends extends Component {
     newDebtLeft = newDebtLeft.filter(d => Object.keys(d).length !== 0).filter(debt => debt.paidBy === id)
     // FILTER DEBT JUST WHERE ACTUAL ID IS PAYER
   
-
-    console.log('toto je left')
-    console.log(newDebtLeft)
-    console.log('toto je right')
+    console.log('----------po tomto pozeram----------')
+    var debt2 = JSON.parse(JSON.stringify(debt));
+  
+      var hovno = debt2.map((d) => {
+        // const {id} = d.paidBy
+        d.debtTo.forEach(c => c.id === "8opyA98quZTWchrkkOOa3lzksUz1" )
+        // if (id === auth.uid ){
+        //    return d
+        //  }
+      }).filter(a => typeof(a) !== 'undefined')
+        
+      //.filter(obj => obj !== false)
+      console.log(hovno)
 
     function giveMePayer(debt, users, id) {
+
+      
+
+
+
       let result = {}
 
       users.forEach(user => {
@@ -163,6 +177,7 @@ class friends extends Component {
           }
         }
       )
+      console.log(nieco)
         if (debt.paidBy === user.id && debt.paidBy === auth.uid && nieco) {
           Object.assign(result, debt, { payer: 'you', actualDebt: value ? value : debt.balance })
         }
@@ -170,8 +185,11 @@ class friends extends Component {
       )
       return result
     }
-    newDebtRight = newDebtRight.filter(d => Object.keys(d).length !== 0).flat()
+    console.log("-------------------totot----------")
     console.log(newDebtRight)
+    newDebtRight = newDebtRight.filter(d => Object.keys(d).length !== 0).flat()
+   
+    
 
     for (var i in newDebtLeft) {
       newDebtRight.push(newDebtLeft[i])
@@ -179,6 +197,7 @@ class friends extends Component {
     var stateCopy9 = Object.assign({}, this.state);
     stateCopy9.actualUsersDebts = newDebtRight
     this.setState(stateCopy9)
+ 
     console.log(stateCopy9.actualUsersDebts)
   }
 
@@ -194,10 +213,16 @@ class friends extends Component {
 
     // FILTER ALL MY ALREADY PICKED FRIENDS / IF THERE IS NO ONE USER.ID IS SET TO 'NULL' BECAUSE I DONT WANT TO
     // CAUSE CRASH ON FILTER METHOD FORWARD.
-    var myFriends = copyofU.map(user => user.id === auth.uid ? user.friends : [{id: 'null'}]).filter(function (el) {
-      return el != null;
-    }).flat();
+    var myFriends = copyofU.map(user => user.id === auth.uid && user.friends).filter(arr => arr !== false).flat()
 
+    if (typeof(myFriends[0]) !== 'undefined'){
+      console.log('-------myFriends---------')
+      console.log(myFriends)
+    } else {
+      console.log('-------None---------')
+      myFriends = [{label: 'none'}]
+    }
+    
 
     // COPYOFUSERS - MYFRIENDS
     for (var i in copyofU){
@@ -214,7 +239,8 @@ class friends extends Component {
     myFriends = myFriends.filter(function (el) {
       return el.id != 'null';
     })
-
+    console.log('--nonfriends---')
+    console.log(showNonFriends)
     // IN CASE YOU DONT HAVE ANY FRIENDS PUSH ID NULL FOR MESSAGE RENDERING IN RETURN
     if (myFriends.length < 1){
       myFriends.push({ id: 'null' })
@@ -253,136 +279,59 @@ class friends extends Component {
       return Object.assign({}, ...keyValues);
     }
 
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     if (debt && users) {
 
    
-      var newDebtRight = [];
-      var newDebtLeft = [];
-      for (let i = 0; i < debt.length; i++) {
-        newDebtRight.push(giveMePayer(debt[i], users))
-        newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
-      }
-      
-      // ASSIGN PAYER AND ACTUALDEBT TO EXIST DEBT BASED ON WHO I OWE TO 
-      function giveMePayerForOvrview(debt, users) {
-        let result = {}
-        var nieco = false;
-        var value;
-        debt.debtTo.forEach(d => {
-          if (d.id === auth.uid) {
-            nieco = true;
-            value = d.actualDebt
-          }
-        }
-        )
-        users.forEach(user => {
-          if (debt.paidBy === user.id && debt.paidBy !== auth.uid && nieco) {
-            Object.assign(result, debt, { payer: user.firstName + user.lastName, actualDebt: value ? value : debt.balance })
-          }
-        }
-        )
-        return result
-      }
-
-
-      // FILTER OUT EMPTY OBJECTS
-      newDebtLeft = newDebtLeft.filter(d => Object.keys(d).length !== 0)
-     
-
-      var output = [];
-
-      //MERGE ALL OBJECT INTO ONE BESED ON WHO PAYD THE BILL
-      // newDebtLeft.forEach(function (item) {
-      //   var existing = output.filter(function (v) {
-      //     return v.paidBy === item.paidBy;
-      //   });
-      //   if (existing.length) {
-      //     var existingIndex = output.indexOf(existing[0]);
-      //     var actualDebt = parseInt(output[existingIndex].actualDebt) + parseInt(item.actualDebt)
-      //     output[existingIndex].actualDebt = actualDebt
-      //   } else {
-      //     if (typeof item.actualDebt == 'string')
-      //       item.actualDebt = [item.actualDebt];
-      //     output.push(item);
-      //   }
-      // });
-
-      function giveMePayer(debt, users) {
-        let result = []
-        users.forEach(user => {
-       
-          if (debt.paidBy === user.id && debt.paidBy === auth.uid) {
-      
-            result.push(debt)
-          }
-        }
-        )
-        return result.flat()
-      }
-      newDebtRight = newDebtRight.filter(d => Object.keys(d).length !== 0).flat()
-      // newDebtRight.filter(d => Object.keys(d).id !== auth.uid)
-   
-      console.log('ooooooooooooooooo')
-      console.log(newDebtRight)
       return (
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md-4">
             <table className="table table-borderless">
-              <thead className="thead-inverse">
+              <thead className="thead-inverse border-bottom">
                 <tr>
-                  <th>Your friends</th>
+                  <th>Your friends {' '}
+                    <button
+                      // to={`/client/${client.id}`}
+                      onClick={this.addFriends}
+                      className="btn btn-outline-primary btn-sm"
+                    >
+                      <i className="fas fa-plus" />{" "}
+                      List of your friends
+                    </button>
+                  </th>
                   <th />
                 </tr>
-                <button
-                  // to={`/client/${client.id}`}
-                  onClick={this.addFriends}
-                  className="btn btn-outline-primary btn-sm"
-                >
-                  <i className="fas fa-plus" />{" "}
-                  List of your friends
-                    </button>
+                
               </thead>
               <React.Fragment>
                 {myFriends.map((friend) => (
                   <React.Fragment>
-                    {friend.id !== 'null' ?
+                    {friend.id && friend.label !== 'none' ?
                       <tbody>
                         <tr
                          key={friend.id}
-                         >
+                         >       
+                          <td>   
 
-                                           
-                          <td>          
-                            <button
-                              // to={`/client/${client.id}`}
-                              onClick={this.showUserDetail.bind(this, friend.id)}
-                              className="btn btn-outline-primary btn-sm"
-                            > 
-                              {friend.label}
-                         </button>                
+                            <div className="logo">
+                              <div className="photo">
+                                <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+                              </div>
+                              {' '}  <button
+                                // to={`/client/${client.id}`}
+                                onClick={this.showUserDetail.bind(this, friend.id)}
+                                className="btn btn-outline-primary btn-sm"
+                              >
+                                {friend.label}{' '}{friend.lastName}
+                              </button>                
+                            </div>
+
+                            
                           </td>
                         </tr>
                       </tbody>
-                      : <p>You dont have any friends added yet</p>}
+                      : <p>You did't add any friends yet</p>}
                   </React.Fragment>
                 ))}
               </React.Fragment>

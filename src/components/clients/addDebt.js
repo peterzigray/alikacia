@@ -318,7 +318,7 @@ class addDebt extends Component {
       <div>
         <div className="row mb-0 mt-2 m9">
           
-          <div className="col-md-4 pl-4 mr-0 mt-2">
+          <div className="col-md-5 pl-4 mr-0 mt-2">
             <div className="card">
               {/* <div className="card-header">Add an expense</div> */}
               <div className="card-body">
@@ -459,7 +459,7 @@ class addDebt extends Component {
           </div>
          
        
-          <div className="col-md-4">
+          <div className="col-md-5">
        {this.state.debtTo ? this.state.debtTo.map(name => 
        
        <div className="card in-left">

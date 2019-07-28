@@ -10,48 +10,7 @@ import '../../css/Cients.css'
 // import '../../css/LoginCss.css'
 import '../../pics/app.jpg'
 
-//////////////////////////////////RIGHT DEBTORS//////////////////////////////////////////
-/**
- * 
- * @param {array} debt array of objects of debts
- * @param {object} auth object mine authorization
- */
-function listOfUsersWhoOweMe(debt,auth){
-  var result = [];
-  for (var i = 0; i < debt.length; i++) {
-    result.push(giveMePayer(debt[i], auth))
-  }
-  return result
-}
-/**
- * 
- * @param {object} debt one object od debt
- * @param {object} auth object mine authorization
- */
-function giveMePayer(debt, auth){
-  const {id} = debt.paidBy;
-  var result = [];
-  if(id === auth.uid){
-    if(debt.debtTo.length !== 0){
-      debt.debtTo.forEach(d => result.push(d) )
-    }
-  }
-  var finalResult = result.filter((obj) => { return obj.id !== auth.uid}).flat()
-  return finalResult
-}
-//function giveMePayer(a,b){var c=[];a.paidBy.id===b.uid&&0!==a.debtTo.length&&a.debtTo.forEach(function(a){return c.push(a)});return c.filter(function(a){return a.id!==b.uid}).flat()};
-/////////////////////////////////////////////////////////////////////////////////////////
 
-
-//////////////////////////////////LEFT DEBTORS//////////////////////////////////////////
-
-// function listOfUsersIOwe(debt,newDebtRight,auth){
-//   for (var i = 0; i < debt.length; i++) {
-//       newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
-//   }
-//   return newDebtRight
-// }
-/////////////////////////////////////////////////////////////////////////////////////////
 
 class dashboard extends Component {
   state = {
@@ -152,157 +111,26 @@ class dashboard extends Component {
 
   render() {
 
-    const { users, debt, auth } = this.props;
+    const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft} = this.props;
 
     if (debt && users) {
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//******************************ALL ABOUT DEBTORS DISPLAYED ON RIGHT SIDE OF THE SCREEN OF DASHBOARD************************************** */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      // STORE ALL RETURNED DEBTORS WITHOUT ME
-      var newDebtRight = listOfUsersWhoOweMe([...debt], auth);
-
-      // CONCAT ALL ARRAYS OF DEBTORS INTO ONE AND GET RID OF INNER ARRAYS SO RESULT IS --> [{},{},{}]
-      var allDebtorsMerged = [].concat.apply([], [...newDebtRight]);
-      // CREATE DEEP COPY OF DEBTORS ARRAY (NON MUTABLE)     
-      var b = JSON.parse(JSON.stringify(allDebtorsMerged));
-
-      // STORE ALL DUPLICATE RECORDS
-      const duplicated = b.filter((ele, indx) => {
-          return indx !== b.map(p => p['id']).indexOf(ele['id'])
-         }
-      )
-      // STORE IDECKA OF DUPLICATE RECORDS
-      const idecka = duplicated.map(d => d.id)
-      
-      // FOR FIRST RECORDS WHERE ID === DUPLICATED CHANGE ACTUAL DEBT TO SUM OF ALL RECORDS WHERE ID === PARTICULAR DUPLICATED ID
-      for (var j = 0; j < idecka.length; j++) {
-           gimmeSum(b, idecka[j])
-      }
-     
-        function gimmeSum(ar, idecko) {
-          var number = ar.filter(({ id }) => id === idecko).reduce((sum, record) => sum + Number(record.actualDebt), 0)
-          // CHANGE ACTUAL DEBT UNDER ONE NAME    
-           ar.filter(obj => obj.id === idecko ? Object.assign(obj, { actualDebt: number }) : null)
-        }
-        
-      // STORE ALL DEBTORS WHERE DUPLICATED RECORD HAS BEEN FILTERED AND ONLY RECORD WHERE ACTUAL DEBT HAS BEEN STORED AS SUM OFF ALL RECORD REMAIN
-      const debtors = b.filter((pilot, index, array) => {return array.map(a => a['id']).indexOf(pilot['id']) === index})
-        
-      console.log('----debtors of the right side-----') 
-      console.log(debtors)    
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//******************************ALL ABOUT DEBTORS DISPLAYED ON LEFT SIDE OF THE SCREEN OF DASHBOARD************************************** */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     
-     // STORE ALL RETURNED DEBTORS WITHOUT ME
-     var debtLeft = JSON.parse(JSON.stringify(debt));
-
-     var newDebtLeft  = listOfUsersIOwe(debtLeft,auth);
-
-     var allMyDebtsMerged = [].concat.apply([], [...newDebtLeft]);
-     console.log('--newDebtLeft---')
-      console.log(allMyDebtsMerged)
-
-
-
-    function listOfUsersIOwe(debt,auth){
-      var result = [];
-
-  for (var i = 0; i < debt.length; i++) {
-    result.push(giveMePayerForOvrview(debt[i], users))
-  }
-  return result
-}
-
-     
-      // ASSIGN PAYER AND ACTUALDEBT TO EXIST DEBT BASED ON WHO I OWE TO 
-      function giveMePayerForOvrview(debt, users) {
-        const {id} = debt.paidBy;
-        var res = [];
-        debt.debtTo.forEach((d) => {
-   
-              if(d.id === auth.uid && id !== auth.uid){
-                console.log('wwwwwwwwwwwwwresultwwwwwwwwwwwwwwww')
-                // console.log(debt.paidBy)
-                res.push(Object.assign(debt.paidBy,{actualDebt: d.actualDebt}) )
-              }
-          
-            }
-            
-          )
-          console.log(res)
-          return res
-      //   let result = {}
-      //   var haveDebtWithPayer = false;
-      //   var value;
-      // // SEARCH EVERY DEBT AND RETURN MY USER
-      //   debt.debtTo.forEach(d =>{
-      //     if(d.id === auth.uid){
-      //       haveDebtWithPayer = true;
-      //       value = d.actualDebt
-      //     }
-      //   }
-      // )
-      
-      //   users.forEach(user => {
-      //     if (debt.paidBy === user.id && debt.paidBy !== auth.uid && haveDebtWithPayer) {
-      //       Object.assign(result, debt, { payer: user.firstName + " " + user.lastName, actualDebt: value ? value: debt.balance })
-      //     }
-      //   }
-      // )
-    //   console.log('wwwwwwwwwwwwwresultwwwwwwwwwwwwwwww')
-    // console.log(result)
-    //     return result
-    }
-    
-
-      
-    //   // FILTER OUT EMPTY OBJECTS
-    //   newDebtLeft = newDebtLeft.filter(d => Object.keys(d).length !== 0)
-  
-    //   var output = [];
-
-    //   //MERGE ALL OBJECT INTO ONE BESED ON WHO PAYD THE BILL
-    //   newDebtLeft.forEach(function (item) {
-    //     var existing = output.filter(function (v) {
-    //       return v.paidBy === item.paidBy;
-    //     });
-    //     if (existing.length) {
-    //       var existingIndex = output.indexOf(existing[0]);
-    //       var actualDebt = parseInt(output[existingIndex].actualDebt) + parseInt(item.actualDebt)
-    //       output[existingIndex].actualDebt = actualDebt
-    //     } else {
-    //       if (typeof item.actualDebt == 'string')
-    //         item.actualDebt = [item.actualDebt];
-    //       output.push(item);
-    //     }
-    //   });
-    //   console.log('ooooooooooooooooooutputoooooooooooooooooooo')
-    //   console.log(output)
-
-      
-
-
-      newDebtRight = newDebtRight.filter((d) => { return d.id !== auth.uid && Object.keys(d).length !== 0 }).flat()
 
       return (
         <div className="row h-100">
           <div className="col-md-6">
-          <table className="table-borderless">
+            <table className="table-borderless" style={{ width: '100%' }}>
               <thead className="thead-inverse">
-                <tr>
-                  <th>You are owed</th>
+                <tr >
+                  <th className="pb-2">You owed</th>
                   <th />
                 </tr>
               </thead>
               <React.Fragment>
-                {allMyDebtsMerged.map((w) => (
+                {debtorsLeft.map((w) => (
                   <React.Fragment>
            
 
-                      <div className="card in-left">
+                    <div className="card in-left mb-1">
    
    <ul className="list-group list-group-flush">
      
@@ -314,11 +142,11 @@ class dashboard extends Component {
       
          <div class="card-body">
 
-         <div className="photo">
+         <div className="photo mr-2 ">
            <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
          </div> 
          
-         {'You owe '}{' '}{w.label}<p style={{color: 'red'}}>{w.actualDebt}</p>
+         {'You owe '}{' '}{w.label}{' '}<span style={{color: 'red'}}>{w.actualDebt}{' '}</span> EUR
 
          </div>
       
@@ -338,10 +166,10 @@ class dashboard extends Component {
 
 
           <div className="col-md-6">
-            <table className="table-borderless">
+            <table className="table-borderless" style={{width: '100%'}}>
               <thead className="thead-inverse">
                 <tr>
-                  <th>You are owed</th>
+                  <th className="pb-2" >You are owed</th>
                   <th />
                 </tr>
               </thead>
@@ -367,7 +195,7 @@ class dashboard extends Component {
                         </div>
                       </tbody> */}
 
-                      <div className="card in-left">
+                    <div className="card in-left mb-1">
    
    <ul className="list-group list-group-flush">
      
@@ -391,12 +219,12 @@ class dashboard extends Component {
       
          <div class="card-body">
 
-         <div className="photo">
+         <div className="photo mr-2">
            <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
          </div> 
-         {w.label}
-         {'owes you'}{' '}<p style={{color: 'green'}}>{w.actualDebt}</p>
-
+        
+            {w.label}{' '}{'owes you'}{' '}<span style={{ color: 'green' }}>{w.actualDebt}{' '}</span>EUR
+                                              
          </div>
       
 

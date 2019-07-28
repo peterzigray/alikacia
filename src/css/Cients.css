@@ -222,11 +222,29 @@ stroke-width: 3;
     width: 100%;
     align-items: stretch;
 }
+.transition{
+  transition: 0.4s;
+}
 
 .logo {
+   transition: 0.4s;
   position: relative;
   padding: .5rem .7rem;
   z-index: 4;
+}
+.logo:hover{
+  background-color: aquamarine;
+  border-radius: 5%;
+}
+
+.withoutML{
+  margin-right: 0px;
+}
+
+.clicked{
+  background-color: aquamarine;
+  border-radius: 5%; 
+  color: white;
 }
 
 .photo {

@@ -11,7 +11,40 @@ import ClientOverview from './ClientOverview';
 import AddDebt from './addDebt';
 import Dashboard from './Dashboard';
 import Friends from './Friends';
+import CountUp from 'react-countup';
+import { ENGINE_METHOD_NONE } from 'constants';
 
+
+
+//////////////////////////////////RIGHT DEBTORS//////////////////////////////////////////
+/**
+ * 
+ * @param {array} debt array of objects of debts
+ * @param {object} auth object mine authorization
+ */
+function listOfUsersWhoOweMe(debt, auth) {
+  var result = [];
+  for (var i = 0; i < debt.length; i++) {
+    result.push(giveMePayer(debt[i], auth))
+  }
+  return result
+}
+/**
+ * 
+ * @param {object} debt one object od debt
+ * @param {object} auth object mine authorization
+ */
+function giveMePayer(debt, auth) {
+  const { id } = debt.paidBy;
+  var result = [];
+  if (id === auth.uid) {
+    if (debt.debtTo.length !== 0) {
+      debt.debtTo.forEach(d => result.push(d))
+    }
+  }
+  var finalResult = result.filter((obj) => { return obj.id !== auth.uid }).flat()
+  return finalResult
+}
 
 const styles = {
   transition: "all 0.3s ease-out"
@@ -25,6 +58,8 @@ class Clients extends Component {
     navbarOn: true,
 
     isAuthenticated: false,
+    totalOweBalance: '0',
+   
     cards: [
       {
         id: 0,
@@ -74,6 +109,8 @@ class Clients extends Component {
     showSettings: false,
     showAddClient: ''
   };
+
+ 
 
 
   // GET TOTAL BALANCE OWED MONEY AND PAID MONEY
@@ -176,6 +213,7 @@ class Clients extends Component {
 
   onClickButton = id => {
 
+  
     window.scrollTo({
       top: 165,
       behavior: "smooth"
@@ -193,14 +231,16 @@ class Clients extends Component {
     this.setState(stateCopy)
   };
 
+  // updateCounter = () =>{}
+
   render() {
     const { clients , users, debt} = this.props;
     const { totalOwed, cards, showSettings, showAddClient, youAreOwed, youOwed } = this.state;
     const { auth, isAuthenticated } = this.props;
     let settingsAndLogout = "";
 
-    const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block bg-light sidebar' : 'col-lg-1half d-block bg-light sidebar';
-    const mainClassName = this.state.navbarOn ? 'col-9' : 'col-9';
+    const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block bg-light sidebar transition' : 'col-lg-1half d-block bg-light sidebar transition';
+    const mainClassName = this.state.navbarOn ? 'col-9 transition' : 'col-9 transition';
     const iconChange = this.state.navbarOn ? 'fas fa-arrow-circle-left fa-2x' : 'fas fa-arrow-circle-right fa-2x';
 
     
@@ -305,6 +345,143 @@ class Clients extends Component {
 
 
     if (debt && users) {
+      console.log('------------users------------')
+      
+      var allUsers = JSON.parse(JSON.stringify(users));
+      var myName = allUsers.filter(user => {
+        if (user.id === auth.uid ){
+          return user
+        } 
+      })[0]
+      const {firstName , lastName} = myName;
+      console.log(firstName + ' ' + lastName)
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //******************************ALL ABOUT DEBTORS DISPLAYED ON RIGHT SIDE OF THE SCREEN OF DASHBOARD************************************** */
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      // STORE ALL RETURNED DEBTORS WITHOUT ME
+      var newDebtRight = listOfUsersWhoOweMe([...debt], auth);
+
+      // CONCAT ALL ARRAYS OF DEBTORS INTO ONE AND GET RID OF INNER ARRAYS SO RESULT IS --> [{},{},{}]
+      var allDebtorsMerged = [].concat.apply([], [...newDebtRight]);
+      // CREATE DEEP COPY OF DEBTORS ARRAY (NON MUTABLE)     
+      var b = JSON.parse(JSON.stringify(allDebtorsMerged));
+
+      // STORE ALL DUPLICATE RECORDS
+      const duplicated = b.filter((ele, indx) => {
+        return indx !== b.map(p => p['id']).indexOf(ele['id'])
+      }
+      )
+      // STORE IDECKA OF DUPLICATE RECORDS
+      const idecka = duplicated.map(d => d.id)
+
+      // FOR FIRST RECORDS WHERE ID === DUPLICATED CHANGE ACTUAL DEBT TO SUM OF ALL RECORDS WHERE ID === PARTICULAR DUPLICATED ID
+      for (var j = 0; j < idecka.length; j++) {
+        gimmeSum(b, idecka[j])
+      }
+
+      function gimmeSum(ar, idecko) {
+        var number = ar.filter(({ id }) => id === idecko).reduce((sum, record) => sum + Number(record.actualDebt), 0)
+        // CHANGE ACTUAL DEBT UNDER ONE NAME    
+        ar.filter(obj => obj.id === idecko ? Object.assign(obj, { actualDebt: number.toFixed(2) }) : null)
+      }
+
+      // STORE ALL DEBTORS WHERE DUPLICATED RECORD HAS BEEN FILTERED AND ONLY RECORD WHERE ACTUAL DEBT HAS BEEN STORED AS SUM OFF ALL RECORD REMAIN
+      const debtors = b.filter((pilot, index, array) => { return array.map(a => a['id']).indexOf(pilot['id']) === index })
+
+      console.log('----debtors of the right side-----')
+      console.log(debtors)
+
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //******************************ALL ABOUT DEBTORS DISPLAYED ON LEFT SIDE OF THE SCREEN OF DASHBOARD************************************** */
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+      var debtLeft = JSON.parse(JSON.stringify(debt));
+
+      // STORE ALL RETURNED DEBTORS WITHOUT ME
+      var newDebtLeft = listOfUsersIOwe(debtLeft, auth);
+
+      var allMyDebtsMerged = [].concat.apply([], [...newDebtLeft]);
+      // console.log('--newDebtLeft---')
+      // console.log(allMyDebtsMerged)
+
+
+
+      function listOfUsersIOwe(debt, auth) {
+        var result = [];
+        for (var i = 0; i < debt.length; i++) {
+          result.push(giveMePayerForOvrview(debt[i], users))
+        }
+        return result
+      }
+
+
+      // ASSIGN PAYER AND ACTUALDEBT TO EXIST DEBT BASED ON WHO I OWE TO 
+      function giveMePayerForOvrview(debt, users) {
+        const { id } = debt.paidBy;
+        var res = [];
+        debt.debtTo.forEach((d) => {
+
+          if (d.id === auth.uid && id !== auth.uid) {
+            console.log('wwwwwwwwwwwwwresultwwwwwwwwwwwwwwww')
+            // console.log(debt.paidBy)
+            res.push(Object.assign(debt.paidBy, { actualDebt: d.actualDebt }))
+          }
+
+        }
+
+        )
+        console.log(res)
+        return res
+
+      }
+      var allDebtsLeftSide = JSON.parse(JSON.stringify(allMyDebtsMerged));
+
+      getAllDebtors(allDebtsLeftSide)
+
+      function getAllDebtors(allDebtsLeftSide) {
+      }
+      // STORE ALL DUPLICATE RECORDS
+      const duplicatedLeft = allDebtsLeftSide.filter((ele, indx) => {
+        return indx !== allDebtsLeftSide.map(p => p['id']).indexOf(ele['id'])
+      }
+      )
+      // STORE IDECKA OF DUPLICATE RECORDS
+      const ide = duplicatedLeft.map(d => d.id)
+
+      // FOR FIRST RECORDS WHERE ID === DUPLICATED CHANGE ACTUAL DEBT TO SUM OF ALL RECORDS WHERE ID === PARTICULAR DUPLICATED ID
+      for (var j = 0; j < ide.length; j++) {
+        gimmeSum2(allDebtsLeftSide, ide[j])
+      }
+
+
+      function gimmeSum2(ar, idecko) {
+        var number = ar.filter(({ id }) => id === idecko).reduce((sum, record) => sum + Number(record.actualDebt), 0)
+        // CHANGE ACTUAL DEBT UNDER ONE NAME    
+        ar.filter(obj => obj.id === idecko ? Object.assign(obj, { actualDebt: number.toFixed(2) }) : null)
+      }
+
+      // STORE ALL DEBTORS WHERE DUPLICATED RECORD HAS BEEN FILTERED AND ONLY RECORD WHERE ACTUAL DEBT HAS BEEN STORED AS SUM OFF ALL RECORD REMAIN
+      const debtorsLeft = allDebtsLeftSide.filter((pilot, index, array) => { return array.map(a => a['id']).indexOf(pilot['id']) === index })
+
+
+
+      console.log('--------my id--------')
+      console.log(auth.uid)
+
+      // TOTAL BALANCE YOU OWE
+      var listOfUsersForBalance = JSON.parse(JSON.stringify(debtorsLeft));
+      var totalOwedBalance = listOfUsersForBalance.filter(({ actualDebt }) => actualDebt).reduce((sum, record) => sum + Number(record.actualDebt), 0)
+    
+
+      // TOTAL BALANCE THEY OWED
+      var listOfUsersForBalance2 = JSON.parse(JSON.stringify(debtors));
+      var totalPaidBalance = listOfUsersForBalance2.filter(({ actualDebt }) => actualDebt).reduce((sum, record) => sum + Number(record.actualDebt), 0)
+
+      // TOTAL BALANCE
+      var totalBalanceForMe = totalPaidBalance - totalOwedBalance;
+      
       return (
         <React.Fragment>
 
@@ -396,7 +573,7 @@ class Clients extends Component {
               
               <nav className={navbarClassName} style={{height: '100rem'}}>
                
-                <div className="sidebar-sticky" style={{'padding-top': '4rem'}}>
+                <div className="sidebar-sticky pl-0 pr-0" style={{'padding-top': '4rem'}}>
 
 
                   
@@ -407,21 +584,21 @@ class Clients extends Component {
                   <div className="photo">
                     <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
                   </div>
-                  {auth.email}  
+                    {' '}  {firstName + ' ' + lastName}  
                   </div>
 
-                  <div className="logo" onClick={this.onClickButton.bind(this, 0)}>            
-                    <i class="fas fa-home fa-lg"></i> Dashboard               
+                    <div className="logo pt-3 pb-3 pl-4 " onClick={this.onClickButton.bind(this, 0)}>            
+                      <i class="fas fa-home fa-lg"></i>{' '}{' '}<span>Dashboard</span>               
                   </div>
 
-                  <div className="logo" onClick={this.onClickButton.bind(this, 2)}>              
-                    <i class="fas fa-history fa-lg"></i> History                
+                    <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 2)}>              
+                      <i class="fas fa-history fa-lg"></i>{' '}{' '} History                
                   </div>
-                  <div className="logo" onClick={this.onClickButton.bind(this, 3)}>              
-                    <i class="fas fa-user-friends fa-lg"></i> Friends              
+                    <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 3)}>              
+                      <i class="fas fa-user-friends fa-lg"></i>{' '}{' '} Friends              
                   </div>
-                  <div className="logo" onClick={this.onClickButton.bind(this, 1)}>              
-                    <i class="fas fa-plus fa-lg"></i> Add bills                
+                    <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 1)}>              
+                      <i class="fas fa-plus fa-lg"></i>{' '}{' '} Add bills                
                   </div>
 
                       {/* <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
@@ -446,12 +623,12 @@ class Clients extends Component {
                  <React.Fragment>
                   
                   
-                  <div className="photo">
+                    <div className="photo ml-3 ">
                     <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
                   </div> 
               
 
-                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-3">
+                    <ul class="nav flex-column mt-2 mb-3 mt-1 pl-2 ml-3">
                         <li class="nav-item mt-3">
                             <i class="fas fa-home fa-lg"></i>
                         </li>
@@ -460,7 +637,7 @@ class Clients extends Component {
                         </li>
                       </ul>
 
-                      <ul class="nav flex-column mt-2 mb-3 mt-1 pl-3">
+                    <ul class="nav flex-column mt-2 mb-3 mt-1 pl-2 ml-3">
                         <li class="nav-item mt-3">           
                             <i class="fas fa-user-friends fa-lg"></i> 
                         </li>
@@ -488,41 +665,72 @@ class Clients extends Component {
 
               </nav>
 
-              <main role="main" className={mainClassName}>
+        <main role="main" className={mainClassName}>
         
-          <div className="row border-bottom mb-2 mt-2" style={{ 'height': '15rem' }}>
+          <div className="row mb-2 mt-2" style={{ 'height': '15rem' }}>
+
             <div className="col p-5">
-              <div className="mx-auto border-left pl-2" style={{width: '50%'}}>             
+              <div className="mx-auto border-left pl-2" style={{width: '100%'}}>             
               <h6 style={{ color:'grey'}}>Total Balance</h6>
-                {}
-                <h2 style={{ color: 'red' }}>
-                {'$'} 440
-                </h2>
+                    {totalBalanceForMe >= 0 ? <h2 style={{ color: 'rgb(0, 105, 217)' }}>
+                      {'€'} <CountUp decimals={2} end={totalBalanceForMe} />
+                    </h2> : 
+                    <h2 style={{ color: 'red' }}>
+                        {'€'} <CountUp  decimals={2} duration={3.75} end={totalBalanceForMe}/> 
+                    </h2>}
+                
                 <p>View statement ></p>
               </div>
             </div> 
+
             <div className="col p-5">
-              <div className="mx-auto border-left pl-2" style={{ width: '50%' }}>   
+              <div className="mx-auto border-left pl-2" style={{ width: '100%' }}>   
                 <h6 style={{ color: 'grey' }}>You owe</h6>
-                {}
-                <h2 style={{ color: 'Black' }}>
-                  {'$'} 440
-                </h2>
+                    
+                      <h2 className="withoutML" style={{ color: 'red', width: '70%' }}>
+                      {'€'}{' '}
+                        <CountUp
+                          decimals={2}
+                          end={totalOwedBalance}
+                          duration={3.75}
+                        />
+                    
+                      </h2>
+                    
+                    
                 <p>View statement ></p>
               </div>
             </div> 
+
             <div className="col p-5">
-              <div className="mx-auto border-left pl-2" style={{ width: '50%' }}>   
+              <div className="mx-auto border-left pl-2" style={{ width: '100%' }}>   
                 <h6 style={{ color: 'grey' }}>You are owed</h6>
                 {}
                 <h2 style={{ color: 'green' }}>
-                  {'$'} 440
+                      {'€'} <CountUp decimals={2} duration={3.75} end={totalPaidBalance} /> 
                 </h2>
                 <p>View statement ></p>
               </div>
             </div> 
+            
   </div>
 
+              <div className="row border-bottom mb-2 mt-2" >
+                <div className="border-bottom border-primary">
+                  {showAddClient === 0 || !showAddClient ? (
+                    <h5> Dashboard </h5>
+                  ) : null}
+                  {showAddClient === 1 ? (
+                    <h5> Add Debt </h5>
+                  ) : null}
+                  {showAddClient === 2 ? (
+                    <h5> History </h5>
+                  ) : null}
+                  {showAddClient === 3 ? (
+                    <h5> Friends </h5>
+                  ) : null}
+                </div>
+              </div>
             
   {/* <div className="row mt-4 border-bottom" style={{ 'height': '10rem' }}>
               {cards.map(card => (
@@ -586,7 +794,7 @@ class Clients extends Component {
             
         
 
-          <div className="row mt-4" style={{height: 'auto'}}>
+          <div className="row pt-4 mt-4" style={{height: 'auto'}}>
         
        
             <div className="col">
@@ -594,25 +802,15 @@ class Clients extends Component {
                 className="card text-white bg-info mb-2 iconsoverlap"
                 style={{ width: "110px", height: "60px" }}
               > */}
-                <div className="d-flex ">
-                  {/* <i className="fas fa-bookmark" /> {' '} */}
-                  {showAddClient === 0 || !showAddClient ? (
-                    <h5> Dashboard </h5>
-                  ) : null}
-                  {showAddClient === 1 ? (
-                    <h5> Add Debt </h5>
-                  ) : null}
-                  {showAddClient === 2 ? (
-                    <h5> History </h5>
-                  ) : null}
-                  {showAddClient === 3 ? (
-                    <h5> Friends </h5>
-                  ) : null}
-                </div>
+            
               {/* s */}
               {/* <ClientOverview/> */}
               <div className="clientTable">
-                {showAddClient === 0 || !showAddClient ? <Dashboard/> : null}
+                    {showAddClient === 0 || !showAddClient ? 
+                    <Dashboard
+                     debtors={debtors}
+                     debtorsLeft={debtorsLeft}
+                     /> : null}
                 {showAddClient === 1 ? <AddDebt /> : null}
 
                 {showAddClient === 2  ? <ClientOverview
