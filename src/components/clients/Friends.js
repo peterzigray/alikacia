@@ -29,7 +29,12 @@ class friends extends Component {
     friendsList: '',
     actualUsersDebts: [{id: 'null'}],
 
-    detailRecordOfFriend: [{ id: 'null', paidBy: {id: 1, label: 'none'}, status: {color: 'none', state: 'none'} }],
+    detailRecordOfFriend: [{ id: 'null', 
+                             paidBy: {id: 1, label: 'none'}, 
+                             status: {color: 'none', state: 'none'},
+                             debt:['none'],
+                             debtor:['none']
+                             }],
     showClickedRecord: false,
     recordId:'',
     allRecordForRow: ''
@@ -129,10 +134,22 @@ class friends extends Component {
     var detailRecordOfFriend = debt2.map(function(d){
       const{id}= d.paidBy
       var res = d.debtTo.map(function(c){
-          if (c.id === idecko && id === auth.uid || c.id === auth.uid && id === idecko){
-            console.log(d)
-            return d
+          if (c.id === idecko && id === auth.uid){
+            return Object.assign(d, 
+              {debt: d.debtTo.map(n => n.id === idecko? n.actualDebt: null).filter(a => a !== null),
+                debtor: d.debtTo.map(n => n.id === idecko ? n.id : null).filter(a => a !== null)
+              })
+         
+            
           }  
+        if (c.id === auth.uid && id === idecko){
+          return Object.assign(d, 
+            {
+              debt: d.debtTo.map(n => n.id === auth.uid ? n.actualDebt : null).filter(a => a !== null),
+            debtor: d.debtTo.map(n => n.id === auth.uid ? n.id : null).filter(a => a !== null)
+           })
+          
+        }
         }
       ).filter(a => a)
         return res
@@ -313,9 +330,9 @@ class friends extends Component {
                           //onClick={this.onRecordClick}
                           >
                             <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
-                              <td className='col-md-2' >
+                              <td className='col-md-3' >
                                 <span><i className="fas fa-circle fa-xs"  style={{ color: Object.values(w.status).map(a => a)[0]}}></i></span>
-                                   {' '}     {Object.values(w.status).map(a => a)[1]}
+                                   {' '}{' '}{Object.values(w.status).map(a => a)[1]}
                                <span >
                                  
 
@@ -323,10 +340,25 @@ class friends extends Component {
                                   
                                </span>
                               </td>
-                              <td className='col-md-2' >15 Jun</td>
-                              <td className='col-md-2' >{w.description}</td>
-                              <td className='col-md-3' >{Object.values(w.paidBy).map(a => a)[1]}{' '}{'EUR'}{' '}{w.balance}</td>
-                              <td className='col-md-1' ><i style={{color: 'green'}}className="fas fa-long-arrow-alt-up fa-lg"></i></td>
+                              <td className='col-md-2 pl-0 pr-0' >15 Jun</td>
+                              <td className='col-md-3 pl-0 pr-0' >{w.description}</td>
+                              <td className='col-md-2 pl-0 pr-0' >
+                              {/* {Object.values(w.paidBy).map(a => a)[1]} */}
+
+                                
+                                <span 
+                                  className="float-right"
+                                  style={{ color: w.debtor[0] === auth.uid ? 'red' : 'green' }}>
+                                  {w.debt[0]}{' '}{'€'}
+                                </span>
+                              </td>
+                              <td className='col-md-1 pl-0 pr-0' >
+                                <i style={{color: w.debtor[0] === auth.uid?'red':'green'}}
+                                  className= { w.debtor[0] === auth.uid ?
+                                "fas fa-long-arrow-alt-down fa-lg float-right"
+                                    :"fas fa-long-arrow-alt-up fa-lg float-right"
+                                  }
+                              ></i></td>
                             </th>
                           </div>
                         </tr>
