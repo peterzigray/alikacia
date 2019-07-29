@@ -34,7 +34,8 @@ class addDebt extends Component {
     multi: true,
     listOfUsers:'',
     usersWithoutMe:'',
-
+    status: { state:'Pending', color:'#F8BC35' },
+  
     isPayerChoosen: false,
     isDebterChoosen: false,
     isBalanceChoosen: false,
@@ -43,7 +44,8 @@ class addDebt extends Component {
     labelField: 'label',
 
 
-    date: new Date()
+    date: new Date(),
+    newDate: ''
   };
   
 
@@ -158,10 +160,11 @@ class addDebt extends Component {
     const newDebt = {
       ...state,
       balance: state.balance === "" ? "0" : state.balance,
-      date: state.date === null ? new Date() : state.date
+      date: state.newDate === '' ? this.state.date.toString() : state.newDate
     };
 
-    const { selectedOption, multi, usersWithoutMe, listOfUsers,isPayerChoosen,isDebterChoosen,isBalanceChoosen,valueField,labelField, ...rest } = newDebt
+
+    const { selectedOption, multi, usersWithoutMe, listOfUsers,isPayerChoosen,isDebterChoosen,isBalanceChoosen,valueField,labelField,newDate, ...rest } = newDebt
     const nieco = {
       balance: '',
       date: '',
@@ -182,8 +185,10 @@ class addDebt extends Component {
   onDate(date, e) {
     console.log('________________________date message')
     console.log(date)
+    console.log( typeof date.toString())
+    console.log( this.state.date.toString())
     this.setState({
-      date: date
+      newDate: date.toString()
     });
   }
 

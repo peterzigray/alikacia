@@ -29,7 +29,7 @@ class friends extends Component {
     friendsList: '',
     actualUsersDebts: [{id: 'null'}],
 
-    detailRecordOfFriend: [{ id: 'null' }],
+    detailRecordOfFriend: [{ id: 'null', paidBy: {id: 1, label: 'none'}, status: {color: 'none', state: 'none'} }],
     showClickedRecord: false,
     recordId:'',
     allRecordForRow: ''
@@ -97,6 +97,7 @@ class friends extends Component {
   }
 
   onRecordClick = (id) => {
+    
     const { showClickedRecord } = this.state;
     const { users, debt, auth } = this.props;
 
@@ -106,6 +107,9 @@ class friends extends Component {
     console.log('meno meno meno')
     console.log(wholeClickedRecord)
     this.setState({ allRecordForRow: wholeClickedRecord})
+
+    console.log('---------id clicked----------')
+    console.log(id)
   }
 
 
@@ -125,7 +129,8 @@ class friends extends Component {
     var detailRecordOfFriend = debt2.map(function(d){
       const{id}= d.paidBy
       var res = d.debtTo.map(function(c){
-          if (c.id === idecko && id === auth.uid){
+          if (c.id === idecko && id === auth.uid || c.id === auth.uid && id === idecko){
+            console.log(d)
             return d
           }  
         }
@@ -135,6 +140,7 @@ class friends extends Component {
     ).flat()
   
     console.log(detailRecordOfFriend)
+  
 
     this.setState({ detailRecordOfFriend: detailRecordOfFriend})
    
@@ -229,14 +235,14 @@ class friends extends Component {
             <table className="table table-borderless">
               <thead className="thead-inverse border-bottom">
                 <tr>
-                  <th>Your friends {' '}
+                  <th>
                     <button
                       // to={`/client/${client.id}`}
                       onClick={this.addFriends}
-                      className="btn btn-outline-primary btn-sm"
+                      className="btn btn-outline-primary btn-xs"
                     >
-                      <i className="fas fa-plus" />{" "}
-                      List of your friends
+                      <i className="fas fa-plus fa-xs" />{' '} Your friends 
+                      
                     </button>
                   </th>
                   <th />
@@ -276,17 +282,17 @@ class friends extends Component {
               </React.Fragment>
             </table>
           </div>
-            <div className="col-md-8">
+            <div className="col-md-8 pt-4">
 
 
-            <table className="table table-borderless">
+            <table className="table table-borderless mt-5">
               <thead className="thead-inverse border-bottom">
-                <tr>
+                {/* <tr>
                   <th>Records of your debt with Friends
                     
                   </th>
                   <th />
-                </tr>
+                </tr> */}
 
               </thead>
               <React.Fragment>
@@ -298,32 +304,41 @@ class friends extends Component {
                       <tbody className='pointer'>
 
                         <tr
-                          // key={a.id}
+                          key={w.id}
                           // className={(this.state.showLine && this.state.idecko === a.id ? "strikeout" : null)}
                           // onClick={this.onClickHandler.bind(this, a.id)}
+                          onClick={this.onRecordClick.bind(this, w.id)}
                         >
-                          <div class="card style_prevu_kit" >
+                          <div class="card style_prevu_kit ml-0 mt-3" 
+                          //onClick={this.onRecordClick}
+                          >
                             <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
-                              <td className='col-md-4' style={{ width: '95%' }}>
-                                <span><i className="fas fa-circle fa-xs" style={{ color: 'green' }}></i></span>
+                              <td className='col-md-2' >
+                                <span><i className="fas fa-circle fa-xs"  style={{ color: Object.values(w.status).map(a => a)[0]}}></i></span>
+                                   {' '}     {Object.values(w.status).map(a => a)[1]}
+                               <span >
+                                 
 
-                              <span >
-                                  {Object.keys(w.paidBy).map(k => k)}
+                                 {/* {Object.values(w.paidBy).map(a => a)[1]} */}
                                   
                                </span>
                               </td>
-                              <td className='col-md-4' style={{ width: '95%' }}>payer</td>
-                              <td className='col-md-4' style={{ width: '95%' }}>{w.description}</td>
+                              <td className='col-md-2' >15 Jun</td>
+                              <td className='col-md-2' >{w.description}</td>
+                              <td className='col-md-3' >{Object.values(w.paidBy).map(a => a)[1]}{' '}{'EUR'}{' '}{w.balance}</td>
+                              <td className='col-md-1' ><i style={{color: 'green'}}className="fas fa-long-arrow-alt-up fa-lg"></i></td>
                             </th>
                           </div>
                         </tr>
                         {this.state.showClickedRecord && this.state.recordId === w.id ?
 
-                          <div>{this.state.allRecordForRow.map(record => (
+                          <div>
+                          
+                          {this.state.allRecordForRow.map(record => (
 
 
 
-                            <div className="card text-center">
+                            <div className="card text-center ml-0 mt-2" style={{'max-width': '90%'}}>
                               {/* <div class="card-header">
                                 Featured
                                     </div> */}
@@ -336,7 +351,7 @@ class friends extends Component {
                                 <div className="col-6">
                                   <i class="fas fa-user-circle fa-3x clientAvatar" />
                                   <h5 className="card-title">Peter Zigray</h5>
-                                  <p>{record.balance} {record.date} {record.paidBy}</p>
+                                  <p>{record.date} </p>
                                   <p style={{ color: 'red' }}>${record.balance}</p>
                                 </div>
                               </div>
@@ -351,6 +366,8 @@ class friends extends Component {
 
 
                           )}
+
+
 
 
                           </div>
