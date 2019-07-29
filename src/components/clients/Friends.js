@@ -29,6 +29,7 @@ class friends extends Component {
     friendsList: '',
     actualUsersDebts: [{id: 'null'}],
 
+    detailRecordOfFriend: [{ id: 'null' }],
     showClickedRecord: false,
     recordId:'',
     allRecordForRow: ''
@@ -108,97 +109,35 @@ class friends extends Component {
   }
 
 
-  showUserDetail = (id) => {
+  showUserDetail = (idecko) => {
     const { users, debt, auth } = this.props;
-    console.log('checking current')
-    console.log(id)
-    var newDebtLeft = [];
-    var newDebtRight = [];
-    for (var i in debt) {
-      newDebtRight.push(giveMePayer(debt[i], users, id))
-      newDebtLeft.push(giveMePayerForOvrview(debt[i], users))
-    }
-   
-    // RETURN DEBT WHERE I AM THE OWER
-    function giveMePayerForOvrview(debt, users) {
-      let result = {}
-      var nieco = false;
-      var value;
-      debt.debtTo.forEach(d => {
-        if (d.id === auth.uid) {
-          nieco = true;
-          value = d.actualDebt
-        }
-      }
-      )
-      users.forEach(user => {
-        if (debt.paidBy === user.id && debt.paidBy !== auth.uid && nieco) {
-          Object.assign(result, debt, { payer: user.firstName + user.lastName, actualDebt: value ? value : debt.balance })
-        }
-      }
-      )
-      return result
-    }
 
 
-    // FILTER OUT EMPTY OBJECTS
-    newDebtLeft = newDebtLeft.filter(d => Object.keys(d).length !== 0).filter(debt => debt.paidBy === id)
-    // FILTER DEBT JUST WHERE ACTUAL ID IS PAYER
+
+
+    // // FILTER OUT EMPTY OBJECTS
+    // newDebtLeft = newDebtLeft.filter(d => Object.keys(d).length !== 0).filter(debt => debt.paidBy === id)
+    // // FILTER DEBT JUST WHERE ACTUAL ID IS PAYER
   
     console.log('----------po tomto pozeram----------')
     var debt2 = JSON.parse(JSON.stringify(debt));
   
-      var hovno = debt2.map((d) => {
-        // const {id} = d.paidBy
-        d.debtTo.forEach(c => c.id === "8opyA98quZTWchrkkOOa3lzksUz1" )
-        // if (id === auth.uid ){
-        //    return d
-        //  }
-      }).filter(a => typeof(a) !== 'undefined')
-        
-      //.filter(obj => obj !== false)
-      console.log(hovno)
-
-    function giveMePayer(debt, users, id) {
-
-      
-
-
-
-      let result = {}
-
-      users.forEach(user => {
-        var nieco = false;
-        var value;
-        debt.debtTo.forEach(d => {
-          if (d.id === id) {
-            nieco = true;
-            value = d.actualDebt
-          }
+    var detailRecordOfFriend = debt2.map(function(d){
+      const{id}= d.paidBy
+      var res = d.debtTo.map(function(c){
+          if (c.id === idecko && id === auth.uid){
+            return d
+          }  
         }
-      )
-      console.log(nieco)
-        if (debt.paidBy === user.id && debt.paidBy === auth.uid && nieco) {
-          Object.assign(result, debt, { payer: 'you', actualDebt: value ? value : debt.balance })
-        }
+      ).filter(a => a)
+        return res
       }
-      )
-      return result
-    }
-    console.log("-------------------totot----------")
-    console.log(newDebtRight)
-    newDebtRight = newDebtRight.filter(d => Object.keys(d).length !== 0).flat()
-   
-    
+    ).flat()
+  
+    console.log(detailRecordOfFriend)
 
-    for (var i in newDebtLeft) {
-      newDebtRight.push(newDebtLeft[i])
-    }
-    var stateCopy9 = Object.assign({}, this.state);
-    stateCopy9.actualUsersDebts = newDebtRight
-    this.setState(stateCopy9)
- 
-    console.log(stateCopy9.actualUsersDebts)
+    this.setState({ detailRecordOfFriend: detailRecordOfFriend})
+   
   }
 
  
@@ -338,39 +277,52 @@ class friends extends Component {
             </table>
           </div>
             <div className="col-md-8">
-            <table className="table table-hover">
-              <thead className="thead-light">
+
+
+            <table className="table table-borderless">
+              <thead className="thead-inverse border-bottom">
                 <tr>
-                  <th>You are owed</th>
+                  <th>Records of your debt with Friends
+                    
+                  </th>
                   <th />
                 </tr>
+
               </thead>
               <React.Fragment>
-                {this.state.actualUsersDebts.map((w) => (
+                {this.state.detailRecordOfFriend.map((w, index) => (
+                  
                   <React.Fragment>
-                    {this.state.actualUsersDebts[0].id !== 'null'?
+                    
+                    {this.state.detailRecordOfFriend[0] !== 'null' ?
                       <tbody className='pointer'>
-                        <tr 
-                        key={w.id}
-                          onClick={this.onRecordClick.bind(this, w.id)}
-                        >
-                          <td>
-                            {w.date}  {w.description}<span>{w.payer}</span><span>paid</span>$ {w.balance}<span>and lent</span>{w.actualDebt}
-                            {w.id}
-                          </td>
-                          
 
-{/* 
-                          <td>{w.label}{''}{w.lastName}{''}{'owes you'}{w.actualDebt}</td> */}
-                          <td>
-                          </td>
+                        <tr
+                          // key={a.id}
+                          // className={(this.state.showLine && this.state.idecko === a.id ? "strikeout" : null)}
+                          // onClick={this.onClickHandler.bind(this, a.id)}
+                        >
+                          <div class="card style_prevu_kit" >
+                            <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
+                              <td className='col-md-4' style={{ width: '95%' }}>
+                                <span><i className="fas fa-circle fa-xs" style={{ color: 'green' }}></i></span>
+
+                              <span >
+                                  {Object.keys(w.paidBy).map(k => k)}
+                                  
+                               </span>
+                              </td>
+                              <td className='col-md-4' style={{ width: '95%' }}>payer</td>
+                              <td className='col-md-4' style={{ width: '95%' }}>{w.description}</td>
+                            </th>
+                          </div>
                         </tr>
                         {this.state.showClickedRecord && this.state.recordId === w.id ?
 
                           <div>{this.state.allRecordForRow.map(record => (
-                            
-                            
-                          
+
+
+
                             <div className="card text-center">
                               {/* <div class="card-header">
                                 Featured
@@ -378,8 +330,8 @@ class friends extends Component {
                               <div className="card-body">
                                 <div className="col-6">
 
-                                
-                       
+
+
                                 </div>
                                 <div className="col-6">
                                   <i class="fas fa-user-circle fa-3x clientAvatar" />
@@ -392,59 +344,29 @@ class friends extends Component {
                                 2 days ago
                                     </div>
 
-
-
-
-
-
-                                    
                             </div>
-                            
 
 
-
-                            
-
-
-
-
-
-                            
-                           )
+                          )
 
 
                           )}
 
 
+                          </div>
 
 
 
-                            
+                          : null}
+                      </tbody> : <p> pick one of the friends </p>
+                    }
 
-
-
-
-
-
-
-
-
-
-
-
-                             </div>
-                       
-                       
-                       
-                       : null}
-                      </tbody>  : <p> pick one of the friends </p> 
-                  }
-                 
                   </React.Fragment>
-                
+
                 ))}
               </React.Fragment>
             </table>
+
           </div>
 
           <div className="col-md-3">
