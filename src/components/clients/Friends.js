@@ -33,7 +33,8 @@ class friends extends Component {
                              paidBy: {id: 1, label: 'none'}, 
                              status: {color: 'none', state: 'none'},
                              debt:['none'],
-                             debtor:['none']
+                             debtor:['none'],
+                             date:'nonenonenonenoneone'
                              }],
     showClickedRecord: false,
     recordId:'',
@@ -128,9 +129,15 @@ class friends extends Component {
     // newDebtLeft = newDebtLeft.filter(d => Object.keys(d).length !== 0).filter(debt => debt.paidBy === id)
     // // FILTER DEBT JUST WHERE ACTUAL ID IS PAYER
   
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////DETAIL OF DEBT OF CLICKED USER////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // COPY OF DEBT
     console.log('----------po tomto pozeram----------')
     var debt2 = JSON.parse(JSON.stringify(debt));
   
+    // RETURN ALL DEBTS WHERE I AM PAYER OR DEBTOR TO CLICKED FRIEND OR CLICKED FRIEND IS PAYER OR DEBTOR WITH ME
     var detailRecordOfFriend = debt2.map(function(d){
       const{id}= d.paidBy
       var res = d.debtTo.map(function(c){
@@ -162,7 +169,7 @@ class friends extends Component {
     this.setState({ detailRecordOfFriend: detailRecordOfFriend})
    
   }
-
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
 
   render() {
@@ -248,19 +255,23 @@ class friends extends Component {
    
       return (
         <div className="row">
-          <div className="col-md-4">
-            <table className="table table-borderless">
+          <div className="col-md-3">
+            <table className="table table-borderless" style={{'background-color': 'white'}}>
               <thead className="thead-inverse border-bottom">
                 <tr>
                   <th>
-                    <button
+                    {/* <button
                       // to={`/client/${client.id}`}
                       onClick={this.addFriends}
-                      className="btn btn-outline-primary btn-xs"
+                      className="btn btn-success btn-icon-split"
                     >
-                      <i className="fas fa-plus fa-xs" />{' '} Your friends 
-                      
-                    </button>
+                      <span className="icon text-white-50">
+                        <i className="fas fa-plus " />{' '}
+                      </span>
+                        <span className="text">
+                          Your friends
+                        </span>
+                    </button> */}
                   </th>
                   <th />
                 </tr>
@@ -299,10 +310,10 @@ class friends extends Component {
               </React.Fragment>
             </table>
           </div>
-            <div className="col-md-8 pt-4">
+            <div className="col-md-8">
 
 
-            <table className="table table-borderless mt-5">
+            <table className="table table-borderless ">
               <thead className="thead-inverse border-bottom">
                 {/* <tr>
                   <th>Records of your debt with Friends
@@ -313,12 +324,48 @@ class friends extends Component {
 
               </thead>
               <React.Fragment>
+              <tr>
+                 <div class="card style_prevu_kit2 ml-0 mt-1" >
+
+                      <th className="row" style={{ padding: '0px 0px 0px 22px' }} >     
+                              <td className='col-md-3' >
+                               <span >
+                               Stutus
+                               </span>
+                              </td>
+                              <td className='col-md-2 pl-0 pr-0 ' >Date</td>
+                              <td className='col-md-3 pl-0 pr-0 ' >
+                              Description
+                              </td>
+                              <td className='col-md-2 pl-0 pr-0 ' >
+                              {/* {Object.values(w.paidBy).map(a => a)[1]} */}
+
+                                
+                                <span 
+                                  className="float-right"
+                                  >
+                                  Balance
+                                </span>
+                              </td>
+                              <td className='col-md-1 pl-0 pr-0' >
+                                <i style={{color:'red'}}
+                                  
+                              ></i></td>
+                         </th>
+
+                        </div>
+
+                        </tr>
+
                 {this.state.detailRecordOfFriend.map((w, index) => (
                   
                   <React.Fragment>
+
+
                     
                     {this.state.detailRecordOfFriend[0] !== 'null' ?
                       <tbody className='pointer'>
+                       
 
                         <tr
                           key={w.id}
@@ -326,7 +373,7 @@ class friends extends Component {
                           // onClick={this.onClickHandler.bind(this, a.id)}
                           onClick={this.onRecordClick.bind(this, w.id)}
                         >
-                          <div class="card style_prevu_kit ml-0 mt-3" 
+                          <div class="card style_prevu_kit ml-0 mt-1" 
                           //onClick={this.onRecordClick}
                           >
                             <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
@@ -340,9 +387,11 @@ class friends extends Component {
                                   
                                </span>
                               </td>
-                              <td className='col-md-2 pl-0 pr-0' >15 Jun</td>
-                              <td className='col-md-3 pl-0 pr-0' >{w.description}</td>
-                              <td className='col-md-2 pl-0 pr-0' >
+                              <td className='col-md-2 pl-0 pr-0 ' >{w.date.substring(4, 10)}</td>
+                              <td className='col-md-3 pl-0 pr-0 ' >
+                              <p className="mx-auto">{w.description}</p>
+                              </td>
+                              <td className='col-md-2 pl-0 pr-0 ' >
                               {/* {Object.values(w.paidBy).map(a => a)[1]} */}
 
                                 
