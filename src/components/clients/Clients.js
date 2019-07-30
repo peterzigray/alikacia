@@ -667,7 +667,7 @@ class Clients extends Component {
 
         <main role="main" className={mainClassName}>
         
-          <div className="row mb-2 mt-2" style={{ 'height': '15rem' }}>
+          <div className="row mb-2 mt-2 mr-2 ml-2" style={{ 'height': '13rem','background-color':'white' }}>
 
             <div className="col p-5">
               <div className="mx-auto border-left pl-2" style={{width: '100%'}}>             
@@ -715,7 +715,7 @@ class Clients extends Component {
             
   </div>
 
-              <div className="row border-bottom mb-2 mt-2" >
+              <div className="row border-bottom mb-2 mt-3 ml-2 mr-2" >
                 <div className="border-bottom border-primary">
                   {showAddClient === 0 || !showAddClient ? (
                     <h5> Dashboard </h5>

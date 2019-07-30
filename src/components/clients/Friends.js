@@ -256,64 +256,89 @@ class friends extends Component {
       return (
         <div className="row">
           <div className="col-md-3">
-            <table className="table table-borderless" style={{'background-color': 'white'}}>
-              <thead className="thead-inverse border-bottom">
-                <tr>
-                  <th>
-                    {/* <button
-                      // to={`/client/${client.id}`}
-                      onClick={this.addFriends}
-                      className="btn btn-success btn-icon-split"
-                    >
-                      <span className="icon text-white-50">
-                        <i className="fas fa-plus " />{' '}
-                      </span>
-                        <span className="text">
-                          Your friends
+
+            <div className="card border-success mb-3" style={{ "max-width":"18rem"}}>
+              <div className="card-header bg-transparent border-success">Groups</div>
+              <div className="card-body text-success">
+                <h5 className="card-title">Add your group</h5>
+                <p className="card-text">You haven't added any
+                group yet. let's change it {':)'} </p>
+              </div>
+              <div className="card-footer bg-transparent border-success">
+                <button
+                  // to={`/client/${client.id}`}
+                  onClick={this.addFriends}
+                  className="btn btn-success btn-sm btn-block btn-icon-split"
+                >
+                  <i className="fas fa-plus fa-sm" />{' '}
+                  <span className="text">
+                    add group
                         </span>
-                    </button> */}
-                  </th>
-                  <th />
-                </tr>
-                
-              </thead>
-              <React.Fragment>
+                </button>
+              </div>
+            </div>
+
+
+            <div className="card border-primary mb-3" style={{ "max-width": "18rem" }}>
+              <div className="card-header bg-transparent border-primary">Your friends</div>
+              <div className="card-body text-primary">
+                <button
+                  // to={`/client/${client.id}`}
+                  onClick={this.addFriends}
+                  className="btn btn-primary btn-sm btn-block btn-icon-split"
+                >
+                  
+                    <i className="fas fa-plus fa-sm " />{' '}
+              
+                  <span className="text">
+                    Your friends
+                        </span>
+                </button>
+              </div>
+              <div className="card-footer bg-transparent border-primary">
+                  
                 {myFriends.map((friend) => (
                   <React.Fragment>
                     {friend.id && friend.label !== 'none' ?
-                      <tbody>
-                        <tr
-                         key={friend.id}
-                         >       
-                          <td>   
+                      <tr
+                        key={friend.id}
+                      >
+                        <td>
 
-                            <div className="logo">
-                              <div className="photo">
-                                <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-                              </div>
-                              {' '}  <button
-                                // to={`/client/${client.id}`}
-                                onClick={this.showUserDetail.bind(this, friend.id)}
-                                className="btn btn-outline-primary btn-sm"
-                              >
-                                {friend.label}{' '}{friend.lastName}
-                              </button>                
+                          <div className="logo">
+                            <div className="photo">
+                              <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
                             </div>
+                            {' '}  <button
+                              // to={`/client/${client.id}`}
+                              onClick={this.showUserDetail.bind(this, friend.id)}
+                              className="btn btn-outline-primary btn-sm btn-block"
+                            >
+                              {friend.label}{' '}{friend.lastName}
+                            </button>
+                          </div>
 
-                            
-                          </td>
-                        </tr>
-                      </tbody>
+
+                        </td>
+                      </tr>
+
                       : <p>You did't add any friends yet</p>}
                   </React.Fragment>
                 ))}
-              </React.Fragment>
-            </table>
+
+
+              </div>
+            </div>
+            
           </div>
-            <div className="col-md-8">
 
 
-            <table className="table table-borderless ">
+            <div className="col-md-9">
+
+            <div className="" style={{'background-color': 'white', height: '100%'}}>
+
+            
+            <table className="table table-borderless ml-3">
               <thead className="thead-inverse border-bottom">
                 {/* <tr>
                   <th>Records of your debt with Friends
@@ -325,7 +350,7 @@ class friends extends Component {
               </thead>
               <React.Fragment>
               <tr>
-                 <div class="card style_prevu_kit2 ml-0 mt-1" >
+                 <div className="card style_prevu_kit2 ml-0 mt-1 border-bottom" >
 
                       <th className="row" style={{ padding: '0px 0px 0px 22px' }} >     
                               <td className='col-md-3' >
@@ -373,7 +398,7 @@ class friends extends Component {
                           // onClick={this.onClickHandler.bind(this, a.id)}
                           onClick={this.onRecordClick.bind(this, w.id)}
                         >
-                          <div class="card style_prevu_kit ml-0 mt-1" 
+                          <div class="card style_prevu_kit ml-0 mt-1 border-bottom" 
                           //onClick={this.onRecordClick}
                           >
                             <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
@@ -464,7 +489,7 @@ class friends extends Component {
                 ))}
               </React.Fragment>
             </table>
-
+            </div>
           </div>
 
           <div className="col-md-3">

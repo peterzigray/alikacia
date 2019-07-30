@@ -145,6 +145,7 @@ stroke-width: 3;
     height:40px
       ;
     position: relative;
+    border-radius:0px;
     -webkit-transition: all 500ms ease-in;
     -webkit-transform: scale(1); 
     -ms-transition: all 500ms ease-in;
@@ -162,12 +163,13 @@ stroke-width: 3;
     padding: 0% 0% 0% 0%;
     margin-left:5%;
   margin-bottom: 0.5%;
-  background-color:#F2F4F8;
+  background-color:white;
     display:inline-block;
     border:5px;
     width:90%;
     height:40px
       ;
+      border-radius:0px;
     position: relative;
     -webkit-transition: all 500ms ease-in;
     -webkit-transform: scale(1); 
