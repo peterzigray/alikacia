@@ -28,6 +28,8 @@ class friends extends Component {
     selectedOption: {},
     friendsList: '',
     actualUsersDebts: [{id: 'null'}],
+    valueField: 'id',
+    labelField: 'label',
 
     detailRecordOfFriend: [{ id: 'null', 
                              paidBy: {id: 1, label: 'none'}, 
@@ -221,7 +223,8 @@ class friends extends Component {
 
     // RETURN USERNAMES FOR COMBOBOX (THIS IS RESULT WHAT IS SHOWN IN THE SCREEN)
     const userNames = renameKeys(showNonFriends, newKeys);
-
+    console.log('-------------usernames------------------')
+    console.log(userNames)
     /*
     * RENAME firstName keys in all array to label for input use
     * another comment here
@@ -340,163 +343,168 @@ class friends extends Component {
           </div>
 
 
-            <div className="col-md-9">
+        <div className="col-md-9">
 
-            <div className="" style={{'background-color': 'white', height: '100%'}}>
+          
 
-            
-            <table className="table table-borderless ml-3">
-              <thead className="thead-inverse border-bottom">
-                {/* <tr>
+              <div className="card border-0" style={{ 'background-color': 'white', height: '100%' }}>
+                <div className="card-body">
+                  <table className="table table-borderless ml-3">
+                    <thead className="thead-inverse border-bottom">
+                      {/* <tr>
                   <th>Records of your debt with Friends
                     
                   </th>
                   <th />
                 </tr> */}
 
-              </thead>
-              <React.Fragment>
-              <tr>
-                 <div className="card style_prevu_kit2 ml-0 mt-1 border-bottom" >
+                    </thead>
+                    <React.Fragment>
+                      <tr>
+                        <div className="card style_prevu_kit2 ml-0 mt-1 border-bottom" >
 
-                      <th className="row" style={{ padding: '0px 0px 0px 22px' }} >     
-                              <td className='col-md-3' >
-                               <span >
-                               Stutus
+                          <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
+                            <td className='col-md-3' >
+                              <span >
+                                Stutus
                                </span>
-                              </td>
-                              <td className='col-md-2 pl-0 pr-0 ' >Date</td>
-                              <td className='col-md-3 pl-0 pr-0 ' >
+                            </td>
+                            <td className='col-md-2 pl-0 pr-0 ' >Date</td>
+                            <td className='col-md-3 pl-0 pr-0 ' >
                               Description
                               </td>
-                              <td className='col-md-2 pl-0 pr-0 ' >
+                            <td className='col-md-2 pl-0 pr-0 ' >
                               {/* {Object.values(w.paidBy).map(a => a)[1]} */}
 
-                                
-                                <span 
-                                  className="float-right"
-                                  >
-                                  Balance
+
+                              <span
+                                className="float-right"
+                              >
+                                Balance
                                 </span>
-                              </td>
-                              <td className='col-md-1 pl-0 pr-0' >
-                                <i style={{color:'red'}}
-                                  
+                            </td>
+                            <td className='col-md-1 pl-0 pr-0' >
+                              <i style={{ color: 'red' }}
+
                               ></i></td>
-                         </th>
+                          </th>
 
                         </div>
 
-                        </tr>
+                      </tr>
 
-                {this.state.detailRecordOfFriend.map((w, index) => (
-                  
-                  <React.Fragment>
+                      {this.state.detailRecordOfFriend.map((w, index) => (
 
-
-                    
-                    {this.state.detailRecordOfFriend[0] !== 'null' ?
-                      <tbody className='pointer'>
-                       
-
-                        <tr
-                          key={w.id}
-                          // className={(this.state.showLine && this.state.idecko === a.id ? "strikeout" : null)}
-                          // onClick={this.onClickHandler.bind(this, a.id)}
-                          onClick={this.onRecordClick.bind(this, w.id)}
-                        >
-                          <div class="card style_prevu_kit ml-0 mt-1 border-bottom" 
-                          //onClick={this.onRecordClick}
-                          >
-                            <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
-                              <td className='col-md-3' >
-                                <span><i className="fas fa-circle fa-xs"  style={{ color: Object.values(w.status).map(a => a)[0]}}></i></span>
-                                   {' '}{' '}{Object.values(w.status).map(a => a)[1]}
-                               <span >
-                                 
-
-                                 {/* {Object.values(w.paidBy).map(a => a)[1]} */}
-                                  
-                               </span>
-                              </td>
-                              <td className='col-md-2 pl-0 pr-0 ' >{w.date.substring(4, 10)}</td>
-                              <td className='col-md-3 pl-0 pr-0 ' >
-                              <p className="mx-auto">{w.description}</p>
-                              </td>
-                              <td className='col-md-2 pl-0 pr-0 ' >
-                              {/* {Object.values(w.paidBy).map(a => a)[1]} */}
-
-                                
-                                <span 
-                                  className="float-right"
-                                  style={{ color: w.debtor[0] === auth.uid ? 'red' : 'green' }}>
-                                  {w.debt[0]}{' '}{'€'}
-                                </span>
-                              </td>
-                              <td className='col-md-1 pl-0 pr-0' >
-                                <i style={{color: w.debtor[0] === auth.uid?'red':'green'}}
-                                  className= { w.debtor[0] === auth.uid ?
-                                "fas fa-long-arrow-alt-down fa-lg float-right"
-                                    :"fas fa-long-arrow-alt-up fa-lg float-right"
-                                  }
-                              ></i></td>
-                            </th>
-                          </div>
-                        </tr>
-                        {this.state.showClickedRecord && this.state.recordId === w.id ?
-
-                          <div>
-                          
-                          {this.state.allRecordForRow.map(record => (
+                        <React.Fragment>
 
 
 
-                            <div className="card text-center ml-0 mt-2" style={{'max-width': '90%'}}>
-                              {/* <div class="card-header">
+                          {this.state.detailRecordOfFriend[0] !== 'null' ?
+                            <tbody className='pointer'>
+
+
+                              <tr
+                                key={w.id}
+                                // className={(this.state.showLine && this.state.idecko === a.id ? "strikeout" : null)}
+                                // onClick={this.onClickHandler.bind(this, a.id)}
+                                onClick={this.onRecordClick.bind(this, w.id)}
+                              >
+                                <div class="card style_prevu_kit ml-0 mt-1 border-bottom"
+                                //onClick={this.onRecordClick}
+                                >
+                                  <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
+                                    <td className='col-md-3' >
+                                      <span><i className="fas fa-circle fa-xs" style={{ color: Object.values(w.status).map(a => a)[0] }}></i></span>
+                                      {' '}{' '}{Object.values(w.status).map(a => a)[1]}
+                                      <span >
+
+
+                                        {/* {Object.values(w.paidBy).map(a => a)[1]} */}
+
+                                      </span>
+                                    </td>
+                                    <td className='col-md-2 pl-0 pr-0 ' >{w.date.substring(4, 10)}</td>
+                                    <td className='col-md-3 pl-0 pr-0 ' >
+                                      <p className="mx-auto">{w.description}</p>
+                                    </td>
+                                    <td className='col-md-2 pl-0 pr-0 ' >
+                                      {/* {Object.values(w.paidBy).map(a => a)[1]} */}
+
+
+                                      <span
+                                        className="float-right"
+                                        style={{ color: w.debtor[0] === auth.uid ? 'red' : 'green' }}>
+                                        {w.debt[0]}{' '}{'€'}
+                                      </span>
+                                    </td>
+                                    <td className='col-md-1 pl-0 pr-0' >
+                                      <i style={{ color: w.debtor[0] === auth.uid ? 'red' : 'green' }}
+                                        className={w.debtor[0] === auth.uid ?
+                                          "fas fa-long-arrow-alt-down fa-lg float-right"
+                                          : "fas fa-long-arrow-alt-up fa-lg float-right"
+                                        }
+                                      ></i></td>
+                                  </th>
+                                </div>
+                              </tr>
+                              {this.state.showClickedRecord && this.state.recordId === w.id ?
+
+                                <div>
+
+                                  {this.state.allRecordForRow.map(record => (
+
+
+
+                                    <div className="card text-center ml-0 mt-2" style={{ 'max-width': '90%' }}>
+                                      {/* <div class="card-header">
                                 Featured
                                     </div> */}
-                              <div className="card-body">
-                                <div className="col-6">
+                                      <div className="card-body">
+                                        <div className="col-6">
 
 
 
-                                </div>
-                                <div className="col-6">
-                                  <i class="fas fa-user-circle fa-3x clientAvatar" />
-                                  <h5 className="card-title">Peter Zigray</h5>
-                                  <p>{record.date} </p>
-                                  <p style={{ color: 'red' }}>${record.balance}</p>
-                                </div>
-                              </div>
-                              <div className="card-footer text-muted">
-                                2 days ago
+                                        </div>
+                                        <div className="col-6">
+                                          <i class="fas fa-user-circle fa-3x clientAvatar" />
+                                          <h5 className="card-title">Peter Zigray</h5>
+                                          <p>{record.date} </p>
+                                          <p style={{ color: 'red' }}>${record.balance}</p>
+                                        </div>
+                                      </div>
+                                      <div className="card-footer text-muted">
+                                        2 days ago
                                     </div>
 
-                            </div>
+                                    </div>
 
 
-                          )
+                                  )
 
 
-                          )}
-
-
-
-
-                          </div>
+                                  )}
 
 
 
-                          : null}
-                      </tbody> : <p> pick one of the friends </p>
-                    }
 
-                  </React.Fragment>
+                                </div>
 
-                ))}
-              </React.Fragment>
-            </table>
-            </div>
+
+
+                                : null}
+                            </tbody> : <p> pick one of the friends </p>
+                          }
+
+                        </React.Fragment>
+
+                      ))}
+                    </React.Fragment>
+                  </table>
+                </div>
+              </div>
+            
+            
+            
           </div>
 
           <div className="col-md-3">
@@ -516,26 +524,30 @@ class friends extends Component {
                        >
                       </i>
                     </h5>
-                      <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <p className="card-text"></p>
                   </div>
                       <ul className="list-group list-group-flush">
-                        <li className="list-group-item">
+                      <li className="list-group-item border-0">
                         <Select
+                          labelField={this.state.labelField}
+                          valueField={this.state.valueField}
                           value={selectedOption}
                           onChange={this.onFriendsListChange}
                           options={userNames}
                           multi={this.state.multi}
                         />
                         </li>
-                        <li className="list-group-item">Dapibus ac facilisis in</li>
-                        <li className="list-group-item">Vestibulum at eros</li>
+                      <li className="list-group-item border-0">
+                          <textarea  className="form-control" name="" id="" cols="30" rows="2"></textarea>
+                        </li>
+                       
                       </ul>
                     <div className="card-body">
-                      <a className="card-link">Card link</a>
+                      <i class="fas fa-envelope fa-2x"></i>{' '}<small className=''>your message will be send as an invitation</small>
                       <button
                         onClick={this.onSubmitFriends}
-                        className="btn btn-outline-primary btn-sm float-right"
-                      >Send invites
+                        className="btn btn-outline-primary btn-sm ml-5"
+                      >Send invites 
                       </button>
                     </div>
                 </div>
