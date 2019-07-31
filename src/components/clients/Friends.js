@@ -300,27 +300,34 @@ class friends extends Component {
                 {myFriends.map((friend) => (
                   <React.Fragment>
                     {friend.id && friend.label !== 'none' ?
-                      <tr
-                        key={friend.id}
-                      >
-                        <td>
+                      // <tr
+                      //   key={friend.id}
+                      // >
+                        
 
-                          <div className="logo">
+                          <div className="logo" style={{width: '100%'}}>
                             <div className="photo">
                               <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
                             </div>
+                            <button className="btn btn-primary btn-circle btn-sm">
+                              <i class="fas fa-envelope fa-sm"></i>
+                            </button>
+                            <button className="btn btn-danger btn-circle btn-sm">
+                              <i className="fas fa-trash fa-sm" ></i>
+                            </button>
+                            
                             {' '}  <button
                               // to={`/client/${client.id}`}
                               onClick={this.showUserDetail.bind(this, friend.id)}
-                              className="btn btn-outline-primary btn-sm btn-block"
+                              className="btn btn-outline-primary btn-sm btn-block mt-2"
                             >
                               {friend.label}{' '}{friend.lastName}
                             </button>
                           </div>
 
 
-                        </td>
-                      </tr>
+                        
+                      //</tr>
 
                       : <p>You did't add any friends yet</p>}
                   </React.Fragment>
@@ -496,7 +503,45 @@ class friends extends Component {
             {this.state.addFriends ?
               <div className='popup'>
                 <div className='popup_inner'>
-                  <div className='row-1 mt-5 ml-3 mr-3'
+
+
+
+                <div className="card" style={{width: "100%", height:'100%'}} >
+ 
+                  <div className="card-body">
+                      <h5 className="card-title">Invite friends 
+                      <i className="fas fa-backspace fa-sm float-right"
+                      onClick={this.addFriends}
+                       // onClick={this.setState({ addFriends: !this.state.addFriends  })}
+                       >
+                      </i>
+                    </h5>
+                      <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  </div>
+                      <ul className="list-group list-group-flush">
+                        <li className="list-group-item">
+                        <Select
+                          value={selectedOption}
+                          onChange={this.onFriendsListChange}
+                          options={userNames}
+                          multi={this.state.multi}
+                        />
+                        </li>
+                        <li className="list-group-item">Dapibus ac facilisis in</li>
+                        <li className="list-group-item">Vestibulum at eros</li>
+                      </ul>
+                    <div className="card-body">
+                      <a className="card-link">Card link</a>
+                      <button
+                        onClick={this.onSubmitFriends}
+                        className="btn btn-outline-primary btn-sm float-right"
+                      >Send invites
+                      </button>
+                    </div>
+                </div>
+
+
+                  {/* <div className='row-1 mt-5 ml-3 mr-3'
                     style={{ height: "25%" }}>
                     <i className="fas fa-backspace fa-2x float-right"
                       onClick={this.addFriends}
@@ -527,7 +572,10 @@ class friends extends Component {
                         className="btn btn-outline-primary btn-sm float-right"
                       >Send invites</button>
                     </div>
-                  </div>
+                  </div> */}
+
+
+
                 </div>
               </div>
               : null
