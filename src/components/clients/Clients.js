@@ -13,8 +13,32 @@ import Dashboard from './Dashboard';
 import Friends from './Friends';
 import CountUp from 'react-countup';
 import { ENGINE_METHOD_NONE } from 'constants';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import { UserIsAuthenticated, UserIsNotAuthenticated } from '../../helpers/auth'
 
 
+
+const Child = (path) => {
+  const {debt} = path
+  const {pathname} = path.location
+  const {debtors} = path
+  const {debtorsLeft} = path
+  console.log(pathname)
+ console.log(debtors)
+  console.log(debtorsLeft)
+      if(pathname === '/Dashboard'){
+        return (<Dashboard debtors={debtors} debtorsLeft={debtorsLeft} />)
+      }
+      if(pathname === '/History'){
+        return (<ClientOverview  debt={debt}/>)
+      }
+      if(pathname === '/Friends'){
+        return (<Friends/>)
+      }
+      if(pathname === '/AddBills'){
+        return (<AddDebt/>)
+      }
+}
 
 //////////////////////////////////RIGHT DEBTORS//////////////////////////////////////////
 /**
@@ -588,17 +612,21 @@ class Clients extends Component {
                   </div>
 
                     <div className="logo pt-3 pb-3 pl-4 " onClick={this.onClickButton.bind(this, 0)}>            
-                      <i class="fas fa-home fa-lg"></i>{' '}{' '}<span>Dashboard</span>               
+                      <i class="fas fa-home fa-lg"></i>{' '}{' '}<span><Link to="/Dashboard" debtors={debtors}
+                  debtorsLeft={debtorsLeft} >Dashboard</Link></span>               
                   </div>
 
                     <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 2)}>              
-                      <i class="fas fa-history fa-lg"></i>{' '}{' '} History                
+                      <i class="fas fa-history fa-lg"></i>{' '}{' '} <Link to="/History" debtors={debtors}
+                  debtorsLeft={debtorsLeft} >History</Link>               
                   </div>
                     <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 3)}>              
-                      <i class="fas fa-user-friends fa-lg"></i>{' '}{' '} Friends              
+                      <i class="fas fa-user-friends fa-lg"></i>{' '}{' '} <Link to="/Friends" debtors={debtors}
+                  debtorsLeft={debtorsLeft} >friends</Link>             
                   </div>
                     <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 1)}>              
-                      <i class="fas fa-plus fa-lg"></i>{' '}{' '} Add bills                
+                      <i class="fas fa-plus fa-lg"></i>{' '}{' '} <Link to="/AddBills" debtors={debtors}
+                  debtorsLeft={debtorsLeft} >Add Bills</Link>       
                   </div>
 
                       {/* <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
@@ -798,31 +826,23 @@ class Clients extends Component {
         
        
             <div className="col">
-              {/* <div
-                className="card text-white bg-info mb-2 iconsoverlap"
-                style={{ width: "110px", height: "60px" }}
-              > */}
-            
-              {/* s */}
-              {/* <ClientOverview/> */}
-              <div className="clientTable">
-                    {showAddClient === 0 || !showAddClient ? 
-                    <Dashboard
-                     debtors={debtors}
-                     debtorsLeft={debtorsLeft}
-                     /> : null}
-                {showAddClient === 1 ? <AddDebt /> : null}
 
-                {showAddClient === 2  ? <ClientOverview
-                  debt={debt}
-                /> : null}
-                {showAddClient === 3 ? <Friends></Friends> : null}
+      
+              <div className="clientTable">
+
+                {/* {showAddClient === 0 || !showAddClient ? <Dashboard debtors={debtors} debtorsLeft={debtorsLeft}/> : null}
+                {showAddClient === 1 ? <AddDebt /> : null}
+                {showAddClient === 2  ? <ClientOverview debt={debt}/> : null}
+                {showAddClient === 3 ? <Friends></Friends> : null} */}
+              <Route 
+                path='/:id' 
+                component={ (props) => <Child {...props}  debt={debt}  debtors={debtors} debtorsLeft={debtorsLeft}/>}
+              /> 
               </div>
             </div>
           </div>
-          </main>
-            {/* </main> */}
-            </div>
+        </main>
+      </div>
             
     
         </React.Fragment>

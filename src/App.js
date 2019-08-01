@@ -7,7 +7,7 @@ import {Provider} from 'react-redux';
 import store from './store';
 
 
-import AppNavbar from './components/layout/AppNavbar';
+import Dashboard from './components/clients/Dashboard';
 import addDebt from "./components/clients/addDebt";
 import ClientDetail from "./components/clients/ClientDetail";
 import EditClient from "./components/clients/EditClient";
@@ -29,12 +29,13 @@ class App extends Component {
             {/* <AppNavbar /> */}
             <div className="container-fluid"
               style={{ 'background-color': 'rgb(242, 244, 248)'}}>
-              <Switch>
-                <Route
-                  exact
-                  path="/"
-                  component={UserIsAuthenticated(Clients)}
-                />
+
+                <Route exact path="/" component={UserIsAuthenticated(Clients)}/>
+                <Route exact path="/Dashboard" component={UserIsAuthenticated(Clients)}/>
+                <Route exact path="/History" component={UserIsAuthenticated(Clients)}/>
+                <Route exact path="/Friends" component={UserIsAuthenticated(Clients)}/>
+                <Route exact path="/AddBills" component={UserIsAuthenticated(Clients)}/>
+               
                 {/* <Route
                   exact
                   path="/client/add"
@@ -51,9 +52,9 @@ class App extends Component {
                   component={UserIsAuthenticated(ClientDetail)}
                 /> */}
                 {/* <Route
-                  exact
-                  path="/AppNavbar"
-                  component={UserIsNotAuthenticated(AppNavbar)}
+                  
+                  path="/Dashboard"
+                  component={UserIsAuthenticated(Dashboard)}
                 /> */}
                 {/* <Route
                   exact
@@ -70,7 +71,7 @@ class App extends Component {
                   path="/settings"
                   component={UserIsAuthenticated(Settings)}
                 />
-              </Switch>
+         
             </div>
           </div>
         </Router>
