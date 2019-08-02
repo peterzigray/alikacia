@@ -10,6 +10,32 @@ import '../../css/Cients.css'
 // import '../../css/LoginCss.css'
 import '../../pics/app.jpg';
 import Select from "react-dropdown-select";
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+
+
+
+const Table = () => {
+//   const {debt} = path
+//   const {pathname} = path.location
+//   const {debtors} = path
+//   const {debtorsLeft} = path
+//   console.log(pathname)
+//  console.log(debtors)
+//   console.log(debtorsLeft)
+  console.log('-----------Doslo to sem----------')
+      // if(pathname === '/Dashboard'){
+      //   return (<Dashboard debtors={debtors} debtorsLeft={debtorsLeft} />)
+      // }
+      // if(pathname === '/History'){
+      //   return (<ClientOverview  debt={debt}/>)
+      // }
+      // if(pathname === '/Friends'){
+      //   return (<Friends/>)
+      // }
+      // if(pathname === '/AddBills'){
+      //   return (<AddDebt/>)
+      // }
+}
 
 
 class friends extends Component {
@@ -324,7 +350,9 @@ class friends extends Component {
                               onClick={this.showUserDetail.bind(this, friend.id)}
                               className="btn btn-outline-primary btn-sm btn-block mt-2"
                             >
-                              {friend.label}{' '}{friend.lastName}
+                              <Link to= {`/Friends/${friend.id}`} >{friend.label}{' '}{friend.lastName}</Link>
+
+                              
                             </button>
                           </div>
 
@@ -341,11 +369,14 @@ class friends extends Component {
             </div>
             
           </div>
-
+          <Route  path="/Friends/:id" 
+          // component={Table}
+          render={ (props) => <Table {...props} />}
+          />
 
         <div className="col-md-9">
 
-          
+        
 
               <div className="card border-0" style={{ 'background-color': 'white', height: '100%' }}>
                 <div className="card-body">

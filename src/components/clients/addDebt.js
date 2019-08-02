@@ -323,7 +323,7 @@ class addDebt extends Component {
       <div>
         <div className="row mb-0 mt-2 m9">
           
-          <div className="col-md-5 pl-4 mr-0 mt-2">
+          <div className="col-md-5 pl-4 mr-0 ">
             <div className="card">
               {/* <div className="card-header">Add an expense</div> */}
               <div className="card-body">
@@ -474,30 +474,15 @@ class addDebt extends Component {
 
            <li className="list-group-item ">
 
-
-             {/* <div className="photo">
-               <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-             </div> 
-           {name.label}
-           <div class="input-group">
-               <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
-               <div class="input-group-append">
-                 <span class="input-group-text">$</span>
-                 <span class="input-group-text">0.00</span>
-               </div>
-             </div> */}
-          
-
-          
              <div class="card-body">
 
              <div className="photo">
                <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
              </div> 
              {name.label}
-           <div class="input-group">
-               <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
-               <div class="input-group-append">
+               <div class="input-group">
+                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
+                <div class="input-group-append">
                  <span class="input-group-text">$</span>
                  <span class="input-group-text">0.00</span>
                </div>

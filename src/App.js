@@ -30,11 +30,7 @@ class App extends Component {
             <div className="container-fluid"
               style={{ 'background-color': 'rgb(242, 244, 248)'}}>
 
-                <Route exact path="/" component={UserIsAuthenticated(Clients)}/>
-                <Route exact path="/Dashboard" component={UserIsAuthenticated(Clients)}/>
-                <Route exact path="/History" component={UserIsAuthenticated(Clients)}/>
-                <Route exact path="/Friends" component={UserIsAuthenticated(Clients)}/>
-                <Route exact path="/AddBills" component={UserIsAuthenticated(Clients)}/>
+                <Route exact path="/:id"  component={UserIsAuthenticated(Clients)}/>
                
                 {/* <Route
                   exact
