@@ -11,32 +11,28 @@ import '../../css/Cients.css'
 import '../../pics/app.jpg';
 import Select from "react-dropdown-select";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import UserDetails from './UserDetails';
 
 
 
-const Table = (path) => {
-return <p>toto je ono</p>
-  console.log(path)
-//   const {debt} = path
-//   const {pathname} = path.location
-//   const {debtors} = path
-//   const {debtorsLeft} = path
-//   console.log(pathname)
-//  console.log(debtors)
-//   console.log(debtorsLeft)
+const Table = (property) => {
+  var {otherProps} = property;
+  var {id} = property.match.params
+  var {auth}= property;
+
+
+
   console.log('-----------Doslo to sem----------')
-      // if(pathname === '/Dashboard'){
-      //   return (<Dashboard debtors={debtors} debtorsLeft={debtorsLeft} />)
-      // }
-      // if(pathname === '/History'){
-      //   return (<ClientOverview  debt={debt}/>)
-      // }
-      // if(pathname === '/Friends'){
-      //   return (<Friends/>)
-      // }
-      // if(pathname === '/AddBills'){
-      //   return (<AddDebt/>)
-      // }
+    console.log(property)
+  
+  if(id !== "null")
+  {
+
+ 
+return (
+ <UserDetails otherProps={otherProps} auth={auth} />
+)
+} 
 }
 
 
@@ -70,6 +66,23 @@ class friends extends Component {
     recordId:'',
     allRecordForRow: ''
   };
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // SHOW POP UP FOR ADDING NEW FRIENDS
   addFriends = (e) => {
@@ -204,7 +217,11 @@ class friends extends Component {
 
   render() {
     const { selectedOption } = this.state;
-    const { users, debt, auth } = this.props;
+    const { users, debt, auth, propsFromApp } = this.props;
+
+
+    console.log('--------------toto je ten parameter--------------------')
+    console.log(propsFromApp)
 
     // COPY OFF REAL USERS
     var copyofU = JSON.parse(JSON.stringify(users));
@@ -279,10 +296,63 @@ class friends extends Component {
       return Object.assign({}, ...keyValues);
     }
 
-
+  
 
     if (debt && users) {
 
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                   //                SAME AS IN THE FUNCTION MERGE LATER
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+console.log('----------po tomto pozeram----------')
+var debt2 = JSON.parse(JSON.stringify(debt));
+
+// RETURN ALL DEBTS WHERE I AM PAYER OR DEBTOR TO CLICKED FRIEND OR CLICKED FRIEND IS PAYER OR DEBTOR WITH ME
+var userDetailProps2 = debt2.map(function(d){
+const{id}= d.paidBy
+var res = d.debtTo.map(function(c){
+    if (c.id === 'o0zm6jC0dbPyjG9ru1Xyy78AUnl1' && id === auth.uid){
+      return Object.assign(d, 
+        {debt: d.debtTo.map(n => n.id === 'o0zm6jC0dbPyjG9ru1Xyy78AUnl1'? n.actualDebt: null).filter(a => a !== null),
+          debtor: d.debtTo.map(n => n.id === 'o0zm6jC0dbPyjG9ru1Xyy78AUnl1' ? n.id : null).filter(a => a !== null)
+        })
+   
+      
+    }  
+  if (c.id === auth.uid && id === 'o0zm6jC0dbPyjG9ru1Xyy78AUnl1'){
+    return Object.assign(d, 
+      {
+        debt: d.debtTo.map(n => n.id === auth.uid ? n.actualDebt : null).filter(a => a !== null),
+      debtor: d.debtTo.map(n => n.id === auth.uid ? n.id : null).filter(a => a !== null)
+     })
+    
+  }
+  }
+).filter(a => a)
+  return res
+}
+).flat()
+
+console.log(userDetailProps2)
+//stateCopyForDetailUser.detailRecordOfFriend = userDetailProps2;
+
+//this.setState(stateCopyForDetailUser)
+
+//this.setState({ detailRecordOfFriend: userDetailProps})
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+      //const nextProp = this.state.detailRecordOfFriend.map((w) => w )
+      console.log('all I need is this')
+     var userDetailProps = this.state.detailRecordOfFriend
+   //  console.log(stateCopyForDetailUser.detailRecordOfFriend )
    
       return (
         <div className="row">
@@ -369,180 +439,74 @@ class friends extends Component {
 
               </div>
             </div>
-            </div>
-          <div className="col-9">
+          </div>
+
+
+        {/* <Route path="/:id" component={Table} /> */}
+
+        <div className="col-9">
 
      
-            <Route path="/:id" component={Table} />
-            {/* <Route path="/Friends/:id"
-              //"/Friends/:id"
-                // component={Table}
-                render={(props) => <Table {...props} />}
-              /> */}
-        
+         
+       
+       <Route path="/Friends/:id"            
+        render={(props) => <Table {...props}   otherProps = {userDetailProps[0].id === 'null' ? userDetailProps2: userDetailProps} auth={auth} />}
+       />       
 
             
         
 
-              <div className="card border-0" style={{ 'background-color': 'white', height: '100%' }}>
-                <div className="card-body">
-                  <table className="table table-borderless ml-3">
-                    <thead className="thead-inverse border-bottom">
-                      {/* <tr>
-                  <th>Records of your debt with Friends
-                    
-                  </th>
-                  <th />
-                </tr> */}
-
-                    </thead>
-                    <React.Fragment>
-                      <tr>
-                        <div className="card style_prevu_kit2 ml-0 mt-1 border-bottom" >
-
-                          <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
-                            <td className='col-md-3' >
-                              <span >
-                                Stutus
-                               </span>
-                            </td>
-                            <td className='col-md-2 pl-0 pr-0 ' >Date</td>
-                            <td className='col-md-3 pl-0 pr-0 ' >
-                              Description
-                              </td>
-                            <td className='col-md-2 pl-0 pr-0 ' >
-                              {/* {Object.values(w.paidBy).map(a => a)[1]} */}
-
-
-                              <span
-                                className="float-right"
-                              >
-                                Balance
-                                </span>
-                            </td>
-                            <td className='col-md-1 pl-0 pr-0' >
-                              <i style={{ color: 'red' }}
-
-                              ></i></td>
-                          </th>
-
-                        </div>
-
-                      </tr>
-
-                      {this.state.detailRecordOfFriend.map((w, index) => (
-
-                        <React.Fragment>
-
-
-
-                          {this.state.detailRecordOfFriend[0] !== 'null' ?
-                            <tbody className='pointer'>
-
-
-                              <tr
-                                key={w.id}
-                                // className={(this.state.showLine && this.state.idecko === a.id ? "strikeout" : null)}
-                                // onClick={this.onClickHandler.bind(this, a.id)}
-                                // onClick={this.onRecordClick.bind(this, w.id)}
-                              >
-                                <div class="card style_prevu_kit ml-0 mt-1 border-bottom"
-                                //onClick={this.onRecordClick}
-                                >
-                                  <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
-                                    <td className='col-md-3' >
-                                      <span><i className="fas fa-circle fa-xs" style={{ color: Object.values(w.status).map(a => a)[0] }}></i></span>
-                                      {' '}{' '}{Object.values(w.status).map(a => a)[1]}
-                                      <span >
-
-
-                                        {/* {Object.values(w.paidBy).map(a => a)[1]} */}
-
-                                      </span>
-                                    </td>
-                                    <td className='col-md-2 pl-0 pr-0 ' >{w.date.substring(4, 10)}</td>
-                                    <td className='col-md-3 pl-0 pr-0 ' >
-                                      <p className="mx-auto">{w.description}</p>
-                                    </td>
-                                    <td className='col-md-2 pl-0 pr-0 ' >
-                                      {/* {Object.values(w.paidBy).map(a => a)[1]} */}
-
-
-                                      <span
-                                        className="float-right"
-                                        style={{ color: w.debtor[0] === auth.uid ? 'red' : 'green' }}>
-                                        {w.debt[0]}{' '}{'€'}
-                                      </span>
-                                    </td>
-                                    <td className='col-md-1 pl-0 pr-0' >
-                                      <i style={{ color: w.debtor[0] === auth.uid ? 'red' : 'green' }}
-                                        className={w.debtor[0] === auth.uid ?
-                                          "fas fa-long-arrow-alt-down fa-lg float-right"
-                                          : "fas fa-long-arrow-alt-up fa-lg float-right"
-                                        }
-                                      ></i></td>
-                                  </th>
-                                </div>
-                              </tr>
-                              {this.state.showClickedRecord && this.state.recordId === w.id ?
-
-                                <div>
-
-                                  {this.state.allRecordForRow.map(record => (
-
-
-
-                                    <div className="card text-center ml-0 mt-2" style={{ 'max-width': '90%' }}>
-                                      {/* <div class="card-header">
-                                Featured
-                                    </div> */}
-                                      <div className="card-body">
-                                        <div className="col-6">
-
-
-
-                                        </div>
-                                        <div className="col-6">
-                                          <i class="fas fa-user-circle fa-3x clientAvatar" />
-                                          <h5 className="card-title">Peter Zigray</h5>
-                                          <p>{record.date} </p>
-                                          <p style={{ color: 'red' }}>${record.balance}</p>
-                                        </div>
-                                      </div>
-                                      <div className="card-footer text-muted">
-                                        2 days ago
-                                    </div>
-
-                                    </div>
-
-
-                                  )
-
-
-                                  )}
-
-
-
-
-                                </div>
-
-
-
-                                : null}
-                            </tbody> : <p> pick one of the friends </p>
-                          }
-
-                        </React.Fragment>
-
-                      ))}
-                    </React.Fragment>
-                  </table>
-                </div>
-              </div>
+             
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             </div>
             
             
           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           <div className="col-md-3">
             {this.state.addFriends ?
@@ -661,7 +625,8 @@ friends.propTypes = {
 
   firestore: PropTypes.object.isRequired,
   clients: PropTypes.array,
-  debt: PropTypes.array
+  debt: PropTypes.array,
+  propsFromApp : PropTypes.object.isRequired
 }
 
 export default compose(

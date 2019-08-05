@@ -81,7 +81,7 @@ const styles = {
 }
 
 class Clients extends Component {
-  state = {
+    state = {
     totalOwed: null,
     youAreOwed: null,
     youOwed: null,
@@ -844,6 +844,10 @@ class Clients extends Component {
                 path='/:id' 
                 render={ (props) => <Child {...props}  debt={debt}  debtors={debtors} debtorsLeft={debtorsLeft}/>}
               /> 
+              {/* <Route 
+                path='/Friends/o0zm6jC0dbPyjG9ru1Xyy78AUnl1' 
+                render={ (props) => <Child {...props}  debt={debt}  debtors={debtors} debtorsLeft={debtorsLeft}/>}
+              />  */}
               </div>
             </div>
           </div>

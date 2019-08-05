@@ -30,8 +30,12 @@ class App extends Component {
             <div className="container-fluid"
               style={{ 'background-color': 'rgb(242, 244, 248)'}}>
               <Route exact path="/" component={UserIsAuthenticated(Clients)} />
-              <Route exact path="/:id"  component={UserIsAuthenticated(Clients)}/>
-              <Route  path="/Friends/:id" component={UserIsAuthenticated(Clients)} />
+              {/* <Route exact path="/:id"  component={UserIsAuthenticated(Clients)}/> */}
+              {/* <Route  path="/Friends/:id" component={UserIsAuthenticated(Clients)} /> */}
+              <Route 
+                path='/:id' 
+                render={ (props) => <Clients {...props} propsFromApp={'n'} />}
+              /> 
                
                 {/* <Route
                   exact
