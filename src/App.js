@@ -7,7 +7,7 @@ import {Provider} from 'react-redux';
 import store from './store';
 
 
-import Dashboard from './components/clients/Dashboard';
+import Friends from './components/clients/Friends';
 import addDebt from "./components/clients/addDebt";
 import ClientDetail from "./components/clients/ClientDetail";
 import EditClient from "./components/clients/EditClient";
@@ -29,8 +29,9 @@ class App extends Component {
             {/* <AppNavbar /> */}
             <div className="container-fluid"
               style={{ 'background-color': 'rgb(242, 244, 248)'}}>
-
-                <Route exact path="/:id"  component={UserIsAuthenticated(Clients)}/>
+              <Route exact path="/" component={UserIsAuthenticated(Clients)} />
+              <Route exact path="/:id"  component={UserIsAuthenticated(Clients)}/>
+              <Route  path="/Friends/:id" component={UserIsAuthenticated(Clients)} />
                
                 {/* <Route
                   exact

@@ -18,7 +18,9 @@ import { UserIsAuthenticated, UserIsNotAuthenticated } from '../../helpers/auth'
 
 
 
-const Child = (path) => {
+const Child = (path, {match}) => {
+  console.log('coje to match')
+  //console.log(`${match.url}`)
   const {debt} = path
   const {pathname} = path.location
   const {debtors} = path
@@ -26,7 +28,7 @@ const Child = (path) => {
   console.log(pathname)
  console.log(debtors)
   console.log(debtorsLeft)
-  console.log('Doslo to sem')
+ 
       if(pathname === '/Dashboard'){
         return (<Dashboard debtors={debtors} debtorsLeft={debtorsLeft} />)
       }
@@ -39,6 +41,9 @@ const Child = (path) => {
       if(pathname === '/AddBills'){
         return (<AddDebt/>)
       }
+  else {
+    return (<Friends />)
+  }
 }
 
 //////////////////////////////////RIGHT DEBTORS//////////////////////////////////////////

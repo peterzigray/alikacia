@@ -14,7 +14,9 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 
 
-const Table = () => {
+const Table = (path) => {
+return <p>toto je ono</p>
+  console.log(path)
 //   const {debt} = path
 //   const {pathname} = path.location
 //   const {debtors} = path
@@ -344,16 +346,16 @@ class friends extends Component {
                             <button className="btn btn-danger btn-circle btn-sm">
                               <i className="fas fa-trash fa-sm" ></i>
                             </button>
-                            
+                        <Link to={`/Friends/${friend.id}`} >
                             {' '}  <button
                               // to={`/client/${client.id}`}
                               onClick={this.showUserDetail.bind(this, friend.id)}
                               className="btn btn-outline-primary btn-sm btn-block mt-2"
                             >
-                              <Link to= {`/Friends/${friend.id}`} >{friend.label}{' '}{friend.lastName}</Link>
+                              {friend.label}{' '}{friend.lastName} </button></Link>
 
                               
-                            </button>
+                           
                           </div>
 
 
@@ -367,15 +369,19 @@ class friends extends Component {
 
               </div>
             </div>
+            </div>
+          <div className="col-9">
+
+     
+            <Route path="/:id" component={Table} />
+            {/* <Route path="/Friends/:id"
+              //"/Friends/:id"
+                // component={Table}
+                render={(props) => <Table {...props} />}
+              /> */}
+        
+
             
-          </div>
-          <Route  path="/Friends/:id" 
-          // component={Table}
-          render={ (props) => <Table {...props} />}
-          />
-
-        <div className="col-md-9">
-
         
 
               <div className="card border-0" style={{ 'background-color': 'white', height: '100%' }}>
@@ -438,7 +444,7 @@ class friends extends Component {
                                 key={w.id}
                                 // className={(this.state.showLine && this.state.idecko === a.id ? "strikeout" : null)}
                                 // onClick={this.onClickHandler.bind(this, a.id)}
-                                onClick={this.onRecordClick.bind(this, w.id)}
+                                // onClick={this.onRecordClick.bind(this, w.id)}
                               >
                                 <div class="card style_prevu_kit ml-0 mt-1 border-bottom"
                                 //onClick={this.onRecordClick}
@@ -533,10 +539,10 @@ class friends extends Component {
                   </table>
                 </div>
               </div>
+            </div>
             
             
-            
-          </div>
+          
 
           <div className="col-md-3">
             {this.state.addFriends ?

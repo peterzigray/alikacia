@@ -107,6 +107,12 @@ class dashboard extends Component {
     this.setState(stateCopy);
   //  console.log(pathLenght - e.target.value.length)
   }
+  // clickOnCard = (w) => {
+  //   console.log(w.id)
+  //   return (<Link to={`/Friends/${w.id}`} />)
+    
+  
+  // }
 
 
   render() {
@@ -128,9 +134,12 @@ class dashboard extends Component {
               <React.Fragment>
                 {debtorsLeft.map((w) => (
                   <React.Fragment>
-           
-
-                    <div className="card in-left mb-1">
+                    <Link to={`/Friends/${w.id}`} >
+         
+                    <div className="card in-left mb-1"
+                    // onClick={this.clickOnCard.bind(this, w)}
+                    style={{cursor: "pointer"}}
+                    >
    
    <ul className="list-group list-group-flush">
      
@@ -155,7 +164,7 @@ class dashboard extends Component {
        </ul>
    </div>
 
-
+</Link>
 
 
                   </React.Fragment>
@@ -174,7 +183,9 @@ class dashboard extends Component {
                 </tr>
               </thead>
               <React.Fragment>
+               
                 {debtors.map((w) => (
+                  <Link to={`/Friends/${w.id}`} >
                   <React.Fragment>
                       {/* <tbody >
                        <div style={{ 'height': '105px' }}>
@@ -236,7 +247,9 @@ class dashboard extends Component {
 
 
                   </React.Fragment>
+                  </Link>
                 ))}
+               
               </React.Fragment>
             </table>
           </div>
