@@ -164,6 +164,7 @@ class friends extends Component {
 
   showUserDetail = (idecko) => {
     const { users, debt, auth } = this.props;
+    let stateCopyForDetail = Object.assign({}, this.state);
 
 
 
@@ -177,7 +178,7 @@ class friends extends Component {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // COPY OF DEBT
-    console.log('----------po tomto pozeram----------')
+    console.log('----------po tomto pozeram2----------')
     var debt2 = JSON.parse(JSON.stringify(debt));
   
     // RETURN ALL DEBTS WHERE I AM PAYER OR DEBTOR TO CLICKED FRIEND OR CLICKED FRIEND IS PAYER OR DEBTOR WITH ME
@@ -206,10 +207,17 @@ class friends extends Component {
       }
     ).flat()
   
-    console.log(detailRecordOfFriend)
-  
+    
+    if (detailRecordOfFriend.length < 1){
+      stateCopyForDetail.detailRecordOfFriend[0].id = 'none';
+      this.setState(stateCopyForDetail)
+    } else {
+      stateCopyForDetail.detailRecordOfFriend = detailRecordOfFriend
+      this.setState(stateCopyForDetail)
+    }
+    console.log(stateCopyForDetail.detailRecordOfFriend)
 
-    this.setState({ detailRecordOfFriend: detailRecordOfFriend})
+    
    
   }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,12 +225,12 @@ class friends extends Component {
 
   render() {
     const { selectedOption } = this.state;
-    const { users, debt, auth, propsFromApp } = this.props;
+    const { users, debt, auth, pathname } = this.props;
 
 
-    console.log('--------------toto je ten parameter--------------------')
-    console.log(propsFromApp)
-
+  
+   
+//.match(/(?!.*\/).+/)
     // COPY OFF REAL USERS
     var copyofU = JSON.parse(JSON.stringify(users));
     var showNonFriends = [];
@@ -300,7 +308,13 @@ class friends extends Component {
 
     if (debt && users) {
 
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      console.log('--------------toto je ten parameter--------------------')
+      if (pathname) {
+        var parameter = pathname.match(/(?!.*\/).+/)[0]
+        console.log(parameter)
+      
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                    //                SAME AS IN THE FUNCTION MERGE LATER
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 console.log('----------po tomto pozeram----------')
@@ -310,15 +324,15 @@ var debt2 = JSON.parse(JSON.stringify(debt));
 var userDetailProps2 = debt2.map(function(d){
 const{id}= d.paidBy
 var res = d.debtTo.map(function(c){
-    if (c.id === 'o0zm6jC0dbPyjG9ru1Xyy78AUnl1' && id === auth.uid){
+    if (c.id === parameter && id === auth.uid){
       return Object.assign(d, 
-        {debt: d.debtTo.map(n => n.id === 'o0zm6jC0dbPyjG9ru1Xyy78AUnl1'? n.actualDebt: null).filter(a => a !== null),
-          debtor: d.debtTo.map(n => n.id === 'o0zm6jC0dbPyjG9ru1Xyy78AUnl1' ? n.id : null).filter(a => a !== null)
+        {debt: d.debtTo.map(n => n.id === parameter? n.actualDebt: null).filter(a => a !== null),
+          debtor: d.debtTo.map(n => n.id === parameter ? n.id : null).filter(a => a !== null)
         })
    
       
     }  
-  if (c.id === auth.uid && id === 'o0zm6jC0dbPyjG9ru1Xyy78AUnl1'){
+  if (c.id === auth.uid && id === parameter){
     return Object.assign(d, 
       {
         debt: d.debtTo.map(n => n.id === auth.uid ? n.actualDebt : null).filter(a => a !== null),
@@ -331,6 +345,8 @@ var res = d.debtTo.map(function(c){
   return res
 }
 ).flat()
+
+}
 
 console.log(userDetailProps2)
 //stateCopyForDetailUser.detailRecordOfFriend = userDetailProps2;
@@ -626,7 +642,7 @@ friends.propTypes = {
   firestore: PropTypes.object.isRequired,
   clients: PropTypes.array,
   debt: PropTypes.array,
-  propsFromApp : PropTypes.object.isRequired
+  pathname : PropTypes.string.isRequired
 }
 
 export default compose(

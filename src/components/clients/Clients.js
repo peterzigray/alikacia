@@ -18,14 +18,14 @@ import { UserIsAuthenticated, UserIsNotAuthenticated } from '../../helpers/auth'
 
 
 
-const Child = (path, {match}) => {
+const Child = (path) => {
   console.log('coje to match')
   //console.log(`${match.url}`)
   const {debt} = path
   const {pathname} = path.location
   const {debtors} = path
   const {debtorsLeft} = path
-  console.log(pathname)
+  console.log(path)
  console.log(debtors)
   console.log(debtorsLeft)
  
@@ -42,7 +42,7 @@ const Child = (path, {match}) => {
         return (<AddDebt/>)
       }
   else {
-    return (<Friends />)
+        return (<Friends pathname={pathname} />)
   }
 }
 

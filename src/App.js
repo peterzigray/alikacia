@@ -34,7 +34,7 @@ class App extends Component {
               {/* <Route  path="/Friends/:id" component={UserIsAuthenticated(Clients)} /> */}
               <Route 
                 path='/:id' 
-                render={ (props) => <Clients {...props} propsFromApp={'n'} />}
+                render={ (props) => <Clients {...props} />}
               /> 
                
                 {/* <Route
