@@ -11,13 +11,13 @@ class UserDetails extends Component {
     onRecordClick: false,
     recordId: '',
     allRecordForRow: '',
-    // detailRecordOfFriend: [{ id: 'none', 
-    //                          paidBy: {id: 1, label: 'none'}, 
-    //                          status: {color: 'none', state: 'none'},
-    //                          debt:['none'],
-    //                          debtor:['none'],
-    //                          date:'nonenonenonenoneone'
-    //                          }],
+    detailRecordOfFriend: [{ id: 'something', 
+                             paidBy: {id: 1, label: 'none'}, 
+                             status: {color: 'none', state: 'none'},
+                             debt:['none'],
+                             debtor:['none'],
+                             date:''
+                             }],
   };
 
   // componentDidMount = () => {
@@ -29,9 +29,7 @@ class UserDetails extends Component {
         const {debt} = this.props
         this.setState({ onRecordClick: !this.state.onRecordClick, recordId: id }) 
         var wholeClickedRecord = debt.filter(d => d.id === id)
-        console.log('meno meno meno')
-        console.log(id)
-        console.log(wholeClickedRecord)
+     
         this.setState({ allRecordForRow: wholeClickedRecord })
       }
   render(){
@@ -40,25 +38,26 @@ class UserDetails extends Component {
     console.log('----------------------------------------------------------')
 
     // console.log('-----------------OtherProps-------------------------')
-    // console.log(otherProps)
+    console.log(otherProps)
     
-    // if(otherProps.[] > 1){
-    //   console.log('none')
-    // } else {
-    //   console.log('-----------------OtherProps-------------------------')
-    //   this.setState({detailRecordOfFriend: {id: 'none'}})
-    // }
+    var recorsdOfDetail;
+    if(otherProps.length >= 1){
+      recorsdOfDetail = otherProps
+    } else {
+      console.log('-----------------OtherProps-------------------------')
+      recorsdOfDetail = this.state.detailRecordOfFriend
+    }
  
 //const UserDetails = ( property ) => {
 
     console.log('-----------Nedoslo to sem----------')
-    console.log(otherProps[0].id)
+    console.log(recorsdOfDetail)
     // console.log( otherProps.map(w=> w.description))
 
 
     // console.log(auth.uid)
 
-    if (otherProps[0].id !== "none") {
+    if (recorsdOfDetail[0].id !== "none" && recorsdOfDetail[0].id !== "something") {
      return (
     <React.Fragment>
 {/* 
@@ -208,16 +207,24 @@ class UserDetails extends Component {
             </div>
           </React.Fragment>
      );
-    } else {
+    } else if (recorsdOfDetail[0].id === "something") {
       return (
 
       
         <div className="mt-5 ml-5"> 
-          <h3>You don't have any debts with this friend</h3> 
-          <h5>you may sattle up one {':)'}</h5>
+          <h3>You might have some debts</h3> 
+          <h5>,but something unexpected happened {':('}</h5>
+          <h5> please click on any of your friends</h5>
         </div>
         )
       
+    } else {
+      return (
+      <div className="mt-5 ml-5">
+        <h3>You don't have any debts with this friend</h3>
+        <h5>, but you may sattle up one {':)'}</h5>
+      </div>
+        )
     }
   }
 }

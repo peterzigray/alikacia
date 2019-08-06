@@ -25,7 +25,7 @@ const Child = (path) => {
   const {pathname} = path.location
   const {debtors} = path
   const {debtorsLeft} = path
-  console.log(path)
+  //console.log(path)
  console.log(debtors)
   console.log(debtorsLeft)
  

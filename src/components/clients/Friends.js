@@ -48,6 +48,7 @@ class friends extends Component {
     classNumber: '',
     style: '',
     addFriends: false,
+    addGroup: false,
     multi: true,
     selectedOption: {},
     friendsList: '',
@@ -89,6 +90,11 @@ class friends extends Component {
     e.preventDefault();
     this.setState({addFriends: !this.state.addFriends})
   }
+  addGroup = (e) => {
+    e.preventDefault();
+    this.setState({ addGroup: !this.state.addGroup })
+  }
+  
 
   // SET ALL FRIENDS TO FRIENDSLIST STATE PICKED FROM COMBO BOX
   onFriendsListChange = (selectedOption) => {
@@ -385,7 +391,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
               <div className="card-footer bg-transparent border-success">
                 <button
                   // to={`/client/${client.id}`}
-                  onClick={this.addFriends}
+                  onClick={this.addGroup}
                   className="btn btn-success btn-sm btn-block btn-icon-split"
                 >
                   <i className="fas fa-plus fa-sm" />{' '}
@@ -578,49 +584,60 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                       </button>
                     </div>
                 </div>
+                </div>
+              </div>
+              : null
+            }
+            {this.state.addGroup ?
+              <div className='popup'>
+                <div className='popup_inner'>
 
 
-                  {/* <div className='row-1 mt-5 ml-3 mr-3'
-                    style={{ height: "25%" }}>
-                    <i className="fas fa-backspace fa-2x float-right"
-                      onClick={this.addFriends}
-                    // onClick={this.setState({ addFriends: !this.state.addFriends  })}
-                    ></i>
-                    <h1>Invite friends</h1>
-                  </div>
-                  <div className='row ml-3 mr-3'
-                    style={{ height: "55%" }}
-                  >
-                    <h1>asasa</h1>
-                    <Select
-                      value={selectedOption}
-                      onChange={this.onFriendsListChange}
-                      options={userNames}
-                      multi={this.state.multi}
-                    />
-                  </div>
-                  <div className='row'
-                    style={{ height: "25%" }}
-                  >
-                    <div class="col ml-3">
-                      <i class="fas fa-envelope fa-2x"></i>{' '}<small className={' d-none d-lg-block '}>your message will be send as an invitation</small>
+
+                  <div className="card" style={{ width: "100%", height: '100%' }} >
+
+                    <div className="card-body">
+                      <h5 className="card-title">Invite friends to your group
+                      <i className="fas fa-backspace fa-sm float-right"
+                          onClick={this.addGroup}
+                        // onClick={this.setState({ addFriends: !this.state.addFriends  })}
+                        >
+                        </i>
+                      </h5>
+                      <p className="card-text"></p>
                     </div>
-                    <div class="col mr-3">
+                    <ul className="list-group list-group-flush">
+                      <li className="list-group-item border-0">
+                        <Select
+                          labelField={this.state.labelField}
+                          valueField={this.state.valueField}
+                          value={selectedOption}
+                          onChange={this.onFriendsListChange}
+                          options={userNames}
+                          multi={this.state.multi}
+                        />
+                      </li>
+                      <li className="list-group-item border-0">
+                        <textarea className="form-control" name="" id="" cols="30" rows="2"></textarea>
+                      </li>
+
+                    </ul>
+                    <div className="card-body">
+                      <i class="fas fa-envelope fa-2x"></i>{' '}<small className=''>your message will be send as an invitation</small>
                       <button
                         onClick={this.onSubmitFriends}
-                        className="btn btn-outline-primary btn-sm float-right"
-                      >Send invites</button>
+                        className="btn btn-outline-primary btn-sm ml-5"
+                      >Send invites
+                      </button>
                     </div>
-                  </div> */}
-
-
-
+                  </div>
                 </div>
               </div>
               : null
             }
           </div>
         </div>
+        
       )
     }
 
