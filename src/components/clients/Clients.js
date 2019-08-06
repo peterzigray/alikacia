@@ -273,7 +273,8 @@ class Clients extends Component {
     const mainClassName = this.state.navbarOn ? 'col-9 transition' : 'col-9 transition';
     const iconChange = this.state.navbarOn ? 'fas fa-arrow-circle-left fa-2x' : 'fas fa-arrow-circle-right fa-2x';
 
-    
+    console.log('------------------------CLIENT----------------------------')
+    console.log('----------------------------------------------------------')
     if(users){
       var currentUser = users.filter(user => { return user.id === auth.uid })
       console.log('sdshcdsfhcksdjckjdkjfkjkjkjk')

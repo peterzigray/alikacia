@@ -209,12 +209,19 @@ class friends extends Component {
   
     
     if (detailRecordOfFriend.length < 1){
-      stateCopyForDetail.detailRecordOfFriend[0].id = 'none';
+      stateCopyForDetail.detailRecordOfFriend = [{ id: 'none', 
+                             paidBy: {id: 1, label: 'none'}, 
+                             status: {color: 'none', state: 'none'},
+                             debt:['none'],
+                             debtor:['none'],
+                             date:'nonenonenonenoneone'
+                             }]
       this.setState(stateCopyForDetail)
     } else {
       stateCopyForDetail.detailRecordOfFriend = detailRecordOfFriend
       this.setState(stateCopyForDetail)
     }
+    console.log('------toto chcem odsledovat teraz----------')
     console.log(stateCopyForDetail.detailRecordOfFriend)
 
     
@@ -227,7 +234,8 @@ class friends extends Component {
     const { selectedOption } = this.state;
     const { users, debt, auth, pathname } = this.props;
 
-
+    console.log('------------------------FRIENDS---------------------------')
+    console.log('----------------------------------------------------------')
   
    
 //.match(/(?!.*\/).+/)
@@ -305,7 +313,7 @@ class friends extends Component {
     }
 
   
-
+    var userDetailProps2;
     if (debt && users) {
 
       console.log('--------------toto je ten parameter--------------------')
@@ -318,35 +326,31 @@ class friends extends Component {
                    //                SAME AS IN THE FUNCTION MERGE LATER
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 console.log('----------po tomto pozeram----------')
-var debt2 = JSON.parse(JSON.stringify(debt));
+          var debt2 = JSON.parse(JSON.stringify(debt));
 
-// RETURN ALL DEBTS WHERE I AM PAYER OR DEBTOR TO CLICKED FRIEND OR CLICKED FRIEND IS PAYER OR DEBTOR WITH ME
-var userDetailProps2 = debt2.map(function(d){
-const{id}= d.paidBy
-var res = d.debtTo.map(function(c){
-    if (c.id === parameter && id === auth.uid){
-      return Object.assign(d, 
-        {debt: d.debtTo.map(n => n.id === parameter? n.actualDebt: null).filter(a => a !== null),
-          debtor: d.debtTo.map(n => n.id === parameter ? n.id : null).filter(a => a !== null)
-        })
-   
-      
-    }  
-  if (c.id === auth.uid && id === parameter){
-    return Object.assign(d, 
-      {
-        debt: d.debtTo.map(n => n.id === auth.uid ? n.actualDebt : null).filter(a => a !== null),
-      debtor: d.debtTo.map(n => n.id === auth.uid ? n.id : null).filter(a => a !== null)
-     })
-    
-  }
-  }
-).filter(a => a)
-  return res
-}
-).flat()
-
-}
+          // RETURN ALL DEBTS WHERE I AM PAYER OR DEBTOR TO CLICKED FRIEND OR CLICKED FRIEND IS PAYER OR DEBTOR WITH ME
+          userDetailProps2 = debt2.map(function(d){
+          const{id}= d.paidBy
+          var res = d.debtTo.map(function(c){
+              if (c.id === parameter && id === auth.uid){
+                return Object.assign(d, 
+                  {debt: d.debtTo.map(n => n.id === parameter? n.actualDebt: null).filter(a => a !== null),
+                    debtor: d.debtTo.map(n => n.id === parameter ? n.id : null).filter(a => a !== null)
+                  }
+                )    
+             }  
+            if (c.id === auth.uid && id === parameter){
+              return Object.assign(d, 
+                {
+                  debt: d.debtTo.map(n => n.id === auth.uid ? n.actualDebt : null).filter(a => a !== null),
+                debtor: d.debtTo.map(n => n.id === auth.uid ? n.id : null).filter(a => a !== null)
+              }
+            )  
+          }
+        }).filter(a => a)
+            return res
+      }).flat()
+    }
 
 console.log(userDetailProps2)
 //stateCopyForDetailUser.detailRecordOfFriend = userDetailProps2;
@@ -357,18 +361,15 @@ console.log(userDetailProps2)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+console.log('all I need is this')
+console.log(this.state.detailRecordOfFriend)
+var clickedUserDetailProps = this.state.detailRecordOfFriend
+
+
+// userDetailProps[0].id === 'null' && userDetailProps[0].id !== 'none' ? userDetailProps2: userDetailProps
 
 
 
-
-
-
-
-
-      //const nextProp = this.state.detailRecordOfFriend.map((w) => w )
-      console.log('all I need is this')
-     var userDetailProps = this.state.detailRecordOfFriend
-   //  console.log(stateCopyForDetailUser.detailRecordOfFriend )
    
       return (
         <div className="row">
@@ -466,12 +467,21 @@ console.log(userDetailProps2)
          
        
        <Route path="/Friends/:id"            
-        render={(props) => <Table {...props}   otherProps = {userDetailProps[0].id === 'null' ? userDetailProps2: userDetailProps} auth={auth} />}
+        render={(props) => <Table {...props}   otherProps = {this.state.detailRecordOfFriend[0].id === 'null' && this.state.detailRecordOfFriend[0].id !== 'none' ? userDetailProps2: clickedUserDetailProps} auth={auth} />}
        />       
 
             
         
-
+      { !userDetailProps2
+       // userDetailProps[0].id === 'null'
+         ? 
+        <div className="mt-5 ml-5"> 
+          <h3>You didn't choose any detail</h3> 
+          <h5>Plese click on your friends</h5>
+        </div>
+      
+      :null
+      }
              
             
             

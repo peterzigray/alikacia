@@ -10,8 +10,20 @@ class UserDetails extends Component {
   state = {
     onRecordClick: false,
     recordId: '',
-    allRecordForRow: ''
+    allRecordForRow: '',
+    detailRecordOfFriend: [{ id: 'null', 
+                             paidBy: {id: 1, label: 'none'}, 
+                             status: {color: 'none', state: 'none'},
+                             debt:['none'],
+                             debtor:['none'],
+                             date:'nonenonenonenoneone'
+                             }],
   };
+
+  // componentDidMount = () => {
+  //   const { otherProps } = this.props;
+  
+  // }
 
       onRecordClick = (id) => {
         const {debt} = this.props
@@ -24,20 +36,30 @@ class UserDetails extends Component {
       }
   render(){
     const { otherProps, auth } = this.props;
+    console.log('------------------------FRIENDS DETAIL--------------------')
+    console.log('----------------------------------------------------------')
+
+    // console.log('-----------------OtherProps-------------------------')
+    // console.log(otherProps)
+    
+    // if(otherProps.[] > 1){
+    //   console.log('none')
+    // } else {
+    //   console.log('-----------------OtherProps-------------------------')
+    //   this.setState({detailRecordOfFriend: {id: 'none'}})
+    // }
  
 //const UserDetails = ( property ) => {
 
     console.log('-----------Nedoslo to sem----------')
-    console.log(otherProps)
+    console.log(this.state.detailRecordOfFriend[0].id)
     // console.log( otherProps.map(w=> w.description))
 
 
-
-
     // console.log(auth.uid)
-    if(otherProps[0].id !== "null")
-    {
-  return (
+
+    if(this.state.detailRecordOfFriend[0].id !== "none") {
+     return (
     <React.Fragment>
 {/* 
               <Route 
@@ -148,77 +170,56 @@ class UserDetails extends Component {
                     </div>
                   </tr>
                   
+
+
+                  
    
                 </tbody> 
-    
-                {/* this.state.showClickedRecord && this.state.recordId */}
-              
-
-
-
-
-
-            </React.Fragment>
-    
-          ))}
-
-
-              {this.state.onRecordClick && this.state.recordId ?
-
-               <React.Fragment>
-
-                  {this.state.allRecordForRow.map(record => (
-
-
-
-                    <div className="card text-center ml-0 mt-2" key={record.id} style={{ 'max-width': '90%' }}>
-                      {/* <div class="card-header">
-  Featured
-      </div> */}
-                      <div className="card-body" >
-                        <div className="col-6">
-
-
-
+                {this.state.onRecordClick && this.state.recordId === w.id ?
+                  <React.Fragment>
+                    {this.state.allRecordForRow.map(record => (
+                      <div className="card text-center ml-0 mt-2" style={{ 'max-width': '90%' }}>                 
+                        <div className="card-body"  >
+                          <div className="col-6" >
+                          </div >
+                          <div  className="col-6">
+                            <i class="fas fa-user-circle fa-3x clientAvatar" />
+                            <h5 className="card-title">Peter Zigray</h5>
+                            <p  >{record.date} </p>
+                            <p   style={{ color: 'red' }}>${record.balance}</p>
+                          </div>
                         </div>
-                        <div className="col-6">
-                          <i class="fas fa-user-circle fa-3x clientAvatar" />
-                          <h5 className="card-title">Peter Zigray</h5>
-                          <p>{record.date} </p>
-                          <p style={{ color: 'red' }}>${record.balance}</p>
+                        <div className="card-footer text-muted">
+                          2 days ago
                         </div>
-                      </div>
-                      <div className="card-footer text-muted">
-                        2 days ago
-      </div>
-
-                    </div>
-
-
-                  )
-
-
-                  )}
-
-
-
-
-               </React.Fragment>
-
-
-
-                : null}
-        </React.Fragment>
-      </table>
-    </div>
-    </div>
-    
-    </React.Fragment>
-
-  
-  );
+                     </div>
+                    )
+                )
             }
-}
+          
+                          </React.Fragment> : null}
+                      </React.Fragment>
+                    )
+                  )
+                }   
+                </React.Fragment>
+                </table>
+              </div>
+            </div>
+          </React.Fragment>
+     );
+    } else {
+      return (
+
+      
+        <div className="mt-5 ml-5"> 
+          <h3>You didn't choose any detail</h3> 
+          <h5>Plese click on your friends</h5>
+        </div>
+        )
+      
+    }
+  }
 }
 
 UserDetails.propTypes = {
