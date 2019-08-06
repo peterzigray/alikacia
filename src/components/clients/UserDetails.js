@@ -11,13 +11,13 @@ class UserDetails extends Component {
     onRecordClick: false,
     recordId: '',
     allRecordForRow: '',
-    detailRecordOfFriend: [{ id: 'null', 
-                             paidBy: {id: 1, label: 'none'}, 
-                             status: {color: 'none', state: 'none'},
-                             debt:['none'],
-                             debtor:['none'],
-                             date:'nonenonenonenoneone'
-                             }],
+    // detailRecordOfFriend: [{ id: 'none', 
+    //                          paidBy: {id: 1, label: 'none'}, 
+    //                          status: {color: 'none', state: 'none'},
+    //                          debt:['none'],
+    //                          debtor:['none'],
+    //                          date:'nonenonenonenoneone'
+    //                          }],
   };
 
   // componentDidMount = () => {
@@ -52,13 +52,13 @@ class UserDetails extends Component {
 //const UserDetails = ( property ) => {
 
     console.log('-----------Nedoslo to sem----------')
-    console.log(this.state.detailRecordOfFriend[0].id)
+    console.log(otherProps[0].id)
     // console.log( otherProps.map(w=> w.description))
 
 
     // console.log(auth.uid)
 
-    if(this.state.detailRecordOfFriend[0].id !== "none") {
+    if (otherProps[0].id !== "none") {
      return (
     <React.Fragment>
 {/* 
@@ -213,8 +213,8 @@ class UserDetails extends Component {
 
       
         <div className="mt-5 ml-5"> 
-          <h3>You didn't choose any detail</h3> 
-          <h5>Plese click on your friends</h5>
+          <h3>You don't have any debts with this friend</h3> 
+          <h5>you may sattle up one {':)'}</h5>
         </div>
         )
       
