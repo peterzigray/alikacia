@@ -105,6 +105,9 @@ class friends extends Component {
     console.log(stateCopy3.friendsList)
 
   }
+
+
+  // SUBMIT PICKED FRIENDS
   onSubmitFriends = (e) => {
     const {
       state,
@@ -150,6 +153,54 @@ class friends extends Component {
     this.setState({ addFriends: !this.state.addFriends })
     
   }
+
+  // SUBMIT PICKET GROUPS
+  onSubmitGroup = (e) => {
+    const {
+      state,
+      props: { firestore, history, users, auth}
+    } = this;
+
+    var stateCopyGroup = Object.assign({}, this.state);
+
+
+    if(this.state.friendsList < 1){
+      window.alert("Please choose your new friends!")
+      // stateCopy6.selectedOption = {};
+      // this.setState(stateCopy6)
+    }
+
+    // UPDATE MY USER WITH NEW FRIENDS
+    var copyofUser = JSON.parse(JSON.stringify(users));
+    
+
+    // FILTER MY USER
+    var myUserFriends = copyofUser.filter(user => user.id === auth.uid).filter(user => user.id === auth.uid)
+    console.log('sadjkkskfksdkjsk')
+    console.log(myUserFriends)
+      
+    if (!('friends' in myUserFriends[0])){
+      myUserFriends = [];
+    } else {
+      myUserFriends = myUserFriends[0].friends.filter(friend => friend)
+    }
+
+
+    // FILTER PICKED USERS FROM MULTICHOICE COMBO BOX
+    console.log(this.state.friendsList)
+    var newPickedFriends = this.state.friendsList
+    
+    // MERGE MYUSERSFRIEND WITH FRIENDSLIST
+    for(var i in myUserFriends){
+      newPickedFriends.push(myUserFriends[i])
+    }
+    console.log(newPickedFriends)
+      
+    firestore.collection('users').doc(auth.uid).set({ friends: newPickedFriends }, { merge: true })
+    this.setState({ addFriends: !this.state.addFriends })
+    
+  }
+
 
   onRecordClick = (id) => {
     
@@ -625,7 +676,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                     <div className="card-body">
                       <i class="fas fa-envelope fa-2x"></i>{' '}<small className=''>your message will be send as an invitation</small>
                       <button
-                        onClick={this.onSubmitFriends}
+                        onClick={this.onSubmitGroup}
                         className="btn btn-outline-primary btn-sm ml-5"
                       >Send invites
                       </button>

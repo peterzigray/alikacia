@@ -119,7 +119,19 @@ class dashboard extends Component {
 
     const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft} = this.props;
 
-    if (debt && users && debtors.length >= 1 && debtorsLeft >=1) {
+
+    if (debtors.length < 1 && debtorsLeft < 1) {
+      return (
+        <div className="mt-5 ml-5">
+          <h3>You dont have any debts to show yet</h3>
+          <h4>settle up your debts with friends {':)'}</h4>
+          <h5>in order to do it, click on section add bills</h5>
+        </div>
+      )
+      
+    } 
+
+    else if (debt && users) {
 
       return (
         <div className="row h-100">
@@ -269,16 +281,7 @@ class dashboard extends Component {
 }
 
 
-    else if (debtors.length < 1 && debtorsLeft < 1) {
-      return (
-        <div className="mt-5 ml-5">
-          <h3>You dont have any debts to show yet</h3>
-          <h4>settle up your debts with friends {':)'}</h4>
-          <h5>in order to do it, click on section add bills</h5>
-        </div>
-      )
-      
-    } else {
+    else {
       return (<Spinner />);
     }
   }
