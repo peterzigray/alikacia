@@ -15,25 +15,87 @@ import UserDetails from './UserDetails';
 
 
 
+/**
+ * 
+ * @param {array} property one object od debt
+ * @return {array} result of matched id's from users and friends
+ */
 const Table = (property) => {
   var {otherProps} = property;
   var {id} = property.match.params
   var {auth}= property;
-
-
-
-  console.log('-----------Doslo to sem----------')
+    console.log('-----------Doslo to sem----------')
     console.log(property)
-  
-  if(id !== "null")
-  {
-
- 
-return (
- <UserDetails otherProps={otherProps} auth={auth} />
-)
-} 
+    if(id !== "null") {
+      return (<UserDetails otherProps={otherProps} auth={auth} />)
+     } 
+   }
+//-------------------------------------------------------------------------------------------------------------------------->
+/**
+ * 
+ * @param {array} users one object od debt
+ * @param {array} friends object mine authorization
+ * @return {array} result of matched id's from users and friends
+ */
+function getMyNonFriends(users,friends){
+  var result = [];
+  for (var i in users){
+      var matched = false
+      for (var j in friends){
+        if (users[i].id === friends[j].id){
+          matched = true
+        }
+      }
+      if(!matched){
+        result.push(users[i])
+      }
+    }
+  return result   
 }
+//-------------------------------------------------------------------------------------------------------------------------->
+/**
+ * 
+ * @param {array} users one object od debt
+ * @param {array} friends object mine authorization
+ * @return {array} result of matched id's from users and friends
+ */
+function getAllMyFriends(copyofU, auth){
+    var friends = copyofU.map(user => user.id === auth.uid && user.friends).filter(arr => arr !== false).flat()
+    if (typeof(friends[0]) !== 'undefined'){
+        return friends
+      } else {   
+        return friends = [{label: 'none', id: 'null' }]
+    }
+  }
+//-------------------------------------------------------------------------------------------------------------------------->
+   /*
+    * RENAME firstName keys in all array to label for input use
+    * another comment here
+    * ...
+    */
+   function renameKeys(copyofU, newKeys) {
+    var newArrOfChngedKeys = [];
+    for (let i = 0; i < copyofU.length; i++) {
+      newArrOfChngedKeys.push(giveBackNewArray(copyofU[i], newKeys))
+    }
+    return newArrOfChngedKeys
+  }
+//-------------------------------------------------------------------------------------------------------------------------->
+  /*
+  * RETURN changed key for every single object in array one by one
+  * another comment here
+  * ...
+  */
+  function giveBackNewArray(copyofU, newKeys) {
+    const keyValues = Object.keys(copyofU).map(key => {
+      const newKey = newKeys[key] || key;
+      return { [newKey]: copyofU[key] };
+    }
+    );
+    return Object.assign({}, ...keyValues);
+  }
+//-------------------------------------------------------------------------------------------------------------------------->
+
 
 
 class friends extends Component {
@@ -52,6 +114,8 @@ class friends extends Component {
     multi: true,
     selectedOption: {},
     friendsList: '',
+    groupList: '',
+    groupName: '',
     actualUsersDebts: [{id: 'null'}],
     valueField: 'id',
     labelField: 'label',
@@ -68,55 +132,50 @@ class friends extends Component {
     allRecordForRow: ''
   };
 
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // SHOW POP UP FOR ADDING NEW FRIENDS
   addFriends = (e) => {
     e.preventDefault();
     this.setState({addFriends: !this.state.addFriends})
   }
+  //-------------------------------------------------------------------------------------------------------------------------->
+
   addGroup = (e) => {
     e.preventDefault();
     this.setState({ addGroup: !this.state.addGroup })
   }
+  //-------------------------------------------------------------------------------------------------------------------------->
   
-
   // SET ALL FRIENDS TO FRIENDSLIST STATE PICKED FROM COMBO BOX
   onFriendsListChange = (selectedOption) => {
-    var stateCopy3 = Object.assign({}, this.state);
-    stateCopy3.friendsList = selectedOption;
-    this.setState(stateCopy3);
+    var stateCopyFriends = Object.assign({}, this.state);
+    stateCopyFriends.friendsList = selectedOption;
+    this.setState(stateCopyFriends);
     console.log('HAHAHAH')
-    console.log(stateCopy3.friendsList)
-
+    console.log(stateCopyFriends.friendsList)
   }
-
-
+  //-------------------------------------------------------------------------------------------------------------------------->
+  // SET ALL FRIENDS FOR GROUP
+  onGroupFriendsChange = (e) => {
+    var stateCopyGroupFriends = Object.assign({}, this.state);
+    stateCopyGroupFriends.groupList = e;
+    this.setState(stateCopyGroupFriends);
+  }
+  //-------------------------------------------------------------------------------------------------------------------------->
+  // SET NAME OF THE GROUP 
+  onGroupNameChange = (e) => {
+  var stateCopyGroupName = Object.assign({}, this.state);
+  stateCopyGroupName.groupName = e.target.value;
+  this.setState(stateCopyGroupName);  
+}
+  //-------------------------------------------------------------------------------------------------------------------------->
   // SUBMIT PICKED FRIENDS
   onSubmitFriends = (e) => {
     const {
       state,
       props: { firestore, history, users, auth}
     } = this;
-
-    var stateCopy6 = Object.assign({}, this.state);
-
-
+ 
+    //var stateCopy6 = Object.assign({}, this.state);
     if(this.state.friendsList < 1){
       window.alert("Please choose your new friends!")
       // stateCopy6.selectedOption = {};
@@ -144,7 +203,7 @@ class friends extends Component {
     var newPickedFriends = this.state.friendsList
     
     // MERGE MYUSERSFRIEND WITH FRIENDSLIST
-    for(var i in myUserFriends){
+    for(var i in myUserFriends) {
       newPickedFriends.push(myUserFriends[i])
     }
     console.log(newPickedFriends)
@@ -154,53 +213,66 @@ class friends extends Component {
     
   }
 
-  // SUBMIT PICKET GROUPS
-  onSubmitGroup = (e) => {
+  onSubmitGroups = (e) => {
     const {
       state,
       props: { firestore, history, users, auth}
     } = this;
+    
+    console.log(' group submitted')
+    
 
-    var stateCopyGroup = Object.assign({}, this.state);
-
-
-    if(this.state.friendsList < 1){
-      window.alert("Please choose your new friends!")
+    var myUser = users.filter(user => user.id === auth.uid).filter(user => user.id === auth.uid)
+    console.log(myUser)
+    console.log(Object.assign({}, {name: this.state.groupName , members : this.state.groupList} ))
+    //Array.prototype.push.apply(myUser, ); 
+    // var stateCopy6 = Object.assign({}, this.state);
+    if(this.state.groupName.length < 1 || this.state.groupList.length < 1) {
+      window.alert("Please fill everything :)")
       // stateCopy6.selectedOption = {};
       // this.setState(stateCopy6)
     }
+    
 
     // UPDATE MY USER WITH NEW FRIENDS
-    var copyofUser = JSON.parse(JSON.stringify(users));
+    // var copyofUser = JSON.parse(JSON.stringify(users));
     
 
-    // FILTER MY USER
-    var myUserFriends = copyofUser.filter(user => user.id === auth.uid).filter(user => user.id === auth.uid)
-    console.log('sadjkkskfksdkjsk')
-    console.log(myUserFriends)
+    // // FILTER MY USER
+    // var myUserFriends = copyofUser.filter(user => user.id === auth.uid).filter(user => user.id === auth.uid)
+    // console.log('sadjkkskfksdkjsk')
+    // console.log(myUserFriends)
       
-    if (!('friends' in myUserFriends[0])){
-      myUserFriends = [];
-    } else {
-      myUserFriends = myUserFriends[0].friends.filter(friend => friend)
-    }
+    // if (!('friends' in myUserFriends[0])){
+    //   myUserFriends = [];
+    // } else {
+    //   myUserFriends = myUserFriends[0].friends.filter(friend => friend)
+    // }
 
 
-    // FILTER PICKED USERS FROM MULTICHOICE COMBO BOX
-    console.log(this.state.friendsList)
-    var newPickedFriends = this.state.friendsList
+    // // FILTER PICKED USERS FROM MULTICHOICE COMBO BOX
+    // console.log(this.state.friendsList)
+    // var newPickedFriends = this.state.friendsList
     
-    // MERGE MYUSERSFRIEND WITH FRIENDSLIST
-    for(var i in myUserFriends){
-      newPickedFriends.push(myUserFriends[i])
-    }
-    console.log(newPickedFriends)
+    // // MERGE MYUSERSFRIEND WITH FRIENDSLIST
+    // for(var i in myUserFriends){
+    //   newPickedFriends.push(myUserFriends[i])
+    // }
+    // console.log(newPickedFriends)
       
-    firestore.collection('users').doc(auth.uid).set({ friends: newPickedFriends }, { merge: true })
-    this.setState({ addFriends: !this.state.addFriends })
-    
-  }
+    // firestore.collection('users').doc(auth.uid).set({ friends: newPickedFriends }, { merge: true })
+    // this.setState({ addFriends: !this.state.addFriends })
 
+    //------------------------------------------------------------------------------------------------------
+    // firestore
+    //   .add({ collection: "groups" }, Object.assign({}, {name:this.state.groupName , members : this.state.groupList}))
+      // .then(() => history.push("/"));
+    //  .then(this.setState(nieco))
+}
+  //-------------------------------------------------------------------------------------------------------------------------->
+
+  
+  //-------------------------------------------------------------------------------------------------------------------------->
 
   onRecordClick = (id) => {
     
@@ -217,14 +289,11 @@ class friends extends Component {
     console.log('---------id clicked----------')
     console.log(id)
   }
-
+  //-------------------------------------------------------------------------------------------------------------------------->
 
   showUserDetail = (idecko) => {
     const { users, debt, auth } = this.props;
     let stateCopyForDetail = Object.assign({}, this.state);
-
-
-
 
     // // FILTER OUT EMPTY OBJECTS
     // newDebtLeft = newDebtLeft.filter(d => Object.keys(d).length !== 0).filter(debt => debt.paidBy === id)
@@ -281,11 +350,8 @@ class friends extends Component {
     console.log('------toto chcem odsledovat teraz----------')
     console.log(stateCopyForDetail.detailRecordOfFriend)
 
-    
-   
   }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- 
+  //-------------------------------------------------------------------------------------------------------------------------->
 
   render() {
     const { selectedOption } = this.state;
@@ -294,82 +360,39 @@ class friends extends Component {
     console.log('------------------------FRIENDS---------------------------')
     console.log('----------------------------------------------------------')
   
-   
-//.match(/(?!.*\/).+/)
-    // COPY OFF REAL USERS
+    // COPY OFF REAL USERS AS PREVENT FROM MUTATE 
     var copyofU = JSON.parse(JSON.stringify(users));
-    var showNonFriends = [];
 
-    // FILTER ALL MY ALREADY PICKED FRIENDS / IF THERE IS NO ONE USER.ID IS SET TO 'NULL' BECAUSE I DONT WANT TO
-    // CAUSE CRASH ON FILTER METHOD FORWARD.
-    var myFriends = copyofU.map(user => user.id === auth.uid && user.friends).filter(arr => arr !== false).flat()
 
-    if (typeof(myFriends[0]) !== 'undefined'){
-      console.log('-------myFriends---------')
-      console.log(myFriends)
-    } else {
-      console.log('-------None---------')
-      myFriends = [{label: 'none'}]
-    }
-    
 
-    // COPYOFUSERS - MYFRIENDS
-    for (var i in copyofU){
-      var matched = false
-      for (var j in myFriends){
-        if (copyofU[i].id === myFriends[j].id){
-          matched = true
-        }
-      }
-      if(!matched){
-        showNonFriends.push(copyofU[i])
-      }
-    }
-    myFriends = myFriends.filter(function (el) {
-      return el.id != 'null';
-    })
+    //-------------------------------------------------------------------------------------------------------------------------->
+    // RETURN ALL MY FRIENDS AND IF THERE IS NO ONE RETURN {LABEL: NONE} 
+    var myFriends =  getAllMyFriends(copyofU, auth)
+    console.log('-------myFriends---------')
+    console.log(myFriends)
+
+    // RETURN ALL MY NONFRIENDS
+    var myNonFriends = getMyNonFriends(copyofU,myFriends)
     console.log('--nonfriends---')
-    console.log(showNonFriends)
-    // IN CASE YOU DONT HAVE ANY FRIENDS PUSH ID NULL FOR MESSAGE RENDERING IN RETURN
-    if (myFriends.length < 1){
-      myFriends.push({ id: 'null' })
-    }
+    console.log(myNonFriends)
    
-  
-    // KEY FOR RENAME ALL FIRSTNAME FOR NON PICKED FRIENDS IN ORTER TO FIT INTO COMBOMOX
+    // KEY DECLARATION FOR RENAME ALL FIRSTNAME FOR NONFRIENDS IN ORTER TO FIT INTO COMBOMOX
     const newKeys = { firstName: "label" };
 
-    // RETURN USERNAMES FOR COMBOBOX (THIS IS RESULT WHAT IS SHOWN IN THE SCREEN)
-    const userNames = renameKeys(showNonFriends, newKeys);
+    // RETURN RENAMED USER NAMES KEYS: LABEL INSTEAD OF NAME (IN ORDER TO WORK WITH COMBOBOX FOR SHOWING USERS AS MY NONFRIENDS)
+    const userNames = renameKeys(myNonFriends, newKeys);
     console.log('-------------usernames------------------')
     console.log(userNames)
-    /*
-    * RENAME firstName keys in all array to label for input use
-    * another comment here
-    * ...
-    */
-    function renameKeys(copyofU, newKeys) {
-      var newArrOfChngedKeys = [];
-      for (let i = 0; i < copyofU.length; i++) {
-        newArrOfChngedKeys.push(giveBackNewArray(copyofU[i], newKeys))
-      }
-      return newArrOfChngedKeys
-    }
-    /*
-    * RETURN changed key for every single object in array one by one
-    * another comment here
-    * ...
-    */
-    function giveBackNewArray(copyofU, newKeys) {
-      const keyValues = Object.keys(copyofU).map(key => {
-        const newKey = newKeys[key] || key;
-        return { [newKey]: copyofU[key] };
-      }
-      );
-      return Object.assign({}, ...keyValues);
-    }
+    //-------------------------------------------------------------------------------------------------------------------------->
 
+    const friendsForGruop = renameKeys(myFriends, newKeys);
+    console.log('-------------- friends for groups --------------------')
+    console.log(friendsForGruop)
   
+
+
+
+
     var userDetailProps2;
     if (debt && users) {
 
@@ -379,7 +402,7 @@ class friends extends Component {
         console.log(parameter)
       
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                    //                SAME AS IN THE FUNCTION MERGE LATER
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 console.log('----------po tomto pozeram----------')
@@ -410,24 +433,11 @@ console.log('----------po tomto pozeram----------')
     }
 
 console.log(userDetailProps2)
-//stateCopyForDetailUser.detailRecordOfFriend = userDetailProps2;
-
-//this.setState(stateCopyForDetailUser)
-
-//this.setState({ detailRecordOfFriend: userDetailProps})
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 console.log('all I need is this')
 console.log(this.state.detailRecordOfFriend)
 var clickedUserDetailProps = this.state.detailRecordOfFriend
+//-------------------------------------------------------------------------------------------------------------------------->
 
-
-// userDetailProps[0].id === 'null' && userDetailProps[0].id !== 'none' ? userDetailProps2: userDetailProps
-
-
-
-   
       return (
         <div className="row">
           <div className="col-md-3">
@@ -657,14 +667,28 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                       </h5>
                       <p className="card-text"></p>
                     </div>
+                    
                     <ul className="list-group list-group-flush">
+                    <div className="form-group">
+                    <label htmlFor="description">Enter Group Name</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="description"
+                     // value={this.state.description}
+                      minLength="2"
+                      required
+                     onChange={this.onGroupNameChange}
+                      // value={this.state.lastName}
+                    />
+                  </div>
                       <li className="list-group-item border-0">
                         <Select
                           labelField={this.state.labelField}
                           valueField={this.state.valueField}
                           value={selectedOption}
-                          onChange={this.onFriendsListChange}
-                          options={userNames}
+                          onChange={this.onGroupFriendsChange}
+                          options={friendsForGruop}
                           multi={this.state.multi}
                         />
                       </li>
@@ -676,7 +700,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                     <div className="card-body">
                       <i class="fas fa-envelope fa-2x"></i>{' '}<small className=''>your message will be send as an invitation</small>
                       <button
-                        onClick={this.onSubmitGroup}
+                        onClick={this.onSubmitGroups}
                         className="btn btn-outline-primary btn-sm ml-5"
                       >Send invites
                       </button>
