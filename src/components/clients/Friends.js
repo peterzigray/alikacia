@@ -62,8 +62,10 @@ function getMyNonFriends(users,friends){
 function getAllMyFriends(copyofU, auth){
     var friends = copyofU.map(user => user.id === auth.uid && user.friends).filter(arr => arr !== false).flat()
     if (typeof(friends[0]) !== 'undefined'){
+        
         return friends
       } else {   
+        
         return friends = [{label: 'none', id: 'null' }]
     }
   }
@@ -116,6 +118,8 @@ class friends extends Component {
     friendsList: '',
     groupList: '',
     groupName: '',
+
+    friendExist: false,
     actualUsersDebts: [{id: 'null'}],
     valueField: 'id',
     labelField: 'label',
@@ -137,11 +141,60 @@ class friends extends Component {
     e.preventDefault();
     this.setState({addFriends: !this.state.addFriends})
   }
+
+  onFriendDelete = (id) => {
+    console.log(id)
+    const { firestore , auth , users } = this.props;
+    
+    var usersForDelete = JSON.parse(JSON.stringify(users));
+    var myFriendsForDelete = getAllMyFriends(usersForDelete, auth)
+
+    
+    var newFriendsList = myFriendsForDelete.filter((friend) => friend.id !== id)
+
+    var pathFirestore = firestore.collection('users').doc(auth.uid);
+
+    if (newFriendsList && newFriendsList.length !== 0){
+      
+      // Remove the 'capital' field from the document
+      pathFirestore.update({
+        friends: newFriendsList
+      });
+    } else {
+      pathFirestore.update({
+        friends: newFriendsList
+      });
+      pathFirestore.update({
+        friends: firestore.FieldValue.delete()
+      });
+    }
+   
+
+    // firestore
+    //   .delete({ collection: 'users', doc: auth.uid })
+  }
   //-------------------------------------------------------------------------------------------------------------------------->
 
-  addGroup = (e) => {
-    e.preventDefault();
-    this.setState({ addGroup: !this.state.addGroup })
+  addGroup = (friendsForGruop) => {
+    
+
+    //friendsForGruop[0].label === 'none' ? this.setState({ friendExist: false }) : this.setState({ friendExist: true })
+
+    console.log('ako to je mozne')
+    console.log(friendsForGruop)
+  
+    if (!this.state.addGroup ){
+      //friendsForGruop[0].label === 'none' ? this.setState({ friendExist: false }) : this.setState({ friendExist: true })
+      if (friendsForGruop[0].label === 'none'){
+            window.alert("you must first add at least one firend :)")
+        } else {
+            this.setState({ addGroup: !this.state.addGroup })
+      }
+    } else {
+      this.setState({ addGroup: !this.state.addGroup })
+    }
+   
+    
   }
   //-------------------------------------------------------------------------------------------------------------------------->
   
@@ -220,11 +273,16 @@ class friends extends Component {
     } = this;
     
     console.log(' group submitted')
-    
-
+    var groupList = JSON.parse(JSON.stringify(this.state.groupList));
     var myUser = users.filter(user => user.id === auth.uid).filter(user => user.id === auth.uid)
-    console.log(myUser)
-    console.log(Object.assign({}, {name: this.state.groupName , members : this.state.groupList} ))
+
+    // KEY DECLARATION FOR RENAME ALL FIRSTNAME FOR NONFRIENDS IN ORTER TO FIT INTO COMBOMOX
+    const newKeys = { label: "firstName" };
+
+    // RETURN RENAMED USER NAMES KEYS: LABEL INSTEAD OF NAME (IN ORDER TO WORK WITH COMBOBOX FOR SHOWING USERS AS MY NONFRIENDS)
+    const group = renameKeys(groupList, newKeys);
+
+    //console.log(Object.assign({}, { name: this.state.groupName, members: myUser.concat(group)} ))
     //Array.prototype.push.apply(myUser, ); 
     // var stateCopy6 = Object.assign({}, this.state);
     if(this.state.groupName.length < 1 || this.state.groupList.length < 1) {
@@ -264,10 +322,10 @@ class friends extends Component {
     // this.setState({ addFriends: !this.state.addFriends })
 
     //------------------------------------------------------------------------------------------------------
-    // firestore
-    //   .add({ collection: "groups" }, Object.assign({}, {name:this.state.groupName , members : this.state.groupList}))
-      // .then(() => history.push("/"));
-    //  .then(this.setState(nieco))
+    firestore
+      .add({ collection: "groups" }, Object.assign({}, { name: this.state.groupName, members: myUser.concat(group) }))
+     // .then(() => history.push("/"));
+     //.then(this.setState(nieco))
 }
   //-------------------------------------------------------------------------------------------------------------------------->
 
@@ -355,11 +413,11 @@ class friends extends Component {
 
   render() {
     const { selectedOption } = this.state;
-    const { users, debt, auth, pathname } = this.props;
+    const { users, debt, auth, pathname, groups } = this.props;
 
     console.log('------------------------FRIENDS---------------------------')
     console.log('----------------------------------------------------------')
-  
+    console.log(groups)
     // COPY OFF REAL USERS AS PREVENT FROM MUTATE 
     var copyofU = JSON.parse(JSON.stringify(users));
 
@@ -367,9 +425,11 @@ class friends extends Component {
 
     //-------------------------------------------------------------------------------------------------------------------------->
     // RETURN ALL MY FRIENDS AND IF THERE IS NO ONE RETURN {LABEL: NONE} 
+    var stateForRender = Object.assign({}, this.state);
     var myFriends =  getAllMyFriends(copyofU, auth)
     console.log('-------myFriends---------')
-    console.log(myFriends)
+  
+   
 
     // RETURN ALL MY NONFRIENDS
     var myNonFriends = getMyNonFriends(copyofU,myFriends)
@@ -445,14 +505,36 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
             <div className="card border-success mb-3" style={{ "max-width":"18rem"}}>
               <div className="card-header bg-transparent border-success">Groups</div>
               <div className="card-body text-success">
-                <h5 className="card-title">Add your group</h5>
-                <p className="card-text">You haven't added any
-                group yet. let's change it {':)'} </p>
+
+                {groups ? <div>{ groups.map((group) =>
+                  (
+                    <frameElement>
+                    
+                  < button
+                    // to={`/client/${client.id}`}
+                    // value="groupButton"
+                    // onClick={this.addGroup.bind(this, friendsForGruop)}
+                    className="btn btn-success btn-sm btn-block btn-icon-split mb-1"
+                  >
+                    {group.name}
+                  </button>
+                    </frameElement>
+                ))} </div>:<div><h5 className="card-title">Add your group</h5>
+                  <p className="card-text">You haven't added any
+                group yet. let's change it {':)'} </p></div> }
+                
+
+
               </div>
-              <div className="card-footer bg-transparent border-success">
+              <div className="card-footer bg-transparent border-success"
+                
+              >
+
+              
                 <button
                   // to={`/client/${client.id}`}
-                  onClick={this.addGroup}
+                  value="groupButton"
+                  onClick={this.addGroup.bind(this, friendsForGruop)}
                   className="btn btn-success btn-sm btn-block btn-icon-split"
                 >
                   <i className="fas fa-plus fa-sm" />{' '}
@@ -460,6 +542,9 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                     add group
                         </span>
                 </button>
+
+
+
               </div>
             </div>
 
@@ -497,10 +582,16 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                             <button className="btn btn-primary btn-circle btn-sm">
                               <i class="fas fa-envelope fa-sm"></i>
                             </button>
-                            <button className="btn btn-danger btn-circle btn-sm">
+                            <button 
+                          onClick={() => {
+                            if (window.confirm("Are you sure you wish to delete this Friend?"))
+                              this.onFriendDelete(friend.id)
+                          }
+                        }
+                                className="btn btn-danger btn-circle btn-sm">
                               <i className="fas fa-trash fa-sm" ></i>
                             </button>
-                        <Link to={`/Friends/${friend.id}`} >
+                             <Link to={`/Friends/${friend.id}`} >
                             {' '}  <button
                               // to={`/client/${client.id}`}
                               onClick={this.showUserDetail.bind(this, friend.id)}
@@ -660,6 +751,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                     <div className="card-body">
                       <h5 className="card-title">Invite friends to your group
                       <i className="fas fa-backspace fa-sm float-right"
+                          value="iconBack"
                           onClick={this.addGroup}
                         // onClick={this.setState({ addFriends: !this.state.addFriends  })}
                         >
@@ -744,12 +836,15 @@ friends.propTypes = {
   firestore: PropTypes.object.isRequired,
   clients: PropTypes.array,
   debt: PropTypes.array,
+  groups: PropTypes.array,
   pathname : PropTypes.string.isRequired
+
 }
 
 export default compose(
   firestoreConnect([{ collection: 'debt' }]),
   firestoreConnect([{ collection: 'users' }]),
+  firestoreConnect([{ collection: 'groups' }]),
 
 
   connect((state, props) => ({
@@ -758,7 +853,8 @@ export default compose(
 
     auth: state.firebase.auth,
     settings: state.settings,
-    users: state.firestore.ordered.users
+    users: state.firestore.ordered.users,
+    groups: state.firestore.ordered.groups
   })),
   connect((state, props) => ({
     debt: state.firestore.ordered.debt,

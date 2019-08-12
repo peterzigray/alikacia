@@ -31,6 +31,7 @@ class UserDetails extends Component {
         var wholeClickedRecord = debt.filter(d => d.id === id)
      
         this.setState({ allRecordForRow: wholeClickedRecord })
+        console.log(wholeClickedRecord)
       }
   render(){
     const { otherProps, auth } = this.props;
@@ -176,7 +177,72 @@ class UserDetails extends Component {
                 </tbody> 
                 {this.state.onRecordClick && this.state.recordId === w.id ?
                   <React.Fragment>
-                    {this.state.allRecordForRow.map(record => (
+
+
+                  {this.state.allRecordForRow.map(record => (
+                  <div className="card" style={{ 'max-width': '90%'}}>
+                      <img src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/10/17/11/wine-cheese-food-istock-scorpp.jpg?width=1368&height=912&fit=bounds&format=pjpg&auto=webp&quality=70" style={{ 'max-width': '100%' }}/>
+                      <div className="card-body">
+
+                        <div className="input-group mb-3 float-right" style={{ 'max-width': '40%' }}>
+                          <div className="input-group-prepend">
+                            <span className="input-group-text" id="basic-addon1">€</span>
+                          </div>
+                          <input type="text" className="form-control" placeholder="balance" aria-label="Username" />
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="button">Settle up</button>
+                          </div>
+                        </div>
+                          <h3 className="card-title ">{record.description}</h3>
+
+                        
+                          
+
+                       
+                        <h4  >{'€'}{' '}{record.balance}</h4>
+                        <small > {'Paid by'}{' '}{record.paidBy.label}{' '}{'on'}{' '}{record.date.substring(4, 10)}</small>
+                    
+                      </div>
+                      {record.debtTo.map( person => 
+                        <ul className="list-group list-group-flush">
+
+                          <li className="list-group-item">{person.label}{' '}{'owes'}{' '}{' '}{'€'}{person.actualDebt}
+                            <i className="fas fa-check float-right" style={{color:'green'}}></i>
+                          </li>
+                          
+
+                        </ul>
+                        )}
+                      
+                      {/* <div className="card-body">
+                        
+                      
+                      
+                         
+                        
+                         
+                           
+                      </div> */}
+
+                  </div>
+                  )
+                  )
+                  }
+
+                </React.Fragment> : null}
+
+
+
+
+
+
+
+
+
+
+
+
+                    {/* {this.state.allRecordForRow.map(record => (
                       <div className="card text-center ml-0 mt-2" style={{ 'max-width': '90%' }}>                 
                         <div className="card-body"  >
                           <div className="col-6" >
@@ -196,7 +262,7 @@ class UserDetails extends Component {
                 )
             }
           
-                          </React.Fragment> : null}
+                          </React.Fragment> : null} */}
                       </React.Fragment>
                     )
                   )

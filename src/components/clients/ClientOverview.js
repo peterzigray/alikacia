@@ -316,7 +316,7 @@ class clientOverview extends Component {
                             </td>
                             <td className='col-md-2'>
                               <i class="fas fa-bookmark" />{' '}
-                              {d.date}
+                              {d.date.substring(4, 10)}
                               {/* {client.lastName} */}
                             </td>
 
