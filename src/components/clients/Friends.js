@@ -15,6 +15,40 @@ import UserDetails from './UserDetails';
 
 
 
+
+
+function getAllRelatedDebtsToMe (debt2,parameter,auth){
+
+          
+  console.log('----------po tomto pozeram----------')
+  var response;
+
+  // RETURN ALL DEBTS WHERE I AM PAYER OR DEBTOR TO CLICKED FRIEND OR CLICKED FRIEND IS PAYER OR DEBTOR WITH ME
+  response = debt2.map(function(d){
+  const{id}= d.paidBy
+  var res = d.debtTo.map(function(c){
+      if (c.id === parameter && id === auth.uid){
+        return Object.assign(d, 
+          {debt: d.debtTo.map(n => n.id === parameter? n.actualDebt: null).filter(a => a !== null),
+            debtor: d.debtTo.map(n => n.id === parameter ? n.id : null).filter(a => a !== null)
+          }
+        )    
+     }  
+    if (c.id === auth.uid && id === parameter){
+      return Object.assign(d, 
+        {
+          debt: d.debtTo.map(n => n.id === auth.uid ? n.actualDebt : null).filter(a => a !== null),
+        debtor: d.debtTo.map(n => n.id === auth.uid ? n.id : null).filter(a => a !== null)
+      }
+    )  
+  }
+}).filter(a => a)
+    return res
+}).flat()
+return response
+
+}
+
 /**
  * 
  * @param {array} property one object od debt
@@ -144,30 +178,43 @@ class friends extends Component {
 
   onFriendDelete = (id) => {
     console.log(id)
-    const { firestore , auth , users } = this.props;
-    
-    var usersForDelete = JSON.parse(JSON.stringify(users));
-    var myFriendsForDelete = getAllMyFriends(usersForDelete, auth)
+    const { firestore , auth , users, debt } = this.props;
 
-    
-    var newFriendsList = myFriendsForDelete.filter((friend) => friend.id !== id)
-
-    var pathFirestore = firestore.collection('users').doc(auth.uid);
-
-    if (newFriendsList && newFriendsList.length !== 0){
-      
-      // Remove the 'capital' field from the document
-      pathFirestore.update({
-        friends: newFriendsList
-      });
+    var debtForDelete = JSON.parse(JSON.stringify(debt));
+    var respons = getAllRelatedDebtsToMe (debtForDelete,id,auth)
+    console.log(respons)
+    if(respons.length > 0){
+      window.alert("Unfortunately, you can't delete this user, because you have mutual debt")
     } else {
-      pathFirestore.update({
-        friends: newFriendsList
-      });
-      pathFirestore.update({
-        friends: firestore.FieldValue.delete()
-      });
+
+      var usersForDelete = JSON.parse(JSON.stringify(users));
+      var myFriendsForDelete = getAllMyFriends(usersForDelete, auth)
+  
+      
+      var newFriendsList = myFriendsForDelete.filter((friend) => friend.id !== id)
+  
+      var pathFirestore = firestore.collection('users').doc(auth.uid);
+  
+      if (newFriendsList && newFriendsList.length !== 0){
+        
+        // Remove the 'capital' field from the document
+        pathFirestore.update({
+          friends: newFriendsList
+        });
+      } else {
+        pathFirestore.update({
+          friends: newFriendsList
+        });
+        pathFirestore.update({
+          friends: firestore.FieldValue.delete()
+        });
+      }
     }
+    
+    // if (friendsForGruop[0].label === 'none'){
+    //   window.alert("you must first add at least one firend :)")
+    // }
+
    
 
     // firestore
@@ -383,8 +430,7 @@ class friends extends Component {
               debt: d.debtTo.map(n => n.id === auth.uid ? n.actualDebt : null).filter(a => a !== null),
             debtor: d.debtTo.map(n => n.id === auth.uid ? n.id : null).filter(a => a !== null)
            })
-          
-        }
+          }
         }
       ).filter(a => a)
         return res
@@ -453,7 +499,7 @@ class friends extends Component {
 
 
 
-    var userDetailProps2;
+    
     if (debt && users) {
 
       console.log('--------------toto je ten parameter--------------------')
@@ -465,36 +511,17 @@ class friends extends Component {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                    //                SAME AS IN THE FUNCTION MERGE LATER
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-console.log('----------po tomto pozeram----------')
           var debt2 = JSON.parse(JSON.stringify(debt));
+          var userDetailProps2 = getAllRelatedDebtsToMe(debt2,parameter,auth)
 
-          // RETURN ALL DEBTS WHERE I AM PAYER OR DEBTOR TO CLICKED FRIEND OR CLICKED FRIEND IS PAYER OR DEBTOR WITH ME
-          userDetailProps2 = debt2.map(function(d){
-          const{id}= d.paidBy
-          var res = d.debtTo.map(function(c){
-              if (c.id === parameter && id === auth.uid){
-                return Object.assign(d, 
-                  {debt: d.debtTo.map(n => n.id === parameter? n.actualDebt: null).filter(a => a !== null),
-                    debtor: d.debtTo.map(n => n.id === parameter ? n.id : null).filter(a => a !== null)
-                  }
-                )    
-             }  
-            if (c.id === auth.uid && id === parameter){
-              return Object.assign(d, 
-                {
-                  debt: d.debtTo.map(n => n.id === auth.uid ? n.actualDebt : null).filter(a => a !== null),
-                debtor: d.debtTo.map(n => n.id === auth.uid ? n.id : null).filter(a => a !== null)
-              }
-            )  
-          }
-        }).filter(a => a)
-            return res
-      }).flat()
-    }
+          
+   
+      console.log(this.state.detailRecordOfFriend)
+  }
 
-console.log(userDetailProps2)
-console.log('all I need is this')
-console.log(this.state.detailRecordOfFriend)
+
+
+
 var clickedUserDetailProps = this.state.detailRecordOfFriend
 //-------------------------------------------------------------------------------------------------------------------------->
 
@@ -502,9 +529,27 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
         <div className="row">
           <div className="col-md-3">
 
-            <div className="card border-success mb-3" style={{ "max-width":"18rem"}}>
-              <div className="card-header bg-transparent border-success">Groups</div>
-              <div className="card-body text-success">
+            <div className="card mb-3 shadow-lg bg-white rounded" style={{ "max-width":"100%"}}>
+
+            <div className="card-body bg-info cardHeader1">
+                <h4 className='text-white'> My groups </h4>
+                <h6 clssName="card-subtitle text-white m-b-0 op-5" style={{color: "white", opacity: '0.5'}}> Check your groups here </h6>
+              
+              </div>
+              <h2 className="add-ct-btn">
+              <button
+                  // to={`/client/${client.id}`}
+                  value="groupButton"
+                  onClick={this.addGroup.bind(this, friendsForGruop)}
+                  className="btn btn-circle btn-lg waves-effect waves-dark btn-primary"
+                  style={{opacity: '0.9'}}
+                >
+                  <i className="fas fa-plus fa-sm" />{' '}
+                  
+                </button>
+                </h2>
+            
+              <div className="card-body text-success mt-4">
 
                 {groups ? <div>{ groups.map((group) =>
                   (
@@ -526,46 +571,36 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
 
 
               </div>
-              <div className="card-footer bg-transparent border-success"
-                
-              >
-
-              
-                <button
-                  // to={`/client/${client.id}`}
-                  value="groupButton"
-                  onClick={this.addGroup.bind(this, friendsForGruop)}
-                  className="btn btn-success btn-sm btn-block btn-icon-split"
-                >
-                  <i className="fas fa-plus fa-sm" />{' '}
-                  <span className="text">
-                    add group
-                        </span>
-                </button>
-
-
-
-              </div>
+             
             </div>
 
 
-            <div className="card border-primary mb-3" style={{ "max-width": "18rem" }}>
-              <div className="card-header bg-transparent border-primary">Your friends</div>
-              <div className="card-body text-primary">
+            <div className="card shadow-lg bg-white rounded " style={{ "max-width": "100%" }}>
+              <div className="card-body bg-info cardHeader">
+                <h4 className='text-white'> My contacts </h4>
+                <h6 clssName="card-subtitle text-white m-b-0 op-5" style={{color: "white", opacity: '0.5'}}> Check your contact here </h6>
+              
+              </div>
+              <h2 className="add-ct-btn">
+
+
                 <button
                   // to={`/client/${client.id}`}
+                  style={{opacity: '0.9'}}
                   onClick={this.addFriends}
-                  className="btn btn-primary btn-sm btn-block btn-icon-split"
+                  className="btn btn-circle btn-lg btn-success waves-effect waves-dark"
                 >
                   
                     <i className="fas fa-plus fa-sm " />{' '}
               
-                  <span className="text">
-                    Your friends
-                        </span>
+                
                 </button>
-              </div>
-              <div className="card-footer bg-transparent border-primary">
+
+
+
+
+              </h2>
+              <div className="card-body bg-transparent border-primary mt-2">
                   
                 {myFriends.map((friend) => (
                   <React.Fragment>
@@ -575,7 +610,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                       // >
                         
 
-                          <div className="logo" style={{width: '100%'}}>
+                          <div className="logo border-bottom" style={{width: '100%'}}>
                             <div className="photo">
                               <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
                             </div>
@@ -619,7 +654,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
 
         {/* <Route path="/:id" component={Table} /> */}
 
-        <div className="col-9">
+        <div className="col-7">
 
      
          

@@ -97,6 +97,20 @@ stroke-width: 3;
 
 }
 
+/* .btnColor{
+ background-color: #26c6da
+} */
+.cardHeader{
+  /* background-image: url("https://www.illustrationweb.com/Thumb386s/114849/image_91212/3195-114849.jpg"); */
+  background-color :#1e88e5!important;
+  opacity: 0.9
+  /* max-width: 100%;
+  max-height: 100% */
+}
+.cardHeader1{
+background-image: url("https://wrappixel.com/demos/admin-templates/material-pro/assets/images/background/profile-bg.jpg");
+width: 100%;
+}
 .svgStyle{
     padding-top: 3%;
 }
@@ -312,6 +326,13 @@ stroke-width: 3;
 .col-9{
   padding-left: 8rem;
   padding-right: 0rem;
+}
+
+.add-ct-btn{
+  position: absolute;
+  right: 30px;
+  top: 80px;
+
 }
 
 
