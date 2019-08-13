@@ -12,6 +12,7 @@ import '../../pics/app.jpg';
 import Select from "react-dropdown-select";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import UserDetails from './UserDetails';
+import GroupDetails from './GroupDetails';
 
 
 
@@ -58,12 +59,28 @@ const Table = (property) => {
   var {otherProps} = property;
   var {id} = property.match.params
   var {auth}= property;
-    console.log('-----------Doslo to sem----------')
+    console.log('-----------Som v friends----------')
     console.log(property)
     if(id !== "null") {
       return (<UserDetails otherProps={otherProps} auth={auth} />)
      } 
    }
+   const Groups = (property) => {
+    var {otherProps} = property;
+    var {id} = property.match.params
+    var {auth}= property;
+      console.log('-----------som v groups----------')
+      console.log(property)
+      if(id !== "null") {
+        return (<GroupDetails otherProps={otherProps} auth={auth} />)
+       } 
+   
+        // console.log('-----------Doslo to sem----------')
+        // console.log(property)
+        // if(id !== "null") {
+        //   return (<UserDetails otherProps={otherProps} auth={auth} />)
+        //  } 
+     }
 //-------------------------------------------------------------------------------------------------------------------------->
 /**
  * 
@@ -157,6 +174,7 @@ class friends extends Component {
     actualUsersDebts: [{id: 'null'}],
     valueField: 'id',
     labelField: 'label',
+    detailRecordOfGroup: '',
 
     detailRecordOfFriend: [{ id: 'null', 
                              paidBy: {id: 1, label: 'none'}, 
@@ -396,6 +414,14 @@ class friends extends Component {
   }
   //-------------------------------------------------------------------------------------------------------------------------->
 
+  showGroupDetail = (idecko) => {
+    let stateCopyForGropDetail = Object.assign({}, this.state);
+    stateCopyForGropDetail.detailRecordOfGroup = idecko
+    this.setState(stateCopyForGropDetail);
+
+  }
+  //-------------------------------------------------------------------------------------------------------------------------->
+
   showUserDetail = (idecko) => {
     const { users, debt, auth } = this.props;
     let stateCopyForDetail = Object.assign({}, this.state);
@@ -527,7 +553,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
 
       return (
         <div className="row">
-          <div className="col-md-5">
+          <div className="col-md-3">
 
             <div className="card mb-3 shadow-lg bg-white rounded" style={{ "max-width":"100%"}}>
 
@@ -555,14 +581,15 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                   (
                     <frameElement>
                     
-                  < button
-                    // to={`/client/${client.id}`}
-                    // value="groupButton"
-                    // onClick={this.addGroup.bind(this, friendsForGruop)}
-                    className="btn btn-success btn-sm btn-block btn-icon-split mb-1"
-                  >
-                    {group.name}
-                  </button>
+                  <Link to={`/Friends/Group/${group.id}`} >
+                    < button
+                      onClick={this.showGroupDetail.bind(this, group.id)}
+                      className="btn btn-success btn-sm btn-block btn-icon-split mb-1"
+                    >
+                      {group.name}
+                    </button>
+                  </Link>
+
                     </frameElement>
                 ))} </div>:<div><h5 className="card-title">Add your group</h5>
                   <p className="card-text">You haven't added any
@@ -685,12 +712,22 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
      
          
        
-       <Route path="/Friends/:id"            
-        render={(props) => <Table {...props}   otherProps = {this.state.detailRecordOfFriend[0].id === 'null' && this.state.detailRecordOfFriend[0].id !== 'none' ? userDetailProps2: clickedUserDetailProps} auth={auth} />}
-       />       
-
+       
             
         
+     <Switch>
+
+     <Route path="/Friends/Group/:id"            
+        render={(props) => <Groups {...props}   otherProps = {this.state.detailRecordOfGroup} auth={auth} />}
+       />   
+         <Route path="/Friends/:id"            
+        render={(props) => <Table {...props}   otherProps = {this.state.detailRecordOfFriend[0].id === 'null' && this.state.detailRecordOfFriend[0].id !== 'none' ? userDetailProps2: clickedUserDetailProps} auth={auth} />}
+       />       
+      
+    </Switch>
+      
+
+    
       { !userDetailProps2
        // userDetailProps[0].id === 'null'
          ? 
