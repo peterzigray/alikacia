@@ -65,14 +65,14 @@ const Table = (property) => {
       return (<UserDetails otherProps={otherProps} auth={auth} />)
      } 
    }
-   const Groups = (property) => {
+   const Groups = (property, auth) => {
     var {otherProps} = property;
-    var {id} = property.match.params
-    var {auth}= property;
+    // var {id} = property.match.params
+    // var {auth}= property;
       console.log('-----------som v groups----------')
-      console.log(property)
-      if(id !== "null") {
-        return (<GroupDetails otherProps={otherProps} auth={auth} />)
+     console.log(otherProps)
+     if (property) {
+       return (<GroupDetails otherProps={otherProps} auth={auth} />)
        } 
    
         // console.log('-----------Doslo to sem----------')
@@ -656,7 +656,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                               <small style={{"font-size":"70%"}}>{friend.email}</small>
                        
                               </div>
-                              <div className="col-2">
+                              {/* <div className="col-2">
                         
                               <i class="fas fa-envelope fa-sm float-left mr-1 mb-1"></i>
                            
@@ -672,7 +672,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                               
                               className="fas fa-trash fa-sm float-right" ></i>
                        
-                              </div>
+                              </div> */}
 
                                 {/* <Link to={`/Friends/${friend.id}`} >
                             {' '}  <button

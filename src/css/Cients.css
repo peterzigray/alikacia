@@ -312,6 +312,26 @@ width: 100%;
   color: white;
 }
 
+.UserPicsDash {
+  display: inline-block;
+  height: 105px;
+  width: 105px;
+  border-radius: 50%;
+  vertical-align: middle;
+  overflow: hidden;
+  position: absolute;
+  right: 30%;
+  top: 10%;
+}
+.UserPicsDash img {
+  width: 100%;
+}
+
+.btnUserDash{
+  border-radius: 60px;
+  
+}
+
 .photo {
   display: inline-block;
   height: 55px;

@@ -119,6 +119,8 @@ class dashboard extends Component {
 
     const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft} = this.props;
 
+    
+
 
     if (debtors.length < 1 && debtorsLeft < 1) {
       return (
@@ -133,9 +135,87 @@ class dashboard extends Component {
 
     else if (debt && users) {
 
+      var myName = users.filter(user => {
+        if (user.id === auth.uid) {
+          return user
+        }
+      })[0]
+      const { firstName, lastName } = myName;
+
       return (
         <div className="row h-100">
-          <div className="col-md-6">
+          <div className="col-md-4 pt-2">
+            <div className="card mb-3 shadow-lg bg-white rounded mt-4" style={{ "max-width": "100%" }}>
+
+              <div className="card-body bg-info cardHeader1">
+                <h4 className='text-white'> My groups </h4>
+                <h6 clssName="card-subtitle text-white m-b-0 op-5" style={{ color: "white", opacity: '0.5' }}> Check your groups here </h6>
+
+              </div>
+              <div className="UserPicsDash mr-2 ">
+                <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+              </div> 
+
+              <div className="card-body mt-4">
+                <h3 className="pt-3 pl-4">{firstName} {' '} {lastName}</h3>
+              </div>
+
+              <div className="card-body text-success mt-4 pl-5 ml-5">
+
+               
+                    <frameElement>
+                  < button
+                    //onClick={this.showGroupDetail.bind(this, group.id)}
+                    className="btn btn-success btn-rounded btn-md btnUserDash"
+                    
+                  >
+                   <h4> Groups</h4>
+                        </button>
+                      
+                        {/* < button
+                          //onClick={this.showGroupDetail.bind(this, group.id)}
+                          className="btn btn-success btn-sm btn-block btn-icon-split mb-1"
+                        >
+                         friends
+                        </button> */}
+                  
+
+                    </frameElement>
+              
+              </div>
+              <div className="card-body row mt-4">
+                  
+
+                <div className="col-4 ">
+                  <h3 >
+                    10
+                  </h3>
+                  <small>
+                      Friends
+                  </small>
+                </div>
+                <div className="col-4">
+                  <h3>
+                    2
+                  </h3>
+                  <small>
+                    Groups
+                  </small>
+                </div>
+                <div className="col-4">
+                  <h3>
+                    8
+                  </h3>
+                  <small>
+                    Debts
+                  </small>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+          <div className="col-md-4">
             <table className="table-borderless" style={{ width: '100%' }}>
               <thead className="thead-inverse">
                 <tr >
@@ -186,7 +266,7 @@ class dashboard extends Component {
           </div>
 
 
-          <div className="col-md-6">
+          <div className="col-md-4">
             <table className="table-borderless" style={{width: '100%'}}>
               <thead className="thead-inverse">
                 <tr>
