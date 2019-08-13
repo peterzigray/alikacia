@@ -70,18 +70,16 @@ class UserDetails extends Component {
 <div className="card border-0 shadow-lg bg-white rounded" style={{ 'background-color': 'white', height: '100%' }}>
     <div className="card-body">
       <table className="table table-borderless ml-3">
-        <thead className="thead-inverse border-bottom">
-          {/* <tr>
-      <th>Records of your debt with Friends
-        
-      </th>
-      <th />
-    </tr> */}
+               <thead className="thead-inverse border-bottom">
+                 <th className="">
+                       <h3>Friends</h3>
+                     </th>
     
         </thead>
         <React.Fragment>
           <tr>
             <div className="card style_prevu_kit2 ml-0 mt-1 border-bottom" >
+                     
     
               <th className="row" style={{ padding: '0px 0px 0px 22px' }} >
                 <td className='col-md-3' >

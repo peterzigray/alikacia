@@ -527,7 +527,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
 
       return (
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md-5">
 
             <div className="card mb-3 shadow-lg bg-white rounded" style={{ "max-width":"100%"}}>
 
@@ -600,7 +600,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
 
 
               </h2>
-              <div className="card-body bg-transparent border-primary mt-2">
+              <div className="card-body bg-transparent border-primary">
                   
                 {myFriends.map((friend) => (
                   <React.Fragment>
@@ -609,30 +609,55 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
                       //   key={friend.id}
                       // >
                         
-
-                          <div className="logo border-bottom" style={{width: '100%'}}>
+                      <Link to={`/Friends/${friend.id}`} >
+                          <div className="logo border-bottom mt-2 mb-2" style={{width: '100%'}}
+                        // to={`/client/${client.id}`}
+                        onClick={this.showUserDetail.bind(this, friend.id)}
+                          >
+                        <div className="row">
                             <div className="photo">
                               <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
                             </div>
-                            <button className="btn btn-primary btn-circle btn-sm">
-                              <i class="fas fa-envelope fa-sm"></i>
-                            </button>
-                            <button 
-                          onClick={() => {
-                            if (window.confirm("Are you sure you wish to delete this Friend?"))
-                              this.onFriendDelete(friend.id)
-                          }
-                        }
-                                className="btn btn-danger btn-circle btn-sm">
-                              <i className="fas fa-trash fa-sm" ></i>
-                            </button>
-                             <Link to={`/Friends/${friend.id}`} >
+
+                            
+
+                          <div className="col ml-2 ml-0" >
+                            <h6 className="mb-0 mt-2">{friend.label}{' '}{friend.lastName}  
+                            </h6>
+                                
+                       
+                              <small style={{"font-size":"70%"}}>{friend.email}</small>
+                       
+                              </div>
+                              <div className="col-2">
+                        
+                              <i class="fas fa-envelope fa-sm float-left mr-1 mb-1"></i>
+                           
+                         
+                              
+                              
+                              <i 
+                              onClick={() => {
+                                if (window.confirm("Are you sure you wish to delete this Friend?"))
+                                  this.onFriendDelete(friend.id)
+                              }
+                              }
+                              
+                              className="fas fa-trash fa-sm float-right" ></i>
+                       
+                              </div>
+
+                                {/* <Link to={`/Friends/${friend.id}`} >
                             {' '}  <button
                               // to={`/client/${client.id}`}
                               onClick={this.showUserDetail.bind(this, friend.id)}
                               className="btn btn-outline-primary btn-sm btn-block mt-2"
                             >
-                              {friend.label}{' '}{friend.lastName} </button></Link>
+                              </button></Link>  */}
+
+                              </div>
+
+                            
 
                               
                            
@@ -640,7 +665,8 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
 
 
                         
-                      //</tr>
+                   
+                      </Link>
 
                       : <p>You did't add any friends yet</p>}
                   </React.Fragment>
@@ -727,7 +753,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
 
 
 
-          <div className="col-md-3">
+          <div className="col-md-3 pl-5 pr-5">
             {this.state.addFriends ?
               <div className='popup'>
                 <div className='popup_inner'>
@@ -736,17 +762,21 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
 
                 <div className="card" style={{width: "100%", height:'100%'}} >
  
-                  <div className="card-body">
-                      <h5 className="card-title">Invite friends 
+                  <div className="card-body bodyPopUp">
+                      <h5 className="card-title pl-1" style={{color: "white"}}>Invite friends 
                       <i className="fas fa-backspace fa-sm float-right"
                       onClick={this.addFriends}
                        // onClick={this.setState({ addFriends: !this.state.addFriends  })}
                        >
                       </i>
                     </h5>
+                      
                       <p className="card-text"></p>
                   </div>
-                      <ul className="list-group list-group-flush">
+                    <div className="photoPopUp pb-5">
+                      <img src="https://fiverr-res.cloudinary.com/t_profile_original,q_auto,f_auto/attachments/profile/photo/f48b7d11ce40be53531b1ce7cb900ca0-1551242428645/bee0a7a1-c43c-4f30-be5a-3d505793e806.png" />
+                    </div>
+                      <ul className="list-group list-group-flush pt-5">
                       <li className="list-group-item border-0">
                         <Select
                           labelField={this.state.labelField}
