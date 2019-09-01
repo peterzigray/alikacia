@@ -45,6 +45,37 @@ const Child = (path) => {
         return (<Friends pathname={pathname} />)
   }
 }
+/////////////////////////////////////////////////////////////////////////////////////////
+
+
+function listOfUsersIOwe(debt,users,auth) {
+  var result = [];
+  for (var i = 0; i < debt.length; i++) {
+    result.push(giveMePayerForOvrview(debt[i], users, auth))
+  }
+  return result
+}
+
+
+// ASSIGN PAYER AND ACTUALDEBT TO EXIST DEBT BASED ON WHO I OWE TO 
+function giveMePayerForOvrview(debt, users, auth) {
+  const { id } = debt.paidBy;
+  var res = [];
+  debt.debtTo.forEach((d) => {
+
+    if (d.id === auth.uid && id !== auth.uid) {
+      console.log('wwwwwwwwwwwwwresultwwwwwwwwwwwwwwww')
+      // console.log(debt.paidBy)
+      res.push(Object.assign(debt.paidBy, { actualDebt: d.actualDebt }))
+    }
+
+  }
+
+  )
+  console.log(res)
+  return res
+
+}
 
 //////////////////////////////////RIGHT DEBTORS//////////////////////////////////////////
 /**
@@ -270,7 +301,7 @@ class Clients extends Component {
     let settingsAndLogout = "";
 
     const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block bg-light sidebar transition' : 'col-lg-1half d-block bg-light sidebar transition';
-    const mainClassName = this.state.navbarOn ? 'col-9 transition' : 'col-9 transition';
+    const mainClassName = this.state.navbarOn ? 'col-9 transition positions' : 'col-9 transition positions';
     const iconChange = this.state.navbarOn ? 'fas fa-arrow-circle-left fa-2x' : 'fas fa-arrow-circle-right fa-2x';
 
     console.log('------------------------CLIENT----------------------------')
@@ -427,46 +458,17 @@ class Clients extends Component {
       //******************************ALL ABOUT DEBTORS DISPLAYED ON LEFT SIDE OF THE SCREEN OF DASHBOARD************************************** */
       /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+      
       var debtLeft = JSON.parse(JSON.stringify(debt));
 
       // STORE ALL RETURNED DEBTORS WITHOUT ME
-      var newDebtLeft = listOfUsersIOwe(debtLeft, auth);
+      var newDebtLeft = listOfUsersIOwe(debtLeft, users, auth);
 
       var allMyDebtsMerged = [].concat.apply([], [...newDebtLeft]);
       // console.log('--newDebtLeft---')
       // console.log(allMyDebtsMerged)
 
 
-
-      function listOfUsersIOwe(debt, auth) {
-        var result = [];
-        for (var i = 0; i < debt.length; i++) {
-          result.push(giveMePayerForOvrview(debt[i], users))
-        }
-        return result
-      }
-
-
-      // ASSIGN PAYER AND ACTUALDEBT TO EXIST DEBT BASED ON WHO I OWE TO 
-      function giveMePayerForOvrview(debt, users) {
-        const { id } = debt.paidBy;
-        var res = [];
-        debt.debtTo.forEach((d) => {
-
-          if (d.id === auth.uid && id !== auth.uid) {
-            console.log('wwwwwwwwwwwwwresultwwwwwwwwwwwwwwww')
-            // console.log(debt.paidBy)
-            res.push(Object.assign(debt.paidBy, { actualDebt: d.actualDebt }))
-          }
-
-        }
-
-        )
-        console.log(res)
-        return res
-
-      }
       var allDebtsLeftSide = JSON.parse(JSON.stringify(allMyDebtsMerged));
 
       getAllDebtors(allDebtsLeftSide)
@@ -702,10 +704,10 @@ class Clients extends Component {
 
         <main role="main" className={mainClassName}>
         
-          <div className="row mb-2 mt-4 mr-2 ml-2" style={{ 'height': '13rem','background-color':'white' }}>
+              <div className="row mb-2 mt-4 mr-2 ml-2 positions" style={{ 'height': '13rem','background-color':'white' }}>
 
-            <div className="col p-5">
-              <div className="mx-auto border-left pl-2" style={{width: '100%'}}>             
+                <div className="col p-5 positions">
+                  <div className="mx-auto border-left pl-2 positions2" style={{width: '100%'}}>             
               <h6 style={{ color:'grey'}}>Total Balance</h6>
                     {totalBalanceForMe >= 0 ? <h2 style={{ color: 'rgb(0, 105, 217)' }}>
                       {'€'} <CountUp decimals={2} end={totalBalanceForMe} />

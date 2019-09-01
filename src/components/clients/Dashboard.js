@@ -8,8 +8,12 @@ import Spinner from '../layout/Spinner';
 import classnames from "classnames";
 import '../../css/Cients.css'
 // import '../../css/LoginCss.css'
-import '../../pics/app.jpg'
-
+import '../../pics/app.jpg';
+// import "react-responsive-carousel/lib/styles/carousel.min.css";
+// import { Carousel } from 'react-responsive-carousel';
+// import { Carousel } from 'react-customizable-carousel'
+import AliceCarousel from 'react-alice-carousel';
+import "react-alice-carousel/lib/alice-carousel.css";
 
 
 class dashboard extends Component {
@@ -22,9 +26,15 @@ class dashboard extends Component {
     balanceUpdateAmount: '',
     class: '',
     classNumber: '',
-    style: ''
+    style: '',
+    myFriends: [{ id: 1, firstName: 'Peter', lastName: 'Zigray' }],
+    skuska:'',
+    currentIndex: 0,
+    friends:[{'s':'l'}]
+     
   };
 
+  
 
   balanceSubmit = (e) => {
     e.preventDefault();
@@ -113,13 +123,132 @@ class dashboard extends Component {
     
   
   // }
+  thumbItem = (item, i) => (
+    <span key={item} onClick={() => this.Carousel.slideTo(i)}>* </span>
+  )
+
+  componentDidMount(){
+    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft } = this.props;
+
+    // Arrray with all of my friends but me at the first position
+    var allUsers = JSON.parse(JSON.stringify(users));
+    console.log('----allUSERS----')
+    var friends = allUsers.map(user => user.id === auth.uid && user.friends).filter(arr => arr !== false).flat()
+    console.log(friends)
 
 
+
+      
+   var allFriendsWithMe =  friends.map((i) => (
+
+
+
+  //   <Link to={`/Dashboard/${i.id}`} >
+
+        <div className="card mb-3 shadow-lg bg-white rounded mt-4 text-center"
+          key={i.id}
+          style={{ "max-width": "100%" }}>
+          <div className="card-body text-success text-center">
+
+            <div className="UserPicsDash d-flex justify-content-center ">
+              <img className="" src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+            </div>
+
+            <div className="card-body text-center mt-2">
+
+              <h3 className="">{i.label} {' '} {i.lastName}</h3>
+            </div>
+
+
+            < button
+              //onClick={this.showGroupDetail.bind(this, group.id)}
+              className="btn btn-success btn-rounded btn-md btnUserDash align-middle"
+
+            >
+              <h4 className=""> Groups</h4>
+            </button>
+
+            {/* < button
+                          //onClick={this.showGroupDetail.bind(this, group.id)}
+                          className="btn btn-success btn-sm btn-block btn-icon-split mb-1"
+                        >
+                         friends
+                        </button> */}
+
+
+
+
+          </div>
+      
+          <div className="card-body row mt-4">
+
+
+            <div className="col-4 text-center">
+              <h3 >
+                10
+                   </h3>
+              <small>
+                Friends
+                   </small>
+            </div>
+            <div className="col-4 text-center">
+              <h3>
+                2
+                   </h3>
+              <small>
+                Groups
+                   </small>
+            </div>
+            <div className="col-4 text-center">
+              <h3>
+                8
+                   </h3>
+              <small>
+                Debts
+                   </small>
+            </div>
+
+          </div>
+
+
+
+        </div>
+      ))
+
+this.setState({skuska:allFriendsWithMe})
+    this.setState({ friends: allFriendsWithMe })
+    
+  }
+  slideNext = () =>{ 
+    let stateCopy1 = Object.assign({}, this.state);
+    stateCopy1.currentIndex = this.state.currentIndex + 1
+    
+    this.setState(stateCopy1)
+    console.log(stateCopy1.currentIndex)
+    console.log(this.state.friends[stateCopy1.currentIndex])
+
+}
+  slidePrev = () => {
+    let stateCopy2 = Object.assign({}, this.state);
+    stateCopy2.currentIndex = this.state.currentIndex - 1
+   
+    this.setState(stateCopy2)
+    console.log(stateCopy2.currentIndex)
+    console.log(this.state.friends[stateCopy2.currentIndex])
+
+  }
+  onSlideChanged = (e) => this.setState({ currentIndex: e.item })
   render() {
 
     const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft} = this.props;
 
+    // Arrray with all of my friends but me at the first position
+    var allUsers = JSON.parse(JSON.stringify(users));
     
+    
+    
+    // if there is NoOne disable buttons
+    //
 
 
     if (debtors.length < 1 && debtorsLeft < 1) {
@@ -145,76 +274,84 @@ class dashboard extends Component {
       return (
         <div className="row h-100">
           <div className="col-md-4 pt-2">
-            <div className="card mb-3 shadow-lg bg-white rounded mt-4" style={{ "max-width": "100%" }}>
+           
+            
+              {this.state.currentIndex < 0 ?
+              <React.Fragment>
+              <div className="float-left">
+              <button
+                type="button"
+                className='btn btn-danger btn-sm disabled'
+                aria-disabled="true"
+                onClick={() => this.slidePrev()}>{"<"}
+              </button>
+            </div>
+  
+            <div className="">
+                  <button className='btn btn-primary btn-sm disabled' aria-disabled="true" onClick={() => this.slideNext()}>{">"}</button>
+              </div> 
+                </React.Fragment>: 
+              <React.Fragment>
 
-              <div className="card-body bg-info cardHeader1">
+              <div className="float-left">
+              <button
+                type="button"
+                className='btn btn-primary btn-sm'
+                onClick={() => this.slidePrev()}>{"<"}
+              </button>
+            </div>
+
+            <div className="">
+              <button className='btn btn-primary btn-sm' onClick={() => this.slideNext()}>{">"}</button>
+            </div> 
+                </React.Fragment> }
+             
+
+
+
+              {/* <div className="card-body bg-info cardHeader1">
                 <h4 className='text-white'> My groups </h4>
                 <h6 clssName="card-subtitle text-white m-b-0 op-5" style={{ color: "white", opacity: '0.5' }}> Check your groups here </h6>
-
-              </div>
-              <div className="UserPicsDash mr-2 ">
-                <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-              </div> 
-
-              <div className="card-body mt-4">
-                <h3 className="pt-3 pl-4">{firstName} {' '} {lastName}</h3>
-              </div>
-
-              <div className="card-body text-success mt-4 pl-5 ml-5">
-
                
-                    <frameElement>
-                  < button
-                    //onClick={this.showGroupDetail.bind(this, group.id)}
-                    className="btn btn-success btn-rounded btn-md btnUserDash"
-                    
-                  >
-                   <h4> Groups</h4>
-                        </button>
-                      
-                        {/* < button
-                          //onClick={this.showGroupDetail.bind(this, group.id)}
-                          className="btn btn-success btn-sm btn-block btn-icon-split mb-1"
-                        >
-                         friends
-                        </button> */}
-                  
-
-                    </frameElement>
+              </div> */}
               
-              </div>
-              <div className="card-body row mt-4">
-                  
+              {/* <div id="carouselExampleControls" className="carousel slide" data-interval="false" data-ride="carousel">
+                <div className="carousel-inner"> */}
+               
 
-                <div className="col-4 ">
-                  <h3 >
-                    10
-                  </h3>
-                  <small>
-                      Friends
-                  </small>
-                </div>
-                <div className="col-4">
-                  <h3>
-                    2
-                  </h3>
-                  <small>
-                    Groups
-                  </small>
-                </div>
-                <div className="col-4">
-                  <h3>
-                    8
-                  </h3>
-                  <small>
-                    Debts
-                  </small>
-                </div>
 
-              </div>
+            {/* <Carousel autoPlay infiniteLoop='true'
 
+  >
+              {this.state.skuska.map(s => { 
+                return <div>
+  
+      <p >{s.firstName}</p>
+    </div>
+              })}
+    
+  </Carousel> */}
+            <div>
+              <AliceCarousel
+                dotsDisabled={true}
+                buttonsDisabled={true}
+                items={this.state.skuska}
+                slideToIndex={this.state.currentIndex}
+                ref={(el) => (this.Carousel = el)}
+                onSlideChanged={this.onSlideChanged}
+              />
+
+              {/* <nav>{this.items.map(this.thumbItem)}</nav> */}
+             
             </div>
+
+
+              
           </div>
+
+
+
+
           <div className="col-md-4">
             <table className="table-borderless" style={{ width: '100%' }}>
               <thead className="thead-inverse">
