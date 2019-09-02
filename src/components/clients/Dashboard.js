@@ -220,22 +220,27 @@ this.setState({skuska:allFriendsWithMe})
     
   }
   slideNext = () =>{ 
+    const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend} = this.props;
     let stateCopy1 = Object.assign({}, this.state);
     stateCopy1.currentIndex = this.state.currentIndex + 1
     
     this.setState(stateCopy1)
     console.log(stateCopy1.currentIndex)
     console.log(this.state.friends[stateCopy1.currentIndex])
+    clickedFriend(stateCopy1.currentIndex)
+    const {key} = this.state.friends[stateCopy1.currentIndex];
+    console.log(key)
 
 }
   slidePrev = () => {
+    const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend} = this.props;
     let stateCopy2 = Object.assign({}, this.state);
     stateCopy2.currentIndex = this.state.currentIndex - 1
    
     this.setState(stateCopy2)
     console.log(stateCopy2.currentIndex)
     console.log(this.state.friends[stateCopy2.currentIndex])
-
+    
   }
   onSlideChanged = (e) => this.setState({ currentIndex: e.item })
   render() {
@@ -524,7 +529,8 @@ dashboard.propTypes = {
 
   firestore: PropTypes.object.isRequired,
   clients: PropTypes.array,
-  debt: PropTypes.array
+  debt: PropTypes.array,
+  clickedFriend:PropTypes.func
 }
 
 export default compose(

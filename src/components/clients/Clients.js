@@ -25,12 +25,14 @@ const Child = (path) => {
   const {pathname} = path.location
   const {debtors} = path
   const {debtorsLeft} = path
-  //console.log(path)
+  const {clickedFriend} = path
+  console.log('===============path==================')
+  console.log(clickedFriend)
  console.log(debtors)
   console.log(debtorsLeft)
  
       if(pathname === '/Dashboard'){
-        return (<Dashboard debtors={debtors} debtorsLeft={debtorsLeft} />)
+        return (<Dashboard debtors={debtors} debtorsLeft={debtorsLeft} clickedFriend={clickedFriend} />)
       }
       if(pathname === '/History'){
         return (<ClientOverview  debt={debt}/>)
@@ -244,6 +246,12 @@ class Clients extends Component {
   //     return { isAuthenticated: false };
   //   }
   // }
+
+  clickedFrienInfo = (e) => {
+    console.log('-----parent-----')
+    console.log(e)
+  }
+
   onLogoutClick = e => {
     e.preventDefault();
 
@@ -845,7 +853,7 @@ class Clients extends Component {
                 {showAddClient === 3 ? <Friends></Friends> : null} */}
               <Route 
                 path='/:id' 
-                render={ (props) => <Child {...props}  debt={debt}  debtors={debtors} debtorsLeft={debtorsLeft}/>}
+                render={ (props) => <Child {...props}  debt={debt}  debtors={debtors} debtorsLeft={debtorsLeft}  clickedFriend={this.clickedFrienInfo.bind(this)}/>}
               /> 
               {/* <Route 
                 path='/Friends/o0zm6jC0dbPyjG9ru1Xyy78AUnl1' 
