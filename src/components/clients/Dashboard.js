@@ -222,21 +222,35 @@ this.setState({skuska:allFriendsWithMe})
   slideNext = () =>{ 
     const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend} = this.props;
     let stateCopy1 = Object.assign({}, this.state);
-    stateCopy1.currentIndex = this.state.currentIndex + 1
+
+    if(stateCopy1.currentIndex === (this.state.friends.length - 1)){
+      stateCopy1.currentIndex = this.state.currentIndex + 0
+    } else {
+      stateCopy1.currentIndex = this.state.currentIndex + 1
+    }
+    
     
     this.setState(stateCopy1)
+    console.log(this.state.friends)
+    console.log(this.state.friends.length)
     console.log(stateCopy1.currentIndex)
     console.log(this.state.friends[stateCopy1.currentIndex])
-    clickedFriend(stateCopy1.currentIndex)
-    const {key} = this.state.friends[stateCopy1.currentIndex];
-    console.log(key)
+
+    // clickedFriend(stateCopy1.currentIndex)
+    // const {key} = stateCopy1.friends[stateCopy1.currentIndex];
+    // console.log(key)
 
 }
   slidePrev = () => {
     const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend} = this.props;
     let stateCopy2 = Object.assign({}, this.state);
-    stateCopy2.currentIndex = this.state.currentIndex - 1
-   
+    if(this.state.currentIndex === 0){
+      stateCopy2.currentIndex = this.state.currentIndex - 0
+    } else {
+      stateCopy2.currentIndex = this.state.currentIndex - 1
+    }
+    
+    
     this.setState(stateCopy2)
     console.log(stateCopy2.currentIndex)
     console.log(this.state.friends[stateCopy2.currentIndex])
