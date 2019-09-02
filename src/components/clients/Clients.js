@@ -47,7 +47,35 @@ const Child = (path) => {
         return (<Friends pathname={pathname} />)
   }
 }
-/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////Left debtors////////////////////////////////////////////////////////
+function getLeftDebtors(personsIoweTo) {
+  // STORE ALL DUPLICATE RECORDS
+  const duplicatedLeft = personsIoweTo.filter((ele, indx) => {
+    return indx !== personsIoweTo.map(p => p['id']).indexOf(ele['id'])
+  }
+  )
+
+  // STORE IDECKA OF DUPLICATE RECORDS
+  const ide = duplicatedLeft.map(d => d.id)
+
+  // FOR FIRST RECORDS WHERE ID === DUPLICATED CHANGE ACTUAL DEBT TO SUM OF ALL RECORDS WHERE ID === PARTICULAR DUPLICATED ID
+  for (var j = 0; j < ide.length; j++) {
+    gimmeSum2(personsIoweTo, ide[j])
+  }
+
+
+  function gimmeSum2(ar, idecko) {
+    var number = ar.filter(({ id }) => id === idecko).reduce((sum, record) => sum + Number(record.actualDebt), 0)
+    // CHANGE ACTUAL DEBT UNDER ONE NAME    
+    ar.filter(obj => obj.id === idecko ? Object.assign(obj, { actualDebt: number.toFixed(2) }) : null)
+  }
+
+  // STORE ALL DEBTORS WHERE DUPLICATED RECORD HAS BEEN FILTERED AND ONLY RECORD WHERE ACTUAL DEBT HAS BEEN STORED AS SUM OFF ALL RECORD REMAIN
+  const debtorsLeft = personsIoweTo.filter((pilot, index, array) => { return array.map(a => a['id']).indexOf(pilot['id']) === index })
+
+  return debtorsLeft
+
+}
 
 
 function listOfUsersIOwe(debt,users,auth) {
@@ -55,7 +83,8 @@ function listOfUsersIOwe(debt,users,auth) {
   for (var i = 0; i < debt.length; i++) {
     result.push(giveMePayerForOvrview(debt[i], users, auth))
   }
-  return result
+  // remove all empry arrays + JSON.stringify create clone, prevention against deformation
+  return JSON.parse(JSON.stringify([].concat.apply([], [...result])));
 }
 
 
@@ -64,19 +93,12 @@ function giveMePayerForOvrview(debt, users, auth) {
   const { id } = debt.paidBy;
   var res = [];
   debt.debtTo.forEach((d) => {
-
-    if (d.id === auth.uid && id !== auth.uid) {
-      console.log('wwwwwwwwwwwwwresultwwwwwwwwwwwwwwww')
-      // console.log(debt.paidBy)
+    if (d.id === auth && id !== auth) {
       res.push(Object.assign(debt.paidBy, { actualDebt: d.actualDebt }))
+      }
     }
-
-  }
-
   )
-  console.log(res)
   return res
-
 }
 
 //////////////////////////////////RIGHT DEBTORS//////////////////////////////////////////
@@ -119,6 +141,7 @@ class Clients extends Component {
     youAreOwed: null,
     youOwed: null,
     navbarOn: true,
+    debtorsLeft:'',
 
     isAuthenticated: false,
     totalOweBalance: '0',
@@ -173,42 +196,66 @@ class Clients extends Component {
     showAddClient: ''
   };
 
- 
+  // componentDidMount() {
+  //   var debtLeft = JSON.parse(JSON.stringify(this.props.debt));
+
+  //   // STORE ALL RETURNED DEBTORS WITHOUT ME
+  //   var personsIoweTo = listOfUsersIOwe(debtLeft, this.props.users, this.props.auth.uid);
+
+  //   // STORE ALL DEBTORS FOR LEFT SIDE
+  //   var debtorsLeft = getLeftDebtors(personsIoweTo)
+  //   this.setState({ debtorsLeft: debtorsLeft})
+  // }
 
 
   // GET TOTAL BALANCE OWED MONEY AND PAID MONEY
   static getDerivedStateFromProps(props, state) {
-    const { clients, debt, auth, } = props;
+    const { clients, debt, auth,users } = props;
     const total = {};
     var youOwedNum = [];
     var theyOwedNum = [];
     var sumOfOwedMoney = 0;
     var sumOfPaidMoney = 0;
     //
-    if (debt) {
-      debt.forEach(d => {
-        if (d.debtor && d.debtor[1] === auth.uid) {
-          youOwedNum.push(parseInt(d.debtor[0]))
-          // Object.assign(total, {totalOwed:d.debtor[0]}) ;
-        }
-        if (d.paidBy === auth.uid) {
-          console.log(d.balance)
-          theyOwedNum.push(parseInt(d.balance))
-        }
-      }
-      )
-      for (let i = 0; i < youOwedNum.length; i++) {
-        sumOfOwedMoney += youOwedNum[i]
-      }
-      for (let i = 0; i < theyOwedNum.length; i++) {
-        sumOfPaidMoney += theyOwedNum[i]
-      }
-      // result of amount of money you owed
-      Object.assign(total, { youOwed: sumOfOwedMoney });
-      // result of amount of money you paid
-      Object.assign(total, { youAreOwed: sumOfPaidMoney });
-      return total
+    if (debt && users && auth) {
+
+      var debtLeft = JSON.parse(JSON.stringify(debt));
+
+      // STORE ALL RETURNED DEBTORS WITHOUT ME
+      var personsIoweTo = listOfUsersIOwe(debtLeft, users, auth.uid);
+
+      // STORE ALL DEBTORS FOR LEFT SIDE
+      var debtorsLeft = getLeftDebtors(personsIoweTo)
+      console.log('////////////////////////')
+      console.log(debtorsLeft)
+     
+
+// this.setState({debtorsLeft: debtorsLeft2})
+
+    //   debt.forEach(d => {
+    //     if (d.debtor && d.debtor[1] === auth.uid) {
+    //       youOwedNum.push(parseInt(d.debtor[0]))
+    //       // Object.assign(total, {totalOwed:d.debtor[0]}) ;
+    //     }
+    //     if (d.paidBy === auth.uid) {
+    //       console.log(d.balance)
+    //       theyOwedNum.push(parseInt(d.balance))
+    //     }
+    //   }
+    //   )
+    //   for (let i = 0; i < youOwedNum.length; i++) {
+    //     sumOfOwedMoney += youOwedNum[i]
+    //   }
+    //   for (let i = 0; i < theyOwedNum.length; i++) {
+    //     sumOfPaidMoney += theyOwedNum[i]
+    //   }
+    //   // result of amount of money you owed
+    //   Object.assign(total, { youOwed: sumOfOwedMoney });
+    //   // result of amount of money you paid
+    //   Object.assign(total, { youAreOwed: sumOfPaidMoney });
+    //   return total
     }
+    return debtorsLeft
   }
 
   // static getDerivedStateFromProps(props, state) {
@@ -250,6 +297,17 @@ class Clients extends Component {
   clickedFrienInfo = (e) => {
     console.log('-----parent-----')
     console.log(e)
+
+    var debtLeft = JSON.parse(JSON.stringify(this.props.debt));
+
+    // STORE ALL RETURNED DEBTORS WITHOUT ME
+    var personsIoweTo = listOfUsersIOwe(debtLeft, this.props.users, e);
+
+    // STORE ALL DEBTORS FOR LEFT SIDE
+    var debtorsLeft = getLeftDebtors(personsIoweTo)    
+
+
+
   }
 
   onLogoutClick = e => {
@@ -411,10 +469,9 @@ class Clients extends Component {
       console.log(totalBalance)
     }
 
-   
 
 
-    if (debt && users) {
+    if (debt && users ) {
       console.log('------------users------------')
       
       var allUsers = JSON.parse(JSON.stringify(users));
@@ -462,59 +519,26 @@ class Clients extends Component {
       console.log('----debtors of the right side-----')
       console.log(debtors)
 
+      
+
       /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       //******************************ALL ABOUT DEBTORS DISPLAYED ON LEFT SIDE OF THE SCREEN OF DASHBOARD************************************** */
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
       var debtLeft = JSON.parse(JSON.stringify(debt));
 
       // STORE ALL RETURNED DEBTORS WITHOUT ME
-      var newDebtLeft = listOfUsersIOwe(debtLeft, users, auth);
+      var personsIoweTo = listOfUsersIOwe(debtLeft, users, auth.uid);
 
-      var allMyDebtsMerged = [].concat.apply([], [...newDebtLeft]);
-      // console.log('--newDebtLeft---')
-      // console.log(allMyDebtsMerged)
+      // STORE ALL DEBTORS FOR LEFT SIDE
+      var debtorsLeft = getLeftDebtors(personsIoweTo)
 
+      // this.setState({ debtorsLeft: debtorsLeft })
 
-      var allDebtsLeftSide = JSON.parse(JSON.stringify(allMyDebtsMerged));
-
-      getAllDebtors(allDebtsLeftSide)
-
-      function getAllDebtors(allDebtsLeftSide) {
-      }
-      // STORE ALL DUPLICATE RECORDS
-      const duplicatedLeft = allDebtsLeftSide.filter((ele, indx) => {
-        return indx !== allDebtsLeftSide.map(p => p['id']).indexOf(ele['id'])
-      }
-      )
-      // STORE IDECKA OF DUPLICATE RECORDS
-      const ide = duplicatedLeft.map(d => d.id)
-
-      // FOR FIRST RECORDS WHERE ID === DUPLICATED CHANGE ACTUAL DEBT TO SUM OF ALL RECORDS WHERE ID === PARTICULAR DUPLICATED ID
-      for (var j = 0; j < ide.length; j++) {
-        gimmeSum2(allDebtsLeftSide, ide[j])
-      }
-
-
-      function gimmeSum2(ar, idecko) {
-        var number = ar.filter(({ id }) => id === idecko).reduce((sum, record) => sum + Number(record.actualDebt), 0)
-        // CHANGE ACTUAL DEBT UNDER ONE NAME    
-        ar.filter(obj => obj.id === idecko ? Object.assign(obj, { actualDebt: number.toFixed(2) }) : null)
-      }
-
-      // STORE ALL DEBTORS WHERE DUPLICATED RECORD HAS BEEN FILTERED AND ONLY RECORD WHERE ACTUAL DEBT HAS BEEN STORED AS SUM OFF ALL RECORD REMAIN
-      const debtorsLeft = allDebtsLeftSide.filter((pilot, index, array) => { return array.map(a => a['id']).indexOf(pilot['id']) === index })
-
-
-
-      console.log('--------my id--------')
-      console.log(auth.uid)
 
       // TOTAL BALANCE YOU OWE
       var listOfUsersForBalance = JSON.parse(JSON.stringify(debtorsLeft));
       var totalOwedBalance = listOfUsersForBalance.filter(({ actualDebt }) => actualDebt).reduce((sum, record) => sum + Number(record.actualDebt), 0)
-    
+
 
       // TOTAL BALANCE THEY OWED
       var listOfUsersForBalance2 = JSON.parse(JSON.stringify(debtors));
@@ -522,6 +546,8 @@ class Clients extends Component {
 
       // TOTAL BALANCE
       var totalBalanceForMe = totalPaidBalance - totalOwedBalance;
+
+
       
       return (
         <React.Fragment>

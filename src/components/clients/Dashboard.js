@@ -134,8 +134,11 @@ class dashboard extends Component {
     var allUsers = JSON.parse(JSON.stringify(users));
     console.log('----allUSERS----')
     var friends = allUsers.map(user => user.id === auth.uid && user.friends).filter(arr => arr !== false).flat()
+  
+    // Insert My user at the first position of friends array
+    friends.unshift({ id: auth.uid , email: auth.email, label: 'Me'})
     console.log(friends)
-
+  
 
 
       
@@ -231,15 +234,14 @@ this.setState({skuska:allFriendsWithMe})
     
     
     this.setState(stateCopy1)
-    console.log(this.state.friends)
-    console.log(this.state.friends.length)
-    console.log(stateCopy1.currentIndex)
-    console.log(this.state.friends[stateCopy1.currentIndex])
+    // console.log(this.state.friends)
+    // console.log(this.state.friends.length)
+    // console.log(stateCopy1.currentIndex)
+    // console.log(this.state.friends[stateCopy1.currentIndex])
 
-    // clickedFriend(stateCopy1.currentIndex)
-    // const {key} = stateCopy1.friends[stateCopy1.currentIndex];
-    // console.log(key)
-
+    
+    const {key} = stateCopy1.friends[stateCopy1.currentIndex];
+    clickedFriend(key)
 }
   slidePrev = () => {
     const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend} = this.props;
@@ -252,8 +254,10 @@ this.setState({skuska:allFriendsWithMe})
     
     
     this.setState(stateCopy2)
-    console.log(stateCopy2.currentIndex)
-    console.log(this.state.friends[stateCopy2.currentIndex])
+    // console.log(stateCopy2.currentIndex)
+    // console.log(this.state.friends[stateCopy2.currentIndex])
+    const { key } = stateCopy2.friends[stateCopy2.currentIndex];
+    clickedFriend(key)
     
   }
   onSlideChanged = (e) => this.setState({ currentIndex: e.item })
@@ -295,35 +299,23 @@ this.setState({skuska:allFriendsWithMe})
           <div className="col-md-4 pt-2">
            
             
-              {this.state.currentIndex < 0 ?
-              <React.Fragment>
+             
+         
               <div className="float-left">
               <button
                 type="button"
-                className='btn btn-danger btn-sm disabled'
+                className='btn btn-danger btn-sm '
                 aria-disabled="true"
                 onClick={() => this.slidePrev()}>{"<"}
               </button>
             </div>
   
             <div className="">
-                  <button className='btn btn-primary btn-sm disabled' aria-disabled="true" onClick={() => this.slideNext()}>{">"}</button>
+                  <button className='btn btn-primary btn-sm ' aria-disabled="true" onClick={() => this.slideNext()}>{">"}</button>
               </div> 
-                </React.Fragment>: 
-              <React.Fragment>
+            
 
-              <div className="float-left">
-              <button
-                type="button"
-                className='btn btn-primary btn-sm'
-                onClick={() => this.slidePrev()}>{"<"}
-              </button>
-            </div>
-
-            <div className="">
-              <button className='btn btn-primary btn-sm' onClick={() => this.slideNext()}>{">"}</button>
-            </div> 
-                </React.Fragment> }
+        
              
 
 
