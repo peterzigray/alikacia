@@ -30,7 +30,8 @@ class dashboard extends Component {
     myFriends: [{ id: 1, firstName: 'Peter', lastName: 'Zigray' }],
     skuska:'',
     currentIndex: 0,
-    friends:[{'s':'l'}]
+    friends:[{'s':'l'}],
+    groupCount: ''
      
   };
 
@@ -128,7 +129,7 @@ class dashboard extends Component {
   )
 
   componentDidMount(){
-    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft } = this.props;
+    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft,groups } = this.props;
 
     // Arrray with all of my friends but me at the first position
     var allUsers = JSON.parse(JSON.stringify(users));
@@ -137,21 +138,16 @@ class dashboard extends Component {
   
     // Insert My user at the first position of friends array
     friends.unshift({ id: auth.uid , email: auth.email, label: 'Me'})
-    console.log(friends)
-  
 
 
-      
    var allFriendsWithMe =  friends.map((i) => (
 
 
 
   //   <Link to={`/Dashboard/${i.id}`} >
 
-        <div className="card mb-3 shadow-lg bg-white rounded mt-4 text-center"
-          key={i.id}
-          style={{ "max-width": "100%" }}>
-          <div className="card-body text-success text-center">
+        
+          <div className="card-body text-success text-center" key={i.id}>
 
             <div className="UserPicsDash d-flex justify-content-center ">
               <img className="" src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
@@ -183,39 +179,11 @@ class dashboard extends Component {
 
           </div>
       
-          <div className="card-body row mt-4">
-
-
-            <div className="col-4 text-center">
-              <h3 >
-                10
-                   </h3>
-              <small>
-                Friends
-                   </small>
-            </div>
-            <div className="col-4 text-center">
-              <h3>
-                2
-                   </h3>
-              <small>
-                Groups
-                   </small>
-            </div>
-            <div className="col-4 text-center">
-              <h3>
-                8
-                   </h3>
-              <small>
-                Debts
-                   </small>
-            </div>
-
-          </div>
+          
 
 
 
-        </div>
+      
       ))
 
 this.setState({skuska:allFriendsWithMe})
@@ -223,7 +191,7 @@ this.setState({skuska:allFriendsWithMe})
     
   }
   slideNext = () =>{ 
-    const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend} = this.props;
+    const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend, groups} = this.props;
     let stateCopy1 = Object.assign({}, this.state);
 
     if(stateCopy1.currentIndex === (this.state.friends.length - 1)){
@@ -231,20 +199,29 @@ this.setState({skuska:allFriendsWithMe})
     } else {
       stateCopy1.currentIndex = this.state.currentIndex + 1
     }
+
+  
     
+    const { key } = stateCopy1.friends[stateCopy1.currentIndex];
     
-    this.setState(stateCopy1)
     // console.log(this.state.friends)
     // console.log(this.state.friends.length)
     // console.log(stateCopy1.currentIndex)
     // console.log(this.state.friends[stateCopy1.currentIndex])
+    // group counter
+    if (groups) {
+      console.log('-------------------groups')
+      var groupCounter = groups.map((group) => group.members.filter(member => member.id === key))
+      stateCopy1.groupCount = [].concat.apply([], [...groupCounter]).length
+    }
 
     
-    const {key} = stateCopy1.friends[stateCopy1.currentIndex];
+   
     clickedFriend(key)
+    this.setState(stateCopy1)
 }
   slidePrev = () => {
-    const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend} = this.props;
+    const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend, groups} = this.props;
     let stateCopy2 = Object.assign({}, this.state);
     if(this.state.currentIndex === 0){
       stateCopy2.currentIndex = this.state.currentIndex - 0
@@ -253,21 +230,33 @@ this.setState({skuska:allFriendsWithMe})
     }
     
     
-    this.setState(stateCopy2)
+   
     // console.log(stateCopy2.currentIndex)
     // console.log(this.state.friends[stateCopy2.currentIndex])
     const { key } = stateCopy2.friends[stateCopy2.currentIndex];
     clickedFriend(key)
-    
+    if (groups) {
+      console.log('-------------------groups')
+      var groupCounter = groups.map((group) => group.members.filter(member => member.id === key))
+      stateCopy2.groupCount = [].concat.apply([], [...groupCounter]).length
+    }
+    this.setState(stateCopy2)
   }
   onSlideChanged = (e) => this.setState({ currentIndex: e.item })
   render() {
 
-    const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft} = this.props;
+    const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, groups} = this.props;
 
     // Arrray with all of my friends but me at the first position
     var allUsers = JSON.parse(JSON.stringify(users));
-    
+  
+    // SETTING GROUP COUNTER
+    // if (!this.state.groupCount)
+    // if (groups) {
+    //   console.log('-------------------groups')
+    //   var groupCounter = groups.map((group) => group.members.filter(member => member.id === auth.uid))
+    //   this.setState({ groupCount: [].concat.apply([], [...groupCounter]).length })
+    // }
     
     
     // if there is NoOne disable buttons
@@ -301,47 +290,12 @@ this.setState({skuska:allFriendsWithMe})
             
              
          
-              <div className="float-left">
-              <button
-                type="button"
-                className='btn btn-danger btn-sm '
-                aria-disabled="true"
-                onClick={() => this.slidePrev()}>{"<"}
-              </button>
-            </div>
-  
-            <div className="">
-                  <button className='btn btn-primary btn-sm ' aria-disabled="true" onClick={() => this.slideNext()}>{">"}</button>
-              </div> 
-            
-
-        
-             
-
-
-
-              {/* <div className="card-body bg-info cardHeader1">
-                <h4 className='text-white'> My groups </h4>
-                <h6 clssName="card-subtitle text-white m-b-0 op-5" style={{ color: "white", opacity: '0.5' }}> Check your groups here </h6>
-               
-              </div> */}
               
-              {/* <div id="carouselExampleControls" className="carousel slide" data-interval="false" data-ride="carousel">
-                <div className="carousel-inner"> */}
-               
+            
+            <div className="card mb-3 shadow-lg bg-white rounded mt-4 text-center"
 
-
-            {/* <Carousel autoPlay infiniteLoop='true'
-
-  >
-              {this.state.skuska.map(s => { 
-                return <div>
-  
-      <p >{s.firstName}</p>
-    </div>
-              })}
-    
-  </Carousel> */}
+              style={{ "max-width": "100%" }}>
+        
             <div>
               <AliceCarousel
                 dotsDisabled={true}
@@ -352,12 +306,52 @@ this.setState({skuska:allFriendsWithMe})
                 onSlideChanged={this.onSlideChanged}
               />
 
-              {/* <nav>{this.items.map(this.thumbItem)}</nav> */}
+                <div className="float-left">
+                  <button
+                    type="button"
+                    className='btn btn-primary btn-sm '
+                    aria-disabled="true"
+                    onClick={() => this.slidePrev()}>{"<"}
+                  </button>
+                </div>
+
+                <div className="float-right">
+                  <button className='btn btn-primary btn-sm ' aria-disabled="true" onClick={() => this.slideNext()}>{">"}</button>
+                </div> 
              
             </div>
 
+            <div className="card-body row mt-4">
 
-              
+
+              <div className="col-4 text-center">
+                <h3 >
+                  10
+                   </h3>
+                <small>
+                  Friends
+                   </small>
+              </div>
+              <div className="col-4 text-center">
+                <h3>
+                    {this.state.groupCount}
+                   </h3>
+                <small>
+                  Groups
+                   </small>
+              </div>
+              <div className="col-4 text-center">
+                <h3>
+                  {debtorsLeft.length}
+                </h3>
+                <small>
+                  Debts
+                   </small>
+              </div>
+
+            </div>
+
+              </div>
           </div>
 
 
@@ -542,6 +536,7 @@ dashboard.propTypes = {
 export default compose(
   firestoreConnect([{ collection: 'debt' }]),
   firestoreConnect([{ collection: 'users' }]),
+  firestoreConnect([{ collection: 'groups' }]),
 
 
   connect((state, props) => ({
@@ -550,10 +545,12 @@ export default compose(
 
     auth: state.firebase.auth,
     settings: state.settings,
-    users: state.firestore.ordered.users
+    users: state.firestore.ordered.users,
+    groups: state.firestore.ordered.groups,
   })),
   connect((state, props) => ({
     debt: state.firestore.ordered.debt,
+    groups: state.firestore.ordered.groups
 
   })),
 

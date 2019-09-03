@@ -26,13 +26,18 @@ const Child = (path) => {
   const {debtors} = path
   const {debtorsLeft} = path
   const {clickedFriend} = path
+  
   console.log('===============path==================')
-  console.log(clickedFriend)
- console.log(debtors)
-  console.log(debtorsLeft)
+  console.log(debtorsLeft.length)
+
  
       if(pathname === '/Dashboard'){
-        return (<Dashboard debtors={debtors} debtorsLeft={debtorsLeft} clickedFriend={clickedFriend} />)
+        return (<Dashboard 
+          debtors={debtors} 
+          debtorsLeft={debtorsLeft} 
+          counter={debtorsLeft.length}
+          clickedFriend={clickedFriend}
+           />)
       }
       if(pathname === '/History'){
         return (<ClientOverview  debt={debt}/>)
@@ -53,7 +58,7 @@ function getLeftDebtors(personsIoweTo) {
   const duplicatedLeft = personsIoweTo.filter((ele, indx) => {
     return indx !== personsIoweTo.map(p => p['id']).indexOf(ele['id'])
   }
-  )
+)
 
   // STORE IDECKA OF DUPLICATE RECORDS
   const ide = duplicatedLeft.map(d => d.id)
@@ -360,6 +365,7 @@ class Clients extends Component {
 
     stateCopy123.debtorsLeft = debtorsLeft
     stateCopy123.debtorsRight = debtors
+
     stateCopy123.friendHasBeenClicked = true
     this.setState(stateCopy123)
 
@@ -560,10 +566,11 @@ class Clients extends Component {
       // STORE ALL RETURNED DEBTORS WITHOUT ME
       var personsIoweTo = listOfUsersIOwe(debtLeft, users, auth.uid);
 
+      
       // STORE ALL DEBTORS FOR LEFT SIDE
       var debtorsLeft = getLeftDebtors(personsIoweTo)
-    
-
+      
+     
 
 
       // -------------------------------------------------------------------------------------------->
@@ -913,11 +920,23 @@ class Clients extends Component {
                { this.state.friendHasBeenClicked ?
               <Route 
                 path='/:id' 
-                render={ (props) => <Child {...props}  debt={debt}  debtors={this.state.debtorsRight}  debtorsLeft={this.state.debtorsLeft}  clickedFriend={this.clickedFrienInfo.bind(this)}/>}
+                render={ (props) => <Child 
+                  {...props}  
+                  debt={debt}  
+                  debtors={this.state.debtorsRight}  
+                  debtorsLeft={this.state.debtorsLeft}  
+                  clickedFriend={this.clickedFrienInfo.bind(this)}/>}
+                     
               /> :
               <Route 
                 path='/:id' 
-                render={ (props) => <Child {...props}  debt={debt}  debtors={debtors}  debtorsLeft={debtorsLeft}  clickedFriend={this.clickedFrienInfo.bind(this)}/>}
+                render={ (props) => <Child 
+                  {...props}  
+                  debt={debt}  
+                  debtors={debtors} 
+                  debtorsLeft={debtorsLeft}  
+                  clickedFriend={this.clickedFrienInfo.bind(this)}/>}
+           
                /> }
               {/* <Route 
                 path='/Friends/o0zm6jC0dbPyjG9ru1Xyy78AUnl1' 
