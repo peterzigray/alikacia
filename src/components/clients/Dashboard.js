@@ -31,7 +31,8 @@ class dashboard extends Component {
     skuska:'',
     currentIndex: 0,
     friends:[{'s':'l'}],
-    groupCount: ''
+    groupCount: '',
+    friendCount: ''
      
   };
 
@@ -215,6 +216,12 @@ this.setState({skuska:allFriendsWithMe})
       stateCopy1.groupCount = [].concat.apply([], [...groupCounter]).length
     }
 
+    if (users) {
+      console.log('-------------------friends')
+      var friendCounter = users.map((user) => user.id === key? user.friends: [])
+      stateCopy1.friendCount = [].concat.apply([], [...friendCounter]).length
+    }
+
     
    
     clickedFriend(key)
@@ -235,6 +242,11 @@ this.setState({skuska:allFriendsWithMe})
     // console.log(this.state.friends[stateCopy2.currentIndex])
     const { key } = stateCopy2.friends[stateCopy2.currentIndex];
     clickedFriend(key)
+    if (users) {
+      console.log('-------------------friends')
+      var friendCounter = users.map((user) => user.id === key? user.friends: [])
+      stateCopy2.friendCount = [].concat.apply([], [...friendCounter]).length
+    }
     if (groups) {
       console.log('-------------------groups')
       var groupCounter = groups.map((group) => group.members.filter(member => member.id === key))
@@ -286,73 +298,90 @@ this.setState({skuska:allFriendsWithMe})
       return (
         <div className="row h-100">
           <div className="col-md-4 pt-2">
-           
-            
-             
-         
-              
-            
-            <div className="card mb-3 shadow-lg bg-white rounded mt-4 text-center"
+          <div className="row h-100">
 
-              style={{ "max-width": "100%" }}>
-        
-            <div>
-              <AliceCarousel
-                dotsDisabled={true}
-                buttonsDisabled={true}
-                items={this.state.skuska}
-                slideToIndex={this.state.currentIndex}
-                ref={(el) => (this.Carousel = el)}
-                onSlideChanged={this.onSlideChanged}
-              />
-
-                <div className="float-left">
+          <div className="col-md-2 ">
+                <div className="" style={{"padding-top": "15rem"}}>
                   <button
                     type="button"
                     className='btn btn-primary btn-sm '
                     aria-disabled="true"
                     onClick={() => this.slidePrev()}>{"<"}
                   </button>
-                </div>
-
-                <div className="float-right">
-                  <button className='btn btn-primary btn-sm ' aria-disabled="true" onClick={() => this.slideNext()}>{">"}</button>
-                </div> 
-             
-            </div>
-
-            <div className="card-body row mt-4">
-
-
-              <div className="col-4 text-center">
-                <h3 >
-                  10
-                   </h3>
-                <small>
-                  Friends
-                   </small>
-              </div>
-              <div className="col-4 text-center">
-                <h3>
-                    {this.state.groupCount}
-                   </h3>
-                <small>
-                  Groups
-                   </small>
-              </div>
-              <div className="col-4 text-center">
-                <h3>
-                  {debtorsLeft.length}
-                </h3>
-                <small>
-                  Debts
-                   </small>
-              </div>
-
-            </div>
-
               </div>
           </div>
+            <div className="col-md-8" style={{"padding": "0"}}>
+
+
+
+            <div className="card mb-3 shadow-lg bg-white rounded mt-4 text-center"
+
+style={{ "max-width": "100%" }}>
+
+<div>
+<AliceCarousel
+  dotsDisabled={true}
+  buttonsDisabled={true}
+  items={this.state.skuska}
+  slideToIndex={this.state.currentIndex}
+  ref={(el) => (this.Carousel = el)}
+  onSlideChanged={this.onSlideChanged}
+/>
+
+  
+
+ 
+
+</div>
+
+<div className="card-body row mt-4">
+
+
+<div className="col-4 text-center">
+  <h3 >
+    {this.state.friendCount}
+     </h3>
+  <small>
+    Friends
+     </small>
+</div>
+<div className="col-4 text-center">
+  <h3>
+      {this.state.groupCount}
+     </h3>
+  <small>
+    Groups
+     </small>
+</div>
+<div className="col-4 text-center">
+  <h3>
+    {debtorsLeft.length}
+  </h3>
+  <small>
+    Debts
+     </small>
+</div>
+
+</div>
+
+</div>
+
+</div>
+      <div className="col-md-2">
+            <div className="" style={{"padding-top": "15rem"}}>
+                <button className='btn btn-primary btn-sm ' aria-disabled="true" onClick={() => this.slideNext()}>{">"}</button>
+              </div> 
+        </div> 
+            </div>
+             
+            </div>
+           
+            
+             
+         
+              
+            
+        
 
 
 
