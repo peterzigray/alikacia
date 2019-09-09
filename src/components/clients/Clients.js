@@ -21,21 +21,18 @@ import { UserIsAuthenticated, UserIsNotAuthenticated } from '../../helpers/auth'
 const Child = (path) => {
   console.log('coje to match')
   //console.log(`${match.url}`)
-  const {debt} = path
+  const { debt, group, debtors, debtorsLeft, clickedFriend} = path
   const {pathname} = path.location
-  const {debtors} = path
-  const {debtorsLeft} = path
-  const {clickedFriend} = path
-  
+
   console.log('===============path==================')
-  console.log(debtorsLeft.length)
+  console.log(group)
 
  
       if(pathname === '/Dashboard'){
         return (<Dashboard 
           debtors={debtors} 
           debtorsLeft={debtorsLeft} 
-          counter={debtorsLeft.length}
+          currentGroup={group}
           clickedFriend={clickedFriend}
            />)
       }
@@ -191,6 +188,7 @@ class Clients extends Component {
     isAuthenticated: false,
     totalOweBalance: '0',
     friendHasBeenClicked: false,
+    clickedGroup:'',
    
     cards: [
       {
@@ -345,31 +343,35 @@ class Clients extends Component {
   //   }
   // }
 
-  clickedFrienInfo = (e) => {
+  clickedFrienInfo = (currentClickedId , g) => {
     console.log('-----parent-----')
-    console.log(e)
+    console.log(currentClickedId)
+    console.log(g)
+ 
 
-    const {users, debt ,auth} = this.props;
+    const {users, debt ,auth } = this.props;
     let stateCopy123 = Object.assign({}, this.state);
     var debtLeft = JSON.parse(JSON.stringify(debt));
 
     //-----------------------------------------------------left side
     // STORE ALL RETURNED DEBTORS WITHOUT ME
-    var personsIoweTo = listOfUsersIOwe(debtLeft, users, e);
+    var personsIoweTo = listOfUsersIOwe(debtLeft, users, currentClickedId);
     // STORE ALL DEBTORS FOR LEFT SIDE
     var debtorsLeft = getLeftDebtors(personsIoweTo)
 
     //-----------------------------------------------------right side
-    var arrOfUsersWhoOweMe = listOfUsersWhoOweMe([...debt], e);
+    var arrOfUsersWhoOweMe = listOfUsersWhoOweMe([...debt], currentClickedId);
     var debtors =  getRightDebtors(arrOfUsersWhoOweMe)
 
+ 
+
+
+    stateCopy123.clickedGroup = g
     stateCopy123.debtorsLeft = debtorsLeft
     stateCopy123.debtorsRight = debtors
 
     stateCopy123.friendHasBeenClicked = true
     this.setState(stateCopy123)
-
-    console.log(this.state.debtorsLeft)
 
 
   }
@@ -425,7 +427,7 @@ class Clients extends Component {
   // updateCounter = () =>{}
 
   render() {
-    const { clients , users, debt} = this.props;
+    const { clients , users, debt, groups} = this.props;
     const { totalOwed, cards, showSettings, showAddClient, youAreOwed, youOwed } = this.state;
     const { auth, isAuthenticated } = this.props;
     let settingsAndLogout = "";
@@ -441,6 +443,10 @@ class Clients extends Component {
       console.log('sdshcdsfhcksdjckjdkjfkjkjkjk')
       console.log(currentUser);
     }
+    if(groups){
+      var clickedGroup = groups.filter(group => group.members.some(member => member.id === auth.uid));
+    }
+    
     
 
     if (showSettings) {
@@ -924,7 +930,8 @@ class Clients extends Component {
                   {...props}  
                   debt={debt}  
                   debtors={this.state.debtorsRight}  
-                  debtorsLeft={this.state.debtorsLeft}  
+                  debtorsLeft={this.state.debtorsLeft} 
+                  group={this.state.clickedGroup}
                   clickedFriend={this.clickedFrienInfo.bind(this)}/>}
                      
               /> :
@@ -935,6 +942,7 @@ class Clients extends Component {
                   debt={debt}  
                   debtors={debtors} 
                   debtorsLeft={debtorsLeft}  
+                  group={clickedGroup}
                   clickedFriend={this.clickedFrienInfo.bind(this)}/>}
            
                /> }
@@ -974,14 +982,17 @@ Clients.propTypes = {
 }
 
 export default compose(
-  firestoreConnect([{ collection: 'clients' }]), firestoreConnect([{ collection: 'users' }]),
+  firestoreConnect([{ collection: 'clients' }]), 
+  firestoreConnect([{ collection: 'users' }]),
   firestoreConnect([{ collection: 'debt' }]),
+  firestoreConnect([{ collection: 'groups' }]),
   connect((state, props) => ({
     clients: state.firestore.ordered.clients,
     users: state.firestore.ordered.users,
     auth: state.firebase.auth,
     settings: state.settings,
-    debt: state.firestore.ordered.debt
+    debt: state.firestore.ordered.debt,
+    groups: state.firestore.ordered.groups
   }))
 )(Clients);
 // export default compose(

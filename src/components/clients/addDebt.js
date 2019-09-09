@@ -50,52 +50,39 @@ class addDebt extends Component {
   
 
   componentDidMount = () => {
-    // var utc = new Date();
-    // var dd = String(utc.getDate()).padStart(2, "0");
-    // const monthNames = [
-    //   "January",
-    //   "February",
-    //   "March",
-    //   "April",
-    //   "May",
-    //   "June",
-    //   "July",
-    //   "August",
-    //   "September",
-    //   "October",
-    //   "November",
-    //   "December"
-    // ];
-    // var currentDate = String(dd + " " + monthNames[utc.getMonth()]);
-    // this.setState({ date: currentDate}) 
-
-
 
     const { disableBalanceOnAdd } = this.props.settings;
     const { auth, users } = this.props;
 
     const newKeys = { firstName: "label" };
-    var copyofUsers = users;
-    var userNames = renameKeys(copyofUsers, newKeys);
+    var copyofUsers = users
+    var userNames = users.filter(user => user.id === auth.uid)[0].friends
 
-    // RENAME firstName keys in all array to label for input use
-    function renameKeys(copyofUsers, newKeys) {
-      var newArrOfChngedKeys = [];
-      for (var i in copyofUsers) {
-        newArrOfChngedKeys.push(giveBackNewArray(copyofUsers[i], newKeys))
-      }
-      return newArrOfChngedKeys
-    }
+    console.log('-------tento-----------componentDidMount')
+    console.log(userNames)
 
-    // RETURN changed key for every single object in array one by one
-    function giveBackNewArray(copyofUsers, newKeys) {
-        const keyValues = Object.keys(copyofUsers).map(key => {
-        const newKey = newKeys[key] || key;
-        return { [newKey]: copyofUsers[key] };
-      }
-    );
-      return Object.assign({}, ...keyValues);
-  }
+
+
+    // var userNames = renameKeys(copyofUsers, newKeys);
+
+  //   // RENAME firstName keys in all array to label for input use
+  //   function renameKeys(copyofUsers, newKeys) {
+  //     var newArrOfChngedKeys = [];
+  //     for (var i in copyofUsers) {
+  //       newArrOfChngedKeys.push(giveBackNewArray(copyofUsers[i], newKeys))
+  //     }
+  //     return newArrOfChngedKeys
+  //   }
+
+  //   // RETURN changed key for every single object in array one by one
+  //   function giveBackNewArray(copyofUsers, newKeys) {
+  //       const keyValues = Object.keys(copyofUsers).map(key => {
+  //       const newKey = newKeys[key] || key;
+  //       return { [newKey]: copyofUsers[key] };
+  //     }
+  //   );
+  //     return Object.assign({}, ...keyValues);
+  // }
 
 
     // RENEMAE EVERY FOUND LABEL TO FIRSTNAME + LASTNAME

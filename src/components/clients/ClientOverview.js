@@ -31,7 +31,7 @@ class clientOverview extends Component {
     // var pathLenght = progress[0].getAttribute('r') * 2 * Math.PI;
     // stateCopy.pathLength = pathLenght;
     // stateCopy.number = e.target.value.length;
-    // stateCopy.dashoffset = pathLenght - e.target.value.length;
+    // stateCopy.']'offset = pathLenght - e.target.value.length;
     // this.setState(stateCopy);
     // console.log('toto chcem')
     // console.log(pathLenght)

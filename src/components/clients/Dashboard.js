@@ -16,25 +16,48 @@ import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
 
 
+function getFriendsCount(users, id) {
+  var friendCounter = users.map((user) => user.id === id && user.friends ? user.friends : [])
+  return [].concat.apply([], [...friendCounter]).length
+}
+function getGroupsCount(groups, key) {
+  var groupCounter = groups.filter(group => group.members.some(member => member.id === key));
+  return groupCounter
+}
+function getFriendsForCard(users, id) {
+  // Arrray with all of my friends but me at the first position
+  var allUsers = JSON.parse(JSON.stringify(users));
+  var res = allUsers.map(user => user.id === id && user.friends).filter(arr => arr !== false).flat()
+  res.unshift({ id: id, label: 'Me' })
+  // Insert My user at the first position of friends array
+  return res
+}
+
 class dashboard extends Component {
-  state = {
-    totalOwed: null,
-    isAuthenticated: false,
-    showSettings: false,
-    showSettleLoan: false,
-    id: "DrOldEvSJx0mXM5V8KhD",
-    balanceUpdateAmount: '',
-    class: '',
-    classNumber: '',
-    style: '',
-    myFriends: [{ id: 1, firstName: 'Peter', lastName: 'Zigray' }],
-    skuska:'',
-    currentIndex: 0,
-    friends:[{'s':'l'}],
-    groupCount: '',
-    friendCount: ''
-     
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      totalOwed: null,
+      isAuthenticated: false,
+      showSettings: false,
+      showSettleLoan: false,
+      id: "DrOldEvSJx0mXM5V8KhD",
+      balanceUpdateAmount: '',
+      class: '',
+      classNumber: '',
+      style: '',
+      myFriends: [{ id: 1, firstName: 'Peter', lastName: 'Zigray' }],
+      skuska: 'null',
+      currentIndex: 0,
+      friends: '',
+      groupCount: '',
+      friendCount: '',
+      groups: '',
+      showDebts: true,
+
+    };
+  }
+  
 
   
 
@@ -53,13 +76,78 @@ class dashboard extends Component {
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  static getDerivedStateFromProps(props, state) {
-    const { auth } = props;
-    if (auth.uid) {
-      return { isAuthenticated: true };
-    } else {
-      return { isAuthenticated: false };
-    }
+
+
+  // static getDerivedStateFromProps(props, state) {
+  //   console.log('-------------------getDerivedStateFromProps')
+//     //const { auth, groups } = props;
+
+//     const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, groups } = this.props;
+//     let stateCopy0 = Object.assign({}, this.state);
+
+//     // Arrray with all of my friends but me at the first position
+//     var allUsers = JSON.parse(JSON.stringify(users));
+//     var friends = allUsers.map(user => user.id === auth.uid && user.friends).filter(arr => arr !== false).flat()
+
+//     // Insert My user at the first position of friends array
+//     friends.unshift({ id: auth.uid, email: auth.email, label: 'Me' })
+
+
+//     var allFriendsWithMe = friends.map((i) => (
+//       //   <Link to={`/Dashboard/${i.id}`} >
+//       <div className="card-body text-success text-center" key={i.id}>
+//         <div className="UserPicsDash d-flex justify-content-center ">
+//           <img className="" src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+//         </div>
+//         <div className="card-body text-center mt-2">
+//           <h3 className="">{i.label} {' '} {i.lastName}</h3>
+//         </div>
+//         < button
+//           //onClick={this.showGroupDetail.bind(this, group.id)}
+//           className="btn btn-success btn-rounded btn-md btnUserDash align-middle">
+//           <h4 className=""> Groups</h4>
+//         </button>
+//         {/* < button
+//                           //onClick={this.showGroupDetail.bind(this, group.id)}
+//                           className="btn btn-success btn-sm btn-block btn-icon-split mb-1"
+//                         >
+//                          friends
+//                         </button> */}
+//       </div>
+//     )
+//     )
+
+//  stateCopy0.friends = allFriendsWithMe;
+//     // stateCopy0.friendCount = friendCount;
+//     stateCopy0.skuska = allFriendsWithMe;
+//     return { stateCopy0 }
+   
+    
+
+    // this.setState(stateCopy0)
+
+    // Used here because for whatever reason it was not able to load groups in componentDidMount
+    // if (groups) {
+    //  console.log('-----------1--------groups')
+    //   var groupCounter = groups.map((group) => group.members.filter(member => member.id === auth.uid))
+    //   return  {groupCount : [].concat.apply([], [...groupCounter]).length}
+    // } 
+
+    // if (auth.uid) {
+    //   return { isAuthenticated: true };
+    // } else {
+    //   return { isAuthenticated: false };
+    // }
+  //}
+
+// shouldComponentUpdate () {
+//   console.log('yeezzzz')
+// }
+
+
+  showGroupDetail = () =>{
+    this.setState({ showDebts: !this.state.showDebts})
+    
   }
   //Delete Client
   onDeleteClick = (id) => {
@@ -128,69 +216,74 @@ class dashboard extends Component {
   thumbItem = (item, i) => (
     <span key={item} onClick={() => this.Carousel.slideTo(i)}>* </span>
   )
-
-  componentDidMount(){
-    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft,groups } = this.props;
-
-    // Arrray with all of my friends but me at the first position
-    var allUsers = JSON.parse(JSON.stringify(users));
-    console.log('----allUSERS----')
-    var friends = allUsers.map(user => user.id === auth.uid && user.friends).filter(arr => arr !== false).flat()
+  // UNSAFE_componentWillMount() {
+  //   const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, groups } = this.props;
+  //   console.log('componentwill mount')
+  //   this.setState({groups: groups})
+  //   if(groups){
+  //     console.log(groups)
+  //   }
+ 
+  //}
+  componentWillUnmount () {
+    console.log('--------------componentWillUnmount')
+ 
+  }
+  // shouldComponentUpdate(){
+  //   console.log('--------------shouldComponentUpdate')
+  // }
   
-    // Insert My user at the first position of friends array
-    friends.unshift({ id: auth.uid , email: auth.email, label: 'Me'})
+  componentWillUpdate(){
+    console.log('---------------componentWillUpdate')
+  }
+  componentDidUpdate(prevProps, prevState) {
+    console.log('---------------------componentDidUpdate')
+   
+    
 
 
-   var allFriendsWithMe =  friends.map((i) => (
+    
+    
+  }
+  componentDidMount(){
+    console.log('-------------------componentDidMount')
+    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, groups } = this.props;
+    var stateCopy0 = Object.assign({}, this.state);
+    var friends = getFriendsForCard(users, auth.uid)
 
-
-
+    console.log(friends)
+    var allFriendsWithMe =  friends.map((i) => (
   //   <Link to={`/Dashboard/${i.id}`} >
-
-        
           <div className="card-body text-success text-center" key={i.id}>
-
             <div className="UserPicsDash d-flex justify-content-center ">
               <img className="" src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
             </div>
-
             <div className="card-body text-center mt-2">
-
               <h3 className="">{i.label} {' '} {i.lastName}</h3>
             </div>
 
-
-            < button
-              //onClick={this.showGroupDetail.bind(this, group.id)}
-              className="btn btn-success btn-rounded btn-md btnUserDash align-middle"
-
-            >
-              <h4 className=""> Groups</h4>
-            </button>
-
-            {/* < button
-                          //onClick={this.showGroupDetail.bind(this, group.id)}
-                          className="btn btn-success btn-sm btn-block btn-icon-split mb-1"
-                        >
-                         friends
-                        </button> */}
-
-
-
-
+        
           </div>
-      
-          
+      )
+    )
 
+    // if (groups) {
+    //   var group01 = getGroupsCount(groups, auth.uid)
+    // }
+    if (users) {
+      var friendCount = getFriendsCount(users, auth.uid)
+    }
+    // hardcoded because from init, it has problem to load group data from firebase
+    stateCopy0.groupCount = 2;
+    stateCopy0.friendCount = friendCount;
+    stateCopy0.skuska = allFriendsWithMe;
+    stateCopy0.friends = allFriendsWithMe;
+ 
+    this.setState(stateCopy0)
 
-
-      
-      ))
-
-this.setState({skuska:allFriendsWithMe})
-    this.setState({ friends: allFriendsWithMe })
-    
   }
+
+  
   slideNext = () =>{ 
     const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend, groups} = this.props;
     let stateCopy1 = Object.assign({}, this.state);
@@ -210,21 +303,19 @@ this.setState({skuska:allFriendsWithMe})
     // console.log(stateCopy1.currentIndex)
     // console.log(this.state.friends[stateCopy1.currentIndex])
     // group counter
+
     if (groups) {
-      console.log('-------------------groups')
-      var groupCounter = groups.map((group) => group.members.filter(member => member.id === key))
-      stateCopy1.groupCount = [].concat.apply([], [...groupCounter]).length
+      var groupsCountAfter = getGroupsCount(groups, key)
     }
-
     if (users) {
-      console.log('-------------------friends')
-      var friendCounter = users.map((user) => user.id === key? user.friends: [])
-      stateCopy1.friendCount = [].concat.apply([], [...friendCounter]).length
+      var friendCountAfter = getFriendsCount(users, key)
     }
 
-    
-   
-    clickedFriend(key)
+    stateCopy1.groupCount = groupsCountAfter.length
+    stateCopy1.friendCount = friendCountAfter
+
+    //SEND TO PARENT WHICH USER SHOULD BE DISPALYED
+    clickedFriend(key, groupsCountAfter)
     this.setState(stateCopy1)
 }
   slidePrev = () => {
@@ -235,33 +326,41 @@ this.setState({skuska:allFriendsWithMe})
     } else {
       stateCopy2.currentIndex = this.state.currentIndex - 1
     }
-    
+    console.log('preview')
     
    
     // console.log(stateCopy2.currentIndex)
     // console.log(this.state.friends[stateCopy2.currentIndex])
     const { key } = stateCopy2.friends[stateCopy2.currentIndex];
-    clickedFriend(key)
-    if (users) {
-      console.log('-------------------friends')
-      var friendCounter = users.map((user) => user.id === key? user.friends: [])
-      stateCopy2.friendCount = [].concat.apply([], [...friendCounter]).length
-    }
+
     if (groups) {
-      console.log('-------------------groups')
-      var groupCounter = groups.map((group) => group.members.filter(member => member.id === key))
-      stateCopy2.groupCount = [].concat.apply([], [...groupCounter]).length
+      var groupsCountPrev = getGroupsCount(groups, key)
     }
+    if (users) {
+      var friendCountPrev = getFriendsCount(users, key)
+    }
+
+    stateCopy2.groupCount = groupsCountPrev.length
+    stateCopy2.friendCount = friendCountPrev
+  
+    //SEND TO PARENT WHICH USER SHOULD BE DISPALYED
+    clickedFriend(key, groupsCountPrev)
     this.setState(stateCopy2)
   }
+
+
+
+
+
   onSlideChanged = (e) => this.setState({ currentIndex: e.item })
   render() {
-
-    const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, groups} = this.props;
-
+    console.log('-------------------render')
+    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, currentGroup} = this.props;
+    console.log(currentGroup)
     // Arrray with all of my friends but me at the first position
     var allUsers = JSON.parse(JSON.stringify(users));
   
+    console.log(this.state.friends)
     // SETTING GROUP COUNTER
     // if (!this.state.groupCount)
     // if (groups) {
@@ -328,7 +427,17 @@ style={{ "max-width": "100%" }}>
   onSlideChanged={this.onSlideChanged}
 />
 
-  
+                    {this.state.showDebts ?
+                      < button
+                        onClick={this.showGroupDetail}
+                        className="btn btn-success btn-rounded btn-md btnUserDash align-middle">
+                        <h4 className="">Groups</h4>
+                      </button> :
+                      < button
+                        onClick={this.showGroupDetail}
+                        className="btn btn-success btn-rounded btn-md btnUserDash align-middle">
+                        <h4 className="">Debts</h4>
+            </button>}
 
  
 
@@ -377,16 +486,12 @@ style={{ "max-width": "100%" }}>
             </div>
            
             
-             
-         
-              
-            
-        
 
-
-
-
+          {this.state.showDebts?
+          
+          <React.Fragment>
           <div className="col-md-4">
+
             <table className="table-borderless" style={{ width: '100%' }}>
               <thead className="thead-inverse">
                 <tr >
@@ -396,46 +501,31 @@ style={{ "max-width": "100%" }}>
               </thead>
               <React.Fragment>
                 {debtorsLeft.map((w) => (
-                  <React.Fragment>
-                    <Link to={`/Friends/${w.id}`} >
-         
-                    <div className="card in-left mb-1"
-                    // onClick={this.clickOnCard.bind(this, w)}
-                    style={{cursor: "pointer"}}
-                    >
-   
-   <ul className="list-group list-group-flush">
-     
-
-       <li className="list-group-item ">
-
+                    <React.Fragment>
+                      <Link to={`/Friends/${w.id}`} >
+                        <div className="card in-left mb-1"
+                        // onClick={this.clickOnCard.bind(this, w)}
+                        style={{cursor: "pointer"}}>
       
-
-      
-         <div class="card-body">
-
-         <div className="photo mr-2 ">
-           <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-         </div> 
-         
-         {'You owe '}{' '}{w.label}{' '}<span style={{color: 'red'}}>{w.actualDebt}{' '}</span> EUR
-
-         </div>
-      
-
-       </li>
-       </ul>
-   </div>
-
-</Link>
-
-
-                  </React.Fragment>
-                ))}
+                          <ul className="list-group list-group-flush">
+                            <li className="list-group-item ">
+                              <div class="card-body">
+                                <div className="photo mr-2 ">
+                                  <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+                                </div> 
+                              {'You owe '}{' '}{w.label}{' '}<span style={{color: 'red'}}>{w.actualDebt}{' '}</span> EUR
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </Link>
+                    </React.Fragment>                
+                    )
+                  )
+                }
               </React.Fragment>
             </table>
           </div>
-
 
           <div className="col-md-4">
             <table className="table-borderless" style={{width: '100%'}}>
@@ -516,13 +606,62 @@ style={{ "max-width": "100%" }}>
               </React.Fragment>
             </table>
           </div>
+          </React.Fragment>
+:
+            <div className="col-md-8">
+              <table className="table-borderless" style={{ width: '100%' }}>
+                <thead className="thead-inverse">
+                  <tr >
+                    <th className="pb-2">Groups</th>
+                    <th />
+                  </tr>
+                </thead>
+                <React.Fragment>
+
+                  {this.state.groupCount !== 0 ?
+                    <React.Fragment>
+                  {currentGroup.map((group) => (
+                    <React.Fragment>
+                      <Link to={`/Friends/Group/${group.id}`} >
+                        <div className="card in-left mb-1"
+                          // onClick={this.clickOnCard.bind(this, w)}
+                          style={{ cursor: "pointer" }}>
+
+                          <ul className="list-group list-group-flush">
+                            <li className="list-group-item ">
+                              <div class="card-body">
+                                <div className="photo mr-2 ">
+                                  <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+                                </div>
+                                <h3>{group.name}</h3>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </Link>
+                    </React.Fragment>
+                    )
+                  )
+                } 
+                    </React.Fragment>
+                :
+                    <div className="mt-5 ml-5">
+                      <h3>Your friend does't have any group yet,</h3>
+                      <h4>but do not worry, you can add him one too, {':)'}</h4>
+                      <h5>just go to the "Friends" section and create one, if you want to</h5>
+                    </div>
+
+              }
 
 
 
 
+                </React.Fragment>
+              </table>
+            </div>
+          }
 
-
-
+    
 
 
 
@@ -564,22 +703,24 @@ dashboard.propTypes = {
 
 export default compose(
   firestoreConnect([{ collection: 'debt' }]),
-  firestoreConnect([{ collection: 'users' }]),
   firestoreConnect([{ collection: 'groups' }]),
+  firestoreConnect([{ collection: 'users' }]),
+  
 
 
   connect((state, props) => ({
     debt: state.firestore.ordered.debt,
     // clients: state.firestore.ordered.clients,
-
+    groups: state.firestore.ordered.groups,
     auth: state.firebase.auth,
     settings: state.settings,
     users: state.firestore.ordered.users,
-    groups: state.firestore.ordered.groups,
+   
   })),
   connect((state, props) => ({
-    debt: state.firestore.ordered.debt,
-    groups: state.firestore.ordered.groups
+    groups: state.firestore.ordered.groups,
+    debt: state.firestore.ordered.debt
+    
 
   })),
 
