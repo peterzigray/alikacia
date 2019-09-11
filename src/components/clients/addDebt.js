@@ -28,17 +28,19 @@ class addDebt extends Component {
     balance: '',
    
     description: '',
-    paidBy: '',
+    paidBy: [],
     debtTo: '',
-    selectedOption: {},
+    selectedOption: [{none:'none'}],
     multi: true,
-    listOfUsers:'',
-    usersWithoutMe:'',
+    uersForDebtAssign:'',
+    usersForPaidBy:'',
     status: { state:'Pending', color:'#F8BC35' },
   
-    isPayerChoosen: false,
-    isDebterChoosen: false,
-    isBalanceChoosen: false,
+    areRequestedArrFilled: false,
+    existDebtorAndPayer: false,
+    equallButtonClicked: false,
+
+    allowExact: false,
 
     valueField: 'id',
     labelField: 'label',
@@ -56,72 +58,77 @@ class addDebt extends Component {
 
     const newKeys = { firstName: "label" };
     var copyofUsers = users
-    var userNames = users.filter(user => user.id === auth.uid)[0].friends
+    var friendNames = users.filter(user => user.id === auth.uid)[0].friends
 
     console.log('-------tento-----------componentDidMount')
-    console.log(userNames)
+    
 
 
 
-    // var userNames = renameKeys(copyofUsers, newKeys);
+    var usersWithoutMe = renameKeys(friendNames, newKeys);
 
-  //   // RENAME firstName keys in all array to label for input use
-  //   function renameKeys(copyofUsers, newKeys) {
-  //     var newArrOfChngedKeys = [];
-  //     for (var i in copyofUsers) {
-  //       newArrOfChngedKeys.push(giveBackNewArray(copyofUsers[i], newKeys))
-  //     }
-  //     return newArrOfChngedKeys
-  //   }
+    // RENAME firstName keys in all array to label for input use
+    function renameKeys(userNames, newKeys) {
+      var newArrOfChngedKeys = [];
+      for (var i in userNames) {
+        newArrOfChngedKeys.push(giveBackNewArray(userNames[i], newKeys))
+      }
+      return newArrOfChngedKeys
+    }
 
-  //   // RETURN changed key for every single object in array one by one
-  //   function giveBackNewArray(copyofUsers, newKeys) {
-  //       const keyValues = Object.keys(copyofUsers).map(key => {
-  //       const newKey = newKeys[key] || key;
-  //       return { [newKey]: copyofUsers[key] };
-  //     }
-  //   );
-  //     return Object.assign({}, ...keyValues);
-  // }
+    // RETURN changed key for every single object in array one by one
+    function giveBackNewArray(userNames, newKeys) {
+      const keyValues = Object.keys(userNames).map(key => {
+        const newKey = newKeys[key] || key;
+        return { [newKey]: userNames[key] };
+      }
+    );
+      return Object.assign({}, ...keyValues);
+  }
 
-
+  
     // RENEMAE EVERY FOUND LABEL TO FIRSTNAME + LASTNAME
-    userNames.forEach(u => {
+    usersWithoutMe.forEach(u => {
       if (u.label) {
         u.label = u.label + " " + u.lastName
       }
     })
 
+    // Add me to the array
+
+    
+
     // DESTRACTURING ONLY NAME(LABEL) AND ID
-    var newar = [];
-    userNames.forEach(ar => {
+    var usersWithoutMe2 = [];
+    usersWithoutMe.forEach(ar => {
       let { lastName, email, friends, ...rest } = ar;
-      newar.push(rest)
-      return newar
+      usersWithoutMe2.push(rest)
+      return usersWithoutMe2
     }
   )
 
-  // DESTRACTURING ONLY NAME(LABEL) AND ID WITHOUT ACTUAL USER
-    var usersWithoutMe = [...newar]
-    var deleteCount = 1;
-    var count = usersWithoutMe.map(o => o.id).indexOf(auth.uid)
+  // // DESTRACTURING ONLY NAME(LABEL) AND ID WITHOUT ACTUAL USER
+  //   var usersWithoutMe = [...newar]
+  //   var deleteCount = 1;
+  //   var count = usersWithoutMe.map(o => o.id).indexOf(auth.uid)
 
-    if(count === -1){
-      count = 0;
-          deleteCount = 0;
-     }
-    usersWithoutMe.splice(count, deleteCount);
-   
-
-    console.log('......userswithoyutme......')
-    console.log(count)
-    console.log(auth.uid)
-    console.log(usersWithoutMe)
-    console.log(newar)
-    console.log('............')
-    this.setState({ usersWithoutMe: usersWithoutMe })
-    this.setState({ listOfUsers: newar})
-
+  //   if(count === -1){
+  //     count = 0;
+  //         deleteCount = 0;
+  //    }
+  //   usersWithoutMe.splice(count, deleteCount);
+    var userWithMe = JSON.parse(JSON.stringify(usersWithoutMe2));
+    userWithMe.unshift({ id: auth.uid, label: 'Me' })
+    // console.log('......userswithoyutme......')
+    // console.log(count)
+    // console.log(auth.uid)
+    // console.log(usersWithoutMe)
+    // console.log(newar)
+    // console.log('............')
+    this.setState({ usersForPaidBy: userWithMe })
+    this.setState({ uersForDebtAssign: usersWithoutMe2})
+    console.log(userWithMe)
+    console.log(usersWithoutMe2)
   }
 
   onSubmit = e => {
@@ -133,8 +140,6 @@ class addDebt extends Component {
     if (stateCopy4.debtTo[0] && stateCopy4.debtTo.length <= 1) {
 
       Object.assign(stateCopy4.debtTo[0], { actualDebt: stateCopy4.balance })
-      console.log('na toto sa focusujem')
-      console.log(stateCopy4)
       this.setState(stateCopy4);
     }
 
@@ -151,7 +156,7 @@ class addDebt extends Component {
     };
 
 
-    const { selectedOption, multi, usersWithoutMe, listOfUsers,isPayerChoosen,isDebterChoosen,isBalanceChoosen,valueField,labelField,newDate, ...rest } = newDebt
+    const { selectedOption, multi, usersForPaidBy, uersForDebtAssign,isPayerChoosen,isDebterChoosen,isBalanceChoosen,valueField,labelField,newDate, ...rest } = newDebt
     const nieco = {
       balance: '',
       date: '',
@@ -175,136 +180,212 @@ class addDebt extends Component {
     console.log( typeof date.toString())
     console.log( this.state.date.toString())
     this.setState({
-      newDate: date.toString()
+      newDate: date
     });
   }
 
-  onChange = (e) => {
-
-    if(e.target.name === "balance" && e.target.value.length != 0){
-      this.setState({isBalanceChoosen: true}) 
-    }
-    if(e.target.name === "balance" && e.target.value.length === 0 ){
-    this.setState({isBalanceChoosen: false}) 
-    } 
-
-    if(e.target.name === "balance" && e.target.value.match(/[^0-9]/g) && e.target.value.length !== 0 ){
-    this.setState({isBalanceChoosen: false}) 
-    window.alert("balance must be only number :) ");
-    }
-   
+  onDescriptionChange = (e) => {
+    this.setState({ areRequestedArrFilled: false })
+      if (e.target.value.length !== 0 && this.state.balance.length !==0) {
+        this.setState({ areRequestedArrFilled: true })
+      }
     this.setState({ [e.target.name]: e.target.value })
-}
-  // SET UP PERSON WHO IS IN DEPT
-  // onChange2 = (e) => {
-  //   this.setState({ debtTo: e.target.value})
-  // }
-  // SET UP PERSON WHO CREATED DEPT
-  onChange3 = (selectedOption, e) => {
-
-    console.log('--------selectedOption----------')
-    console.log(selectedOption)
-    var stateCopy9 = Object.assign({}, this.state);
-
-    if (stateCopy9.listOfUsers) {
-      console.log('--------ano----------')
-      var listOfUnclicked = compare(selectedOption, stateCopy9.listOfUsers)
-    }
-    console.log(listOfUnclicked)
-
-    stateCopy9.isPayerChoosen = false
-
-    if (selectedOption.length !== 0) {
-      stateCopy9.isPayerChoosen = true
-      const { id ,label } = selectedOption[0];
-      stateCopy9.paidBy = {id: id, label: label} 
-    }
-
-    // stateCopy9.listOfUsers = listOfUnclicked
-    this.setState(stateCopy9)
-   
   }
 
-  handleChange = (selectedOption, e) => {
+  onBalanceChange = (e) => {
+    this.setState({areRequestedArrFilled: false})
+    if (e.target.value.length !== 0 && this.state.description.length !== 0) {
+      this.setState({ areRequestedArrFilled: true })
+    }
+    if(e.target.name === "balance" && e.target.value.match(/[^0-9]/g) && e.target.value.length !== 0 ){
+      this.setState({ areRequestedArrFilled: false}) 
+      window.alert("only numbers are accepted :) ");
+    }
+    this.setState({ [e.target.name]: e.target.value })
+}
 
-    var stateCopy3 = Object.assign({}, this.state);
-    // if (this.state.listOfUsers){
-    //   var listOfUnclickedUsers = compare(selectedOption, this.state.listOfUsers)
-    // }
+  handleInputChange = (d , selectedOption) => {
+    
+    var stateCopyInput = Object.assign({}, this.state);
+    stateCopyInput.existDebtorAndPayer = false
+    
+    if (this.state.equallButtonClicked){
+      this.setState({equallButtonClicked: false})
+    }
+    
+       //SET UP PAYER
+    if(d === 'payed'){
+      stateCopyInput.existDebtorAndPayer = false
+      if (selectedOption.length !== 0 ) {
+        const { id, label } = selectedOption[0];
+        stateCopyInput.paidBy = { id: id, label: label }
+      } 
+      if (selectedOption.length !== 0 && stateCopyInput.debtTo.length !== 0) {
+        stateCopyInput.existDebtorAndPayer = true    
+      } 
+      this.setState(stateCopyInput)
+    }
+    
+    // SET UP DEBTOR
+    if(d === 'debt'){   
+          stateCopyInput.existDebtorAndPayer = false
+          stateCopyInput.debtTo = selectedOption; 
+      if (selectedOption.length !== 0 && stateCopyInput.paidBy.length !== 0 ) {
+        stateCopyInput.existDebtorAndPayer = true 
+      } 
+      this.setState(stateCopyInput);
+    }
+  }
+  
+
+
+  // onChange3 = (selectedOption, e) => {
+
+  //   console.log('--------selectedOption----------')
+  //   console.log(selectedOption)
+  //   var stateCopy9 = Object.assign({}, this.state);
+
+  //   // if (stateCopy9.uersForDebtAssign) {
+  //   //   console.log('--------ano----------')
+  //   //   var listOfUnclicked = compare(selectedOption, stateCopy9.uersForDebtAssign)
+  //   // }
+  //   // console.log(listOfUnclicked)
+
+  //   stateCopy9.isPayerChoosen = false
+
+  //   if (selectedOption.length !== 0) {
+  //     stateCopy9.isPayerChoosen = true
+  //     const { id ,label } = selectedOption[0];
+  //     stateCopy9.paidBy = {id: id, label: label} 
+  //   }
+
+  //   // stateCopy9.listOfUsers = listOfUnclicked
+  //   this.setState(stateCopy9)
    
+  // }
 
+  // handleChange = (selectedOption, e) => {
 
-    console.log('--------selectedOption----------')
+  //   var stateCopy3 = Object.assign({}, this.state);
+  //   // if (this.state.listOfUsers){
+  //   //   var listOfUnclickedUsers = compare(selectedOption, this.state.listOfUsers)
+  //   // }
+   
+  //   if (e === 'd'){
+
+  //   console.log('--------selectedOption----------')
     
-    // console.log(listOfUnclickedUsers)
-    // stateCopy3.listOfUsers = listOfUnclickedUsers 
-   // this.setState({listOfUsers: false}
-   // IF THERE IS NO PICKED USER I SETTED UP "NONE" FOR SETUP EXACT SUM ON CUSTOMERS
-    if(selectedOption.length === 0){
-      selectedOption = [{label: 'none'}];
-    }
-    console.log(selectedOption)
-    stateCopy3.isDebterChoosen = false
+  //   // console.log(listOfUnclickedUsers)
+  //   // stateCopy3.listOfUsers = listOfUnclickedUsers 
+  //  // this.setState({listOfUsers: false}
+  //  // IF THERE IS NO PICKED USER I SETTED UP "NONE" FOR SETUP EXACT SUM ON CUSTOMERS
+  //   stateCopy3.isDebterChoosen = false
+  //   if(selectedOption.length === 0){
+  //     selectedOption = [{label: 'You should set at leat one debtor'}];
     
-    if(selectedOption.length !== 0){
+  
+    
+    
+  // }else{
       
-    stateCopy3.debtTo = selectedOption;
-    stateCopy3.isDebterChoosen = true
-    console.log('------------------')
-    console.log(selectedOption)
-      this.setState(stateCopy3);
+  //   stateCopy3.debtTo = selectedOption;
+  //   stateCopy3.isDebterChoosen = true
+  //   console.log('------------------')
+  //   console.log(selectedOption)
+  //     this.setState(stateCopy3);
+  //   }
+  // }
+  // };
+
+  onExactSplit = (e) => {
+    e.preventDefault();
+    this.setState({ allowExact: !this.state.allowExact})
+
+  }
+
+    onTodoChange(value){
+  var stateCopyExact = Object.assign({}, this.state);
+      console.log(value)
+    
+      // if(value.length < 20){
+      //   stateCopyExact.debtTo.forEach(debtor => {
+      //             if(debtor.id === value){
+      //               Object.assign(debtor, { actualDebt: priceForOneDebtor })
+      //             }
+
+      //           }
+
+      //   this.setState({
+      //     balance: value
+      //   });
+      // } else {
+
+
+      //   // stateCopyExact.debtTo.forEach(debtor => {
+      //   //   if(debtor.id === value){
+      //   //     Object.assign(debtor, { actualDebt: priceForOneDebtor })
+      //   //   }
+          
+      //   // }
+      //  return null
+      // }
+      
     }
-  };
+  
 
   onEquallysplit = (e) => {
+    console.log('-----------------------------onEquallysplit')
     e.preventDefault();
-    
+    var stateCopyEqually = Object.assign({}, this.state);
     //IF PAYER IS ALSO DEBTOR
     const { paidBy, debtTo} = this.state
 
-    var clicked = debtTo.filter(obj => {
-      return (obj.id === paidBy.id)
-    })
-
-    // IF EQUALLY WAS CLICKED DO NOTHING, OTHERWISE ADD PAYER TO DOBTOR AND SET ACTUALBALLANCE FOR ALL DEBTORS
-    if(clicked.length){
-      console.log('ok')
-    } else {
-  
-    // PAYER IS ALSO DEBTOR AND HERE I SET UP DEBT TO FOR HIM ALSO
-    var stateCopy1 = Object.assign({}, this.state);
-    stateCopy1.debtTo.push({id: paidBy.id, label: paidBy.label})
-    this.setState(stateCopy1);
-
-    
-    // PAYER IS ALSO DEBTOR AND HERE I SPLIT TOTAL BALANCE FOR ALL DEBTORS AS ACTUALDEBT
-    var stateCopy = Object.assign({}, this.state);
-    var devidedBy = stateCopy.debtTo.length;
-    var actualBalance = stateCopy.balance;
-
-    
-    if (this.state.balance && this.state.debtTo){
-
-      const priceForOneDebtor = Number.parseFloat(actualBalance / devidedBy).toFixed(2);
-      console.log(priceForOneDebtor)
-        stateCopy.debtTo.forEach(debtor => {
-          Object.assign(debtor, { actualDebt : priceForOneDebtor})
-        })
-    } else {
+    //Obtain if Equall button has been clicked
+    // var clicked = debtTo.filter(obj => {
+    //   return (obj.id === paidBy.id)
+    // })
+    if (!this.state.areRequestedArrFilled && !this.state.existDebtorAndPayer) {
       window.confirm("Please add deptor and balance first")
     }
-    this.setState(stateCopy)
 
-    console.log(this.state)
-  }
+    var clicked = debtTo.some(obj => Object.keys(obj)[2] === 'actualDebt'? true: false)
+    console.log(clicked)
+    // IF EQUALL BUTTON WAS CLICKED DO NOTHING, OTHERWISE ADD PAYER TO DOBTOR AND SET ACTUALBALLANCE FOR ALL DEBTORS
+   
+    
+
+      if (!clicked){
+
+      // PAYER IS ALSO DEBTOR AND HERE I SET UP DEBT TO FOR HIM ALSO
+    
+      stateCopyEqually.debtTo.push({ id: paidBy.id, label: paidBy.label })
+      
+      // PAYER IS ALSO DEBTOR AND HERE I SPLIT TOTAL BALANCE FOR ALL DEBTORS AS ACTUALDEBT
+      //var stateCopy = Object.assign({}, this.state);
+      var devidedBy = stateCopyEqually.debtTo.length;
+      var actualBalance = stateCopyEqually.balance;
+      const priceForOneDebtor = Number.parseFloat(actualBalance / devidedBy).toFixed(2);
+   
+        stateCopyEqually.debtTo.forEach(debtor => {
+          Object.assign(debtor, { actualDebt : priceForOneDebtor})
+        }
+      )    
+    } else {
+
+     console.log('was clicked')
+    }
+    stateCopyEqually.equallButtonClicked = clicked;
+    this.setState(stateCopyEqually)
+  
 
 }
 
 
   render() {
    
-    console.log("---------------------------------ss-----s")
-    console.log(this.state.debtTo.length)
+    console.log("---------------------------------render-----s")
+    console.log(this.state.debtTo)
+ 
     const { selectedOption } = this.state;
     return (
       <div>
@@ -317,13 +398,16 @@ class addDebt extends Component {
                  <form onSubmit={this.onSubmit}>
                   <div className="form-group">
 
-                    <label htmlFor="name">With you and</label>
+                    <label htmlFor="name">Debt assign</label>
                       <Select
                       labelField={this.state.labelField}
                       valueField={this.state.valueField}
                         value={selectedOption}
-                        onChange={this.handleChange}
-                        options={this.state.listOfUsers}
+                        name="debt"
+                        onChange={this.handleInputChange.bind(this, "debt")}
+                      //onChange={this.handleInputChange}
+                      //  onChange={this.handleChange.bind(this, 'd')}
+                        options={this.state.uersForDebtAssign}
                         multi={this.state.multi}
                       />
                   </div>
@@ -333,9 +417,12 @@ class addDebt extends Component {
                       <Select
                     labelField={this.state.labelField}
                     valueField={this.state.valueField}
-                      onChange={this.onChange3} 
+                    name="payed"
+                    //onChange={this.handleInputChange}
+                   onChange={this.handleInputChange.bind(this, "payed")}
+                      //onChange={this.onChange3} 
                       value={selectedOption}
-                      options={this.state.listOfUsers}
+                      options={this.state.usersForPaidBy}
                       multi={!this.state.multi}
                     />
 
@@ -350,7 +437,7 @@ class addDebt extends Component {
                       value={this.state.description}
                       minLength="2"
                       required
-                      onChange={this.onChange}
+                      onChange={this.onDescriptionChange}
                       // value={this.state.lastName}
                     />
                   </div>
@@ -358,7 +445,7 @@ class addDebt extends Component {
                   <div className="form-group">
                     <label htmlFor="date">Date</label>
                       <DatePicker
-                        selected={this.state.date}
+                      selected={this.state.newDate}
                         onChange={this.onDate.bind(this)}
                       />
                   </div>
@@ -393,7 +480,7 @@ class addDebt extends Component {
                       type="text"
                       className="form-control"
                       name="balance"
-                      onChange={this.onChange}
+                      onChange={this.onBalanceChange}
                       value={this.state.balance}
                       required
                       // disabled={disableBalanceOnAdd}
@@ -405,8 +492,7 @@ class addDebt extends Component {
                   <div className="col">
 
 
-                    {
-                        this.state.isPayerChoosen && this.state.isDebterChoosen && this.state.isBalanceChoosen ?
+                      {this.state.areRequestedArrFilled && this.state.existDebtorAndPayer?
                        <button 
                         type="button" 
                         className="btn btn-outline-primary btn-sm btn-block"
@@ -429,15 +515,20 @@ class addDebt extends Component {
 
                   
                   <div className="col">
-                  {
-                        this.state.isPayerChoosen && this.state.isDebterChoosen && this.state.isBalanceChoosen ?
-                  <button type="button" className="btn btn-outline-primary btn-sm btn-block">Exact</button> :
+                      {this.state.areRequestedArrFilled && this.state.existDebtorAndPayer?
+
+                  <button 
+                    type="button" 
+                    className="btn btn-outline-primary btn-sm btn-block"
+                    onClick={this.onExactSplit}>
+                    Exact
+                  </button> :
                   <button type="button" className="btn btn-outline-primary btn-sm btn-block" onClick={(e) => window.alert("Please set up your debt firstly :)")}>Exact</button> }
                   </div>
                  </div>
 
                   {
-                    this.state.isPayerChoosen && this.state.isDebterChoosen && this.state.isBalanceChoosen ?
+                    this.state.areRequestedArrFilled && this.state.existDebtorAndPayer ?
                   <button
                   type="submit"
                   value="Submit"
@@ -451,39 +542,64 @@ class addDebt extends Component {
           </div>
          
        
-          <div className="col-md-5">
-       {this.state.debtTo ? this.state.debtTo.map(name => 
-       
-       <div className="card in-left">
-   
-       <ul className="list-group list-group-flush">
-         
-
-           <li className="list-group-item ">
-
-             <div class="card-body">
-
-             <div className="photo">
-               <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-             </div> 
-             {name.label}
-               <div class="input-group">
-                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
-                <div class="input-group-append">
-                 <span class="input-group-text">$</span>
-                 <span class="input-group-text">0.00</span>
-               </div>
-             </div>
-
-             </div>
+      <div className="col-md-7">
+      {this.state.debtTo? this.state.debtTo.map(name => 
+          <div className="card in-left">
+          <div class="row no-gutters">
+            <div className="col-md-4 ">
+              
+                <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
           
+              
+            </div>
+              <div class="col-md-8">
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item ">
+                <div class="card-body">
 
-           </li>
+                {/* <div class="row no-gutters">
+                  <div class="col-md-4">
+                    <img src="..." class="card-img" alt="...">
+                     </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                      </div>
+                    </div>
+                  </div> */}
+                    <h3>{name.label}</h3> 
+
+                    {name.actualDebt?
+                   <div class="input-group">
+                  
+                     <input type="text" 
+                            class="form-control" 
+                          value={name.actualDebt} 
+                            aria-label="Amount (to the nearest dollar)"
+                            key={name.id}
+                             onChange={(e)=> this.onTodoChange(e.target.value)}
+                         // onChange={onTodoChange}
+                             onClick={this.onTodoChange.bind(this, name.id)}
+                        //  onClick={(([e.target.value], key) => this.onTodoChange(e, val))}
+                   />
+                     <div class="input-group-append">
+                      
+                       <span class="input-group-text">$</span>
+                       {/* <span class="input-group-text">0.00</span> */}
+                     </div>
+                   </div>
+                   :null}
+
+                </div>
+              </li>
            </ul>
-       </div>
-      
-         ) : null}
-         </div>
+              </div>
+          </div>
+        </div>
+      ) : <h3>Please choose at least one of your friends</h3>}
+      </div>
      
 
 
