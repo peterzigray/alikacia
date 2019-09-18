@@ -464,9 +464,9 @@ class Clients extends Component {
               </Link>
             </li>
             <li className="nav-item">
-              <a href="#!" className="nav-link" onClick={this.onLogoutClick}>
-                Logout
-              </a>
+              <Link to="/" className="nav-link">
+               LogOut
+              </Link>
             </li>
           </ul>
         </div>

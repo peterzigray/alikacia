@@ -13,6 +13,17 @@ import DatePicker from "react-datepicker";
  
 import "react-datepicker/dist/react-datepicker.css";
 
+// function addActualDebt(debtTo, priceForOneDebtor) {
+//   console.log('som vo vnutri funkcie')
+//   console.log(debtTo)
+//   console.log(priceForOneDebtor)
+//   var result = debtTo.forEach(debtor => {
+//     Object.assign(debtor, { actualDebt: priceForOneDebtor })
+//   })
+  
+//   return result
+// }
+
 function compare(selectedOption, listOfUsers) {
   const finalArray = [...listOfUsers];
   listOfUsers.forEach((e1) => selectedOption.forEach((e2) => {
@@ -38,9 +49,11 @@ class addDebt extends Component {
   
     areRequestedArrFilled: false,
     existDebtorAndPayer: false,
-    equallButtonClicked: false,
+    equallButtonClicked: '',
+    exactButtonClicked: false,
 
     allowExact: false,
+    currentId: '',
 
     valueField: 'id',
     labelField: 'label',
@@ -52,15 +65,15 @@ class addDebt extends Component {
   
 
   componentDidMount = () => {
-
-    const { disableBalanceOnAdd } = this.props.settings;
+    console.log('-------tento-----------componentDidMount')
+    // const { disableBalanceOnAdd } = this.props.settings;
     const { auth, users } = this.props;
 
     const newKeys = { firstName: "label" };
-    var copyofUsers = users
+    // var copyofUsers = users
     var friendNames = users.filter(user => user.id === auth.uid)[0].friends
 
-    console.log('-------tento-----------componentDidMount')
+ 
     
 
 
@@ -143,6 +156,9 @@ class addDebt extends Component {
       this.setState(stateCopy4);
     }
 
+    // IN CASE EXACT AMOUNT AND TOTAL BALANCE IS NOT COVERAGE, ADD DEBT FOR PAYER AS WELL
+
+    //if (this.state.exactButtonClicked && )
     const {
       state,
       props: { firestore, history }
@@ -156,7 +172,8 @@ class addDebt extends Component {
     };
 
 
-    const { selectedOption, multi, usersForPaidBy, uersForDebtAssign,isPayerChoosen,isDebterChoosen,isBalanceChoosen,valueField,labelField,newDate, ...rest } = newDebt
+    const { selectedOption, multi, usersForPaidBy, uersForDebtAssign,isPayerChoosen,isDebterChoosen,isBalanceChoosen,valueField,labelField,newDate, 
+      areRequestedArrFilled, currentId, equallButtonClicked, exactButtonClicked, existDebtorAndPayer, allowExact, ...rest } = newDebt
     const nieco = {
       balance: '',
       date: '',
@@ -204,37 +221,114 @@ class addDebt extends Component {
     this.setState({ [e.target.name]: e.target.value })
 }
 
-  handleInputChange = (d , selectedOption) => {
-    
+  handleInputChangefromArr = (d, selectedOption) => {
+    console.log('handle input change')
+// console.log(d)
+
+  console.log(selectedOption)
+    if (selectedOption.length > 0) {
+    // button equall has not been clicked
     var stateCopyInput = Object.assign({}, this.state);
     stateCopyInput.existDebtorAndPayer = false
     
     if (this.state.equallButtonClicked){
-      this.setState({equallButtonClicked: false})
+
+                        console.log('klikol som aj na equallbutton')
+                        // stateCopyInput.equallButtonClicked = false
+      if (d === 'payer') {
+        console.log('klikol som aj na equallbutton a zmenil payera')
+
+        
+
+                          const { id, label } = selectedOption[0];
+                          stateCopyInput.paidBy = { id: id, label: label }
+
+        var isDebtorSameWithPayer1 = stateCopyInput.debtTo.some(object => object.id === id ? true : false)
+
+        if (!isDebtorSameWithPayer1){
+          stateCopyInput.debtTo.push({ id: stateCopyInput.paidBy.id, label: stateCopyInput.paidBy.label, actualDebt: ''})
+        }
+        var devidedBy1 = stateCopyInput.debtTo.length;
+        var actualBalance1 = stateCopyInput.balance;
+        const priceForOneDebtor1 = Number.parseFloat(actualBalance1 / devidedBy1).toFixed(2);
+
+        stateCopyInput.debtTo.forEach(debtor => debtor.actualDebt = priceForOneDebtor1 )
+        
+
+
+
+
+                          if (selectedOption.length !== 0 && stateCopyInput.debtTo.length !== 0) {
+                            stateCopyInput.existDebtorAndPayer = true
+                          }
+
+                        }
+
+      if (d === 'debt') { 
+                          console.log('klikol som aj na equallbutton a zmenil debt')
+                         
+
+     
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        var isDebtorSameWithPayer = selectedOption.some(object => object.id === stateCopyInput.paidBy.id ? true : false)
+
+
+        if (!isDebtorSameWithPayer){
+          selectedOption.push({ id: stateCopyInput.paidBy.id, label: stateCopyInput.paidBy.label })
+        }
+        
+        stateCopyInput.debtTo = selectedOption;
+
+       
+
+
+
+                          if (selectedOption.length !== 0 && stateCopyInput.paidBy.length !== 0) {
+                            stateCopyInput.existDebtorAndPayer = true
+                          }
+                        
+                        }  
     }
+
+    // button equall has not been clicked
     
-       //SET UP PAYER
-    if(d === 'payed'){
-      stateCopyInput.existDebtorAndPayer = false
-      if (selectedOption.length !== 0 ) {
-        const { id, label } = selectedOption[0];
-        stateCopyInput.paidBy = { id: id, label: label }
-      } 
-      if (selectedOption.length !== 0 && stateCopyInput.debtTo.length !== 0) {
-        stateCopyInput.existDebtorAndPayer = true    
-      } 
-      this.setState(stateCopyInput)
+    if (!this.state.equallButtonClicked) {
+                      console.log('equallbutton neni kliknuty')
+                      //SET UP PAYER
+      if (d === 'payer'){
+                      console.log('som v payer')
+                      stateCopyInput.existDebtorAndPayer = false
+                      if (selectedOption.length !== 0 ) {
+                        const { id, label } = selectedOption[0];
+                        stateCopyInput.paidBy = { id: id, label: label }
+                      } 
+                      console.log('equallbutton neni kliknuty a zmenil som payera')
+                      if (selectedOption.length !== 0 && stateCopyInput.debtTo.length !== 0) {
+                        stateCopyInput.existDebtorAndPayer = true    
+                      } 
+                    
+                    }
+                    
+                    // SET UP DEBTOR
+                    if(d === 'debt'){
+                      console.log('equallbutton neni kliknuty a zmenil som debt')   
+                          stateCopyInput.existDebtorAndPayer = false
+                          stateCopyInput.debtTo = selectedOption; 
+                      if (selectedOption.length !== 0 && stateCopyInput.paidBy.length !== 0 ) {
+                        stateCopyInput.existDebtorAndPayer = true 
+                      } 
+                    
+                    }
+  }
+    this.setState(stateCopyInput);
+
+   
+
+    } else {
+      return null
     }
-    
-    // SET UP DEBTOR
-    if(d === 'debt'){   
-          stateCopyInput.existDebtorAndPayer = false
-          stateCopyInput.debtTo = selectedOption; 
-      if (selectedOption.length !== 0 && stateCopyInput.paidBy.length !== 0 ) {
-        stateCopyInput.existDebtorAndPayer = true 
-      } 
-      this.setState(stateCopyInput);
-    }
+   
   }
   
 
@@ -299,36 +393,110 @@ class addDebt extends Component {
 
   onExactSplit = (e) => {
     e.preventDefault();
-    this.setState({ allowExact: !this.state.allowExact})
 
+    if (!this.state.areRequestedArrFilled && !this.state.existDebtorAndPayer) {
+      window.confirm("Please add deptor and balance first")
+    }
+   
+
+
+
+
+
+    var stateCopyExact = Object.assign({}, this.state);
+
+    // //IF PAYER IS ALSO DEBTOR
+    // const { paidBy, debtTo } = stateCopyExact
+    // var copyDebt1 = JSON.parse(JSON.stringify(debtTo));
+
+    // if (!this.state.equallButtonClicked) {
+
+    //   copyDebt1.forEach(debtor => {
+    //     Object.assign(debtor, { actualDebt: 0 })
+    //   })
+    //   console.log(copyDebt1)
+    //   stateCopyExact.debtTo = copyDebt1;
+
+    // }
+    stateCopyExact.exactButtonClicked = true
+    stateCopyExact.equallButtonClicked = false;
+    this.setState(stateCopyExact)
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+    
   }
 
     onTodoChange(value){
-  var stateCopyExact = Object.assign({}, this.state);
-      console.log(value)
+  var stateCopyChange = Object.assign({}, this.state);
+
     
-      // if(value.length < 20){
-      //   stateCopyExact.debtTo.forEach(debtor => {
-      //             if(debtor.id === value){
-      //               Object.assign(debtor, { actualDebt: priceForOneDebtor })
-      //             }
+      //IF PAYER IS ALSO DEBTOR
+    // const { paidBy, debtTo } = stateCopyChange
+    // var copyDebtChange = JSON.parse(JSON.stringify(debtTo));
 
-      //           }
+    // if (!this.state.equallButtonClicked) {
 
-      //   this.setState({
-      //     balance: value
-      //   });
-      // } else {
+    //   copyDebt1.forEach(debtor => {
+    //     if( debtor.id === value)
+    //     Object.assign(debtor, { actualDebt: 0 })
+    //   })
+    //   console.log(copyDebt1)
+    //   stateCopyChange.debtTo = copyDebt1;
+
+    // }
+    var currentId = '';
+    var currentValue ='';
+    if(value.length > 20){
+      stateCopyChange.currentId = value
+    }
+  
+
+      if (value.length < 20){
+        stateCopyChange.debtTo.forEach(debtor => debtor.id === stateCopyChange.currentId  ? Object.assign(debtor, { actualDebt: value }): null)
+             
+    }
+
+      
+      console.log(stateCopyChange.currentId)
+      console.log(value)
+      this.setState(stateCopyChange)
+    //   if(value.length < 20){
+    //     stateCopyExact.debtTo.forEach(debtor => {
+    //               if(debtor.id === value){
+    //                 Object.assign(debtor, { actualDebt: priceForOneDebtor })
+    //               }
+
+    //             }
+
+    //     this.setState({
+    //       balance: value
+    //     });
+    //   } else {
 
 
-      //   // stateCopyExact.debtTo.forEach(debtor => {
-      //   //   if(debtor.id === value){
-      //   //     Object.assign(debtor, { actualDebt: priceForOneDebtor })
-      //   //   }
+    //     // stateCopyExact.debtTo.forEach(debtor => {
+    //     //   if(debtor.id === value){
+    //     //     Object.assign(debtor, { actualDebt: priceForOneDebtor })
+    //     //   }
           
-      //   // }
-      //  return null
-      // }
+    //     // }
+    //    return null
+    //   }
       
     }
   
@@ -337,8 +505,10 @@ class addDebt extends Component {
     console.log('-----------------------------onEquallysplit')
     e.preventDefault();
     var stateCopyEqually = Object.assign({}, this.state);
+
     //IF PAYER IS ALSO DEBTOR
-    const { paidBy, debtTo} = this.state
+    const { paidBy, debtTo } = stateCopyEqually
+    var copyDebt = JSON.parse(JSON.stringify(debtTo));
 
     //Obtain if Equall button has been clicked
     // var clicked = debtTo.filter(obj => {
@@ -348,33 +518,55 @@ class addDebt extends Component {
       window.confirm("Please add deptor and balance first")
     }
 
-    var clicked = debtTo.some(obj => Object.keys(obj)[2] === 'actualDebt'? true: false)
-    console.log(clicked)
+    // var clicked = debtTo.some(obj => Object.keys(obj)[2] === 'actualDebt'? true: false)
+   
     // IF EQUALL BUTTON WAS CLICKED DO NOTHING, OTHERWISE ADD PAYER TO DOBTOR AND SET ACTUALBALLANCE FOR ALL DEBTORS
    
+    var isDebtorSameWithPayer = copyDebt.some(object => object.id === paidBy.id? true: false)
     
+   
 
-      if (!clicked){
-
+    if (!this.state.equallButtonClicked){
+      stateCopyEqually.equallButtonClicked = true;
       // PAYER IS ALSO DEBTOR AND HERE I SET UP DEBT TO FOR HIM ALSO
-    
-      stateCopyEqually.debtTo.push({ id: paidBy.id, label: paidBy.label })
       
+      if (!isDebtorSameWithPayer){
+        console.log('Am I already debtor?')
+       
+        copyDebt.push({ id: paidBy.id, label: paidBy.label })
+        stateCopyEqually.selectedOption = copyDebt
+
+      }
+      
+
+
+      console.log('pridal som payera do debt')
       // PAYER IS ALSO DEBTOR AND HERE I SPLIT TOTAL BALANCE FOR ALL DEBTORS AS ACTUALDEBT
-      //var stateCopy = Object.assign({}, this.state);
-      var devidedBy = stateCopyEqually.debtTo.length;
+      var devidedBy = copyDebt.length;
       var actualBalance = stateCopyEqually.balance;
       const priceForOneDebtor = Number.parseFloat(actualBalance / devidedBy).toFixed(2);
    
-        stateCopyEqually.debtTo.forEach(debtor => {
-          Object.assign(debtor, { actualDebt : priceForOneDebtor})
-        }
-      )    
+     
+    
+      // ADD ACTUAL DEBT FOR ALL PICKED DEBTORS
+      console.log('debtTo')
+      
+     copyDebt.forEach(debtor => {
+        Object.assign(debtor, { actualDebt: priceForOneDebtor })
+      })
+      console.log(copyDebt)
+      stateCopyEqually.debtTo = copyDebt;
+
+    
+      
     } else {
+
+
 
      console.log('was clicked')
     }
-    stateCopyEqually.equallButtonClicked = clicked;
+    // stateCopyEqually.equallButtonClicked = clicked;
+    stateCopyEqually.exactButtonClicked = true
     this.setState(stateCopyEqually)
   
 
@@ -385,6 +577,26 @@ class addDebt extends Component {
    
     console.log("---------------------------------render-----s")
     console.log(this.state.debtTo)
+    if(this.state.equallButtonClicked){
+      var devidedBy = this.state.debtTo.length;
+      var actualBalance = this.state.balance;
+      const priceForOneDebtor = Number.parseFloat(actualBalance / devidedBy).toFixed(2);
+      var selectedObtions = JSON.parse(JSON.stringify(this.state.debtTo));
+      
+       selectedObtions.forEach(debtor => {
+        Object.assign(debtor, { actualDebt: priceForOneDebtor })
+      })
+
+     
+      console.log(selectedObtions)
+
+    }
+
+    
+
+
+
+
  
     const { selectedOption } = this.state;
     return (
@@ -404,7 +616,7 @@ class addDebt extends Component {
                       valueField={this.state.valueField}
                         value={selectedOption}
                         name="debt"
-                        onChange={this.handleInputChange.bind(this, "debt")}
+                      onChange={this.handleInputChangefromArr.bind(this, "debt")}
                       //onChange={this.handleInputChange}
                       //  onChange={this.handleChange.bind(this, 'd')}
                         options={this.state.uersForDebtAssign}
@@ -419,7 +631,7 @@ class addDebt extends Component {
                     valueField={this.state.valueField}
                     name="payed"
                     //onChange={this.handleInputChange}
-                   onChange={this.handleInputChange.bind(this, "payed")}
+                    onChange={this.handleInputChangefromArr.bind(this, "payer")}
                       //onChange={this.onChange3} 
                       value={selectedOption}
                       options={this.state.usersForPaidBy}
@@ -571,12 +783,20 @@ class addDebt extends Component {
                   </div> */}
                     <h3>{name.label}</h3> 
 
-                    {name.actualDebt?
-                   <div class="input-group">
+                 
+
+                 
+
                   
-                     <input type="text" 
-                            class="form-control" 
-                          value={name.actualDebt} 
+                 { !this.state.equallButtonClicked ?
+                      <div className="input-group ">
+                    
+                    {this.state.exactButtonClicked?
+                          <React.Fragment>
+                     <input type="text"
+                   
+                        className="form-control" 
+                          // value={name.actualDebt} 
                             aria-label="Amount (to the nearest dollar)"
                             key={name.id}
                              onChange={(e)=> this.onTodoChange(e.target.value)}
@@ -584,13 +804,30 @@ class addDebt extends Component {
                              onClick={this.onTodoChange.bind(this, name.id)}
                         //  onClick={(([e.target.value], key) => this.onTodoChange(e, val))}
                    />
+
                      <div class="input-group-append">
                       
                        <span class="input-group-text">$</span>
                        {/* <span class="input-group-text">0.00</span> */}
-                     </div>
-                   </div>
-                   :null}
+                        </div>
+                            </React.Fragment>
+                        : null } 
+                      </div>
+                    : 
+                    <div>
+
+                   
+                      <p>Owed {' '} {selectedObtions[0].actualDebt} {"EUR"} </p> 
+                  
+                    
+                    </div>}
+                  
+
+
+
+                   
+                
+                
 
                 </div>
               </li>

@@ -249,9 +249,12 @@ class dashboard extends Component {
     console.log('-------------------componentDidMount')
     const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, groups } = this.props;
     var stateCopy0 = Object.assign({}, this.state);
-    var friends = getFriendsForCard(users, auth.uid)
 
-    console.log(friends)
+    // FIND ALL FRIENDS FOR CARD BUT IF THERE IS NO ONE RETURN JUST ME, OTHERWISE APP WILL BE CRUSH DOWN
+    var friends = getFriendsForCard(users, auth.uid).filter(function (el) {
+      return el != null;
+    });
+    
     var allFriendsWithMe =  friends.map((i) => (
   //   <Link to={`/Dashboard/${i.id}`} >
           <div className="card-body text-success text-center" key={i.id}>
@@ -377,9 +380,15 @@ class dashboard extends Component {
     if (debtors.length < 1 && debtorsLeft < 1) {
       return (
         <div className="mt-5 ml-5">
-          <h3>You dont have any debts to show yet</h3>
-          <h4>settle up your debts with friends {':)'}</h4>
-          <h5>in order to do it, click on section add bills</h5>
+          <h3>You dont have any Friends to share the debt with</h3>
+          <h4>plese click on button bellow and add some</h4>
+          <Link to="/Friends" className="nav-link">
+            <button type="button"
+              className='btn btn-primary btn-sm '
+              >
+                Add Friends
+              </button>
+              </Link>
         </div>
       )
       

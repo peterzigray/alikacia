@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { notifyPasswordUser, notifyEmailUser, allowLogin } from "../../actions/NotifyActions";
 import AppNavbar from '../../components/layout/AppNavbar';
 import { firestoreConnect } from "react-redux-firebase";
+import { Link } from "react-router-dom";
 
 import "../../css/FirstPage.css";
 
@@ -373,14 +374,17 @@ class Register extends Component {
                     />
                   </div>
                   <span className='span-reg'>Make sure you verified your password</span> */}
-
-                  <input
-                    type="submit"
-                    value="Sign Up"
-                    className="btn login_btn btn-block fp-submit-btn"
-                    disabled = {this.state.disabled}
-                    id='register'
-                  />
+            <Link to="/Dashboard" onClick={this.onLogoutClick}>
+              <input
+                type="submit"
+                value="Sign Up"
+                className="btn login_btn btn-block fp-submit-btn"
+                disabled={this.state.disabled}
+                id='register'
+              />
+               
+              </Link>
+                  
                 </form>
               </div>
             </div>
