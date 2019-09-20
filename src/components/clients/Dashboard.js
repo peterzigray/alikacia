@@ -357,9 +357,10 @@ class dashboard extends Component {
 
   onSlideChanged = (e) => this.setState({ currentIndex: e.item })
   render() {
-    console.log('-------------------render')
+    console.log('--------Dashboard-----------render')
     const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, currentGroup} = this.props;
-    console.log(currentGroup)
+    console.log(debtors)
+    console.log(debtorsLeft)
     // Arrray with all of my friends but me at the first position
     var allUsers = JSON.parse(JSON.stringify(users));
   
@@ -382,7 +383,7 @@ class dashboard extends Component {
         <div className="mt-5 ml-5">
           <h3>You dont have any Friends to share the debt with</h3>
           <h4>plese click on button bellow and add some</h4>
-          <Link to="/Friends" className="nav-link">
+          <Link to="/client/Friends" className="nav-link">
             <button type="button"
               className='btn btn-primary btn-sm '
               >

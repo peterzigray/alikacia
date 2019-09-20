@@ -33,7 +33,7 @@ class App extends Component {
               {/* <Route exact path="/:id"  component={UserIsAuthenticated(Clients)}/> */}
               {/* <Route  path="/Friends/:id" component={UserIsAuthenticated(Clients)} /> */}
               <Route 
-                path='/:id' 
+                path='/client/:id' 
                 render={ (props) => <Clients {...props} />}
               /> 
                

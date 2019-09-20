@@ -25,10 +25,11 @@ const Child = (path) => {
   const {pathname} = path.location
 
   console.log('===============path==================')
-  console.log(group)
+  console.log(debtors)
+  console.log(debtorsLeft)
 
  
-      if(pathname === '/Dashboard'){
+  if (pathname === '/' || pathname === '/client/Dashboard'  ){
         return (<Dashboard 
           debtors={debtors} 
           debtorsLeft={debtorsLeft} 
@@ -36,13 +37,13 @@ const Child = (path) => {
           clickedFriend={clickedFriend}
            />)
       }
-      if(pathname === '/History'){
+  if (pathname === '/' || pathname === '/client/History' ){
         return (<ClientOverview  debt={debt}/>)
       }
-      if(pathname === '/Friends'){
+  if (pathname === '/' || pathname === '/client/Friends' ){
         return (<Friends/>)
       }
-      if(pathname === '/AddBills'){
+  if (pathname === '/' || pathname === '/client/AddBills' ){
         return (<AddDebt/>)
       }
   else {
@@ -237,6 +238,7 @@ class Clients extends Component {
       }
     ],
     showSettings: false,
+    isLoadedFirstTime: true,
     showAddClient: ''
   };
 
@@ -357,7 +359,10 @@ class Clients extends Component {
     // STORE ALL RETURNED DEBTORS WITHOUT ME
     var personsIoweTo = listOfUsersIOwe(debtLeft, users, currentClickedId);
     // STORE ALL DEBTORS FOR LEFT SIDE
-    var debtorsLeft = getLeftDebtors(personsIoweTo)
+    var debtorsLeft = getLeftDebtors(personsIoweTo).filter((object) => object !== null)
+
+    console.log('---------------------clicked')
+    console.log(debtLeft)
 
     //-----------------------------------------------------right side
     var arrOfUsersWhoOweMe = listOfUsersWhoOweMe([...debt], currentClickedId);
@@ -413,6 +418,7 @@ class Clients extends Component {
     });
 
     let stateCopy = Object.assign({}, this.state);
+    stateCopy.isLoadedFirstTime = false
     stateCopy.showAddClient = id;
     const length = this.state.cards.length;
     for (let i = 0; i < length; i++) {
@@ -440,8 +446,8 @@ class Clients extends Component {
     console.log('----------------------------------------------------------')
     if(users){
       var currentUser = users.filter(user => { return user.id === auth.uid })
-      console.log('sdshcdsfhcksdjckjdkjfkjkjkjk')
-      console.log(currentUser);
+      // console.log('sdshcdsfhcksdjckjdkjfkjkjkjk')
+      // console.log(currentUser);
     }
     if(groups){
       var clickedGroup = groups.filter(group => group.members.some(member => member.id === auth.uid));
@@ -463,7 +469,7 @@ class Clients extends Component {
                 Settings
               </Link>
             </li>
-            <li className="nav-item">
+            <li className="nav-item" onClick={this.onLogoutClick}>
               <Link to="/" className="nav-link">
                LogOut
               </Link>
@@ -575,8 +581,8 @@ class Clients extends Component {
       
       // STORE ALL DEBTORS FOR LEFT SIDE
       var debtorsLeft = getLeftDebtors(personsIoweTo)
-      
-     
+      console.log('-------------------------this is it-----------')
+      console.log(personsIoweTo)
 
 
       // -------------------------------------------------------------------------------------------->
@@ -700,20 +706,20 @@ class Clients extends Component {
                   </div>
 
                     <div className="logo pt-3 pb-3 pl-4 " onClick={this.onClickButton.bind(this, 0)}>            
-                      <i class="fas fa-home fa-lg"></i>{' '}{' '}<span><Link to="/Dashboard" debtors={debtors}
+                      <i class="fas fa-home fa-lg"></i>{' '}{' '}<span><Link to="/client/Dashboard" debtors={debtors}
                   debtorsLeft={debtorsLeft} >Dashboard</Link></span>               
                   </div>
 
                     <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 2)}>              
-                      <i class="fas fa-history fa-lg"></i>{' '}{' '} <Link to="/History" debtors={debtors}
+                      <i class="fas fa-history fa-lg"></i>{' '}{' '} <Link to="/client/History " debtors={debtors}
                   debtorsLeft={debtorsLeft} >History</Link>               
                   </div>
                     <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 3)}>              
-                      <i class="fas fa-user-friends fa-lg"></i>{' '}{' '} <Link to="/Friends" debtors={debtors}
+                      <i class="fas fa-user-friends fa-lg"></i>{' '}{' '} <Link to="/client/Friends" debtors={debtors}
                   debtorsLeft={debtorsLeft} >friends</Link>             
                   </div>
                     <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 1)}>              
-                      <i class="fas fa-plus fa-lg"></i>{' '}{' '} <Link to="/AddBills" debtors={debtors}
+                      <i class="fas fa-plus fa-lg"></i>{' '}{' '} <Link to="/client/AddBills" debtors={debtors}
                   debtorsLeft={debtorsLeft} >Add Bills</Link>       
                   </div>
 
@@ -934,7 +940,8 @@ class Clients extends Component {
                   group={this.state.clickedGroup}
                   clickedFriend={this.clickedFrienInfo.bind(this)}/>}
                      
-              /> :
+              /> : null}
+                    {!this.state.friendHasBeenClicked && !this.state.isLoadedFirstTime ?
               <Route 
                 path='/:id' 
                 render={ (props) => <Child 
@@ -945,7 +952,19 @@ class Clients extends Component {
                   group={clickedGroup}
                   clickedFriend={this.clickedFrienInfo.bind(this)}/>}
            
-               /> }
+                      />: null }
+               {this.state.isLoadedFirstTime ?
+                      <Route
+                        path='/'
+                        render={(props) => <Child
+                          {...props}
+                          debt={debt}
+                          debtors={debtors}
+                          debtorsLeft={debtorsLeft}
+                          group={clickedGroup}
+                          clickedFriend={this.clickedFrienInfo.bind(this)} />}
+
+                      /> : null}
               {/* <Route 
                 path='/Friends/o0zm6jC0dbPyjG9ru1Xyy78AUnl1' 
                 render={ (props) => <Child {...props}  debt={debt}  debtors={debtors} debtorsLeft={debtorsLeft}/>}
