@@ -21,7 +21,7 @@ import { UserIsAuthenticated, UserIsNotAuthenticated } from '../../helpers/auth'
 const Child = (path) => {
   console.log('coje to match')
   //console.log(`${match.url}`)
-  const { debt, group, debtors, debtorsLeft, clickedFriend} = path
+  const { debt, group, debtors, debtorsLeft, clickedFriend } = path
   const {pathname} = path.location
 
   console.log('===============path==================')
@@ -34,6 +34,7 @@ const Child = (path) => {
           debtors={debtors} 
           debtorsLeft={debtorsLeft} 
           currentGroup={group}
+  
           clickedFriend={clickedFriend}
            />)
       }
@@ -239,7 +240,7 @@ class Clients extends Component {
     ],
     showSettings: false,
     isLoadedFirstTime: true,
-    showAddClient: ''
+    showAddClient: '',
   };
 
   // componentDidMount() {
@@ -370,7 +371,7 @@ class Clients extends Component {
 
  
 
-
+    
     stateCopy123.clickedGroup = g
     stateCopy123.debtorsLeft = debtorsLeft
     stateCopy123.debtorsRight = debtors
@@ -938,7 +939,9 @@ class Clients extends Component {
                   debtors={this.state.debtorsRight}  
                   debtorsLeft={this.state.debtorsLeft} 
                   group={this.state.clickedGroup}
-                  clickedFriend={this.clickedFrienInfo.bind(this)}/>}
+               
+                  clickedFriend={this.clickedFrienInfo.bind(this)}
+                  />}
                      
               /> : null}
                     {!this.state.friendHasBeenClicked && !this.state.isLoadedFirstTime ?
@@ -950,7 +953,9 @@ class Clients extends Component {
                   debtors={debtors} 
                   debtorsLeft={debtorsLeft}  
                   group={clickedGroup}
-                  clickedFriend={this.clickedFrienInfo.bind(this)}/>}
+            
+                  clickedFriend={this.clickedFrienInfo.bind(this)}
+                  />}
            
                       />: null }
                {this.state.isLoadedFirstTime ?
@@ -962,7 +967,9 @@ class Clients extends Component {
                           debtors={debtors}
                           debtorsLeft={debtorsLeft}
                           group={clickedGroup}
-                          clickedFriend={this.clickedFrienInfo.bind(this)} />}
+                       
+                          clickedFriend={this.clickedFrienInfo.bind(this)} 
+                          />}
 
                       /> : null}
               {/* <Route 

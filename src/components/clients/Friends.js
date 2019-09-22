@@ -60,26 +60,27 @@ const Table = (property) => {
   var {id} = property.match.params
   var {auth}= property;
     console.log('-----------Som v friends----------')
-    console.log(property)
+  console.log(otherProps)
     if(id !== "null") {
       return (<UserDetails otherProps={otherProps} auth={auth} />)
      } 
    }
+   //----------------------------------------------------------------------------------------
    const Groups = (property, auth) => {
     var {otherProps} = property;
-    // var {id} = property.match.params
-    // var {auth}= property;
+    var {id} = property.match.params
+    var {auth}= property;
       console.log('-----------som v groups----------')
      console.log(otherProps)
      if (property) {
        return (<GroupDetails otherProps={otherProps} auth={auth} />)
        } 
    
-        // console.log('-----------Doslo to sem----------')
-        // console.log(property)
-        // if(id !== "null") {
-        //   return (<UserDetails otherProps={otherProps} auth={auth} />)
-        //  } 
+        console.log('-----------Doslo to sem----------')
+        console.log(property)
+        if(id !== "null") {
+          return (<UserDetails otherProps={otherProps} auth={auth} />)
+         } 
      }
 //-------------------------------------------------------------------------------------------------------------------------->
 /**
@@ -93,7 +94,7 @@ function getMyNonFriends(users,friends){
   for (var i in users){
       var matched = false
       for (var j in friends){
-        if (users[i].id === friends[j].id){
+        if (users[i].id === friends[j]){
           matched = true
         }
       }
@@ -102,6 +103,21 @@ function getMyNonFriends(users,friends){
       }
     }
   return result   
+}
+function getMyFriends(users, friends) {
+  var result = [];
+  for (var i in users) {
+    var matched = false
+    for (var j in friends) {
+      if (users[i].id === friends[j]) {
+        matched = true
+      }
+    }
+    if (matched) {
+      result.push(users[i])
+    }
+  }
+  return result
 }
 //-------------------------------------------------------------------------------------------------------------------------->
 /**
@@ -112,11 +128,9 @@ function getMyNonFriends(users,friends){
  */
 function getAllMyFriends(copyofU, auth){
     var friends = copyofU.map(user => user.id === auth.uid && user.friends).filter(arr => arr !== false).flat()
-    if (typeof(friends[0]) !== 'undefined'){
-        
+    if (typeof(friends[0]) !== 'undefined'){       
         return friends
       } else {   
-        
         return friends = [{label: 'none', id: 'null' }]
     }
   }
@@ -149,7 +163,10 @@ function getAllMyFriends(copyofU, auth){
   }
 //-------------------------------------------------------------------------------------------------------------------------->
 
-
+function getFriendsCount(users, id) {
+  var friendCounter = users.map((user) => user.id === id && user.friends ? user.friends : [])
+  return [].concat.apply([], [...friendCounter]).length
+}
 
 class friends extends Component {
   state = {
@@ -169,6 +186,7 @@ class friends extends Component {
     friendsList: '',
     groupList: '',
     groupName: '',
+    friendCount: '',
 
     friendExist: false,
     actualUsersDebts: [{id: 'null'}],
@@ -188,6 +206,21 @@ class friends extends Component {
     allRecordForRow: ''
   };
 
+
+  componentDidMount(){
+
+    let stateCopy = Object.assign({}, this.state);
+    const { auth, users } = this.props;
+ 
+      var friendCount = getFriendsCount(users, auth.uid)
+    
+
+    stateCopy.friendCount = friendCount;
+
+    this.setState(stateCopy)
+
+  }
+
   // SHOW POP UP FOR ADDING NEW FRIENDS
   addFriends = (e) => {
     e.preventDefault();
@@ -195,7 +228,7 @@ class friends extends Component {
   }
 
   onFriendDelete = (id) => {
-    console.log(id)
+  
     const { firestore , auth , users, debt } = this.props;
 
     var debtForDelete = JSON.parse(JSON.stringify(debt));
@@ -266,10 +299,10 @@ class friends extends Component {
   // SET ALL FRIENDS TO FRIENDSLIST STATE PICKED FROM COMBO BOX
   onFriendsListChange = (selectedOption) => {
     var stateCopyFriends = Object.assign({}, this.state);
-    stateCopyFriends.friendsList = selectedOption;
+    stateCopyFriends.friendsList = selectedOption.map(obt => obt.id);
     this.setState(stateCopyFriends);
-    console.log('HAHAHAH')
-    console.log(stateCopyFriends.friendsList)
+
+   
   }
   //-------------------------------------------------------------------------------------------------------------------------->
   // SET ALL FRIENDS FOR GROUP
@@ -288,6 +321,7 @@ class friends extends Component {
   //-------------------------------------------------------------------------------------------------------------------------->
   // SUBMIT PICKED FRIENDS
   onSubmitFriends = (e) => {
+    let stateCopy = Object.assign({}, this.state);
     const {
       state,
       props: { firestore, history, users, auth}
@@ -298,22 +332,30 @@ class friends extends Component {
       window.alert("Please choose your new friends!")
       // stateCopy6.selectedOption = {};
       // this.setState(stateCopy6)
+    } else {
+      stateCopy.friendCount = 1;
     }
+
+
+   
+
+    this.setState(stateCopy)
 
     // UPDATE MY USER WITH NEW FRIENDS
     var copyofUser = JSON.parse(JSON.stringify(users));
     
 
-    // FILTER MY USER
-    var myUserFriends = copyofUser.filter(user => user.id === auth.uid).filter(user => user.id === auth.uid)
-    console.log('sadjkkskfksdkjsk')
-    console.log(myUserFriends)
+    // FILTER MY FRIENDS
+    var myUserFriends = copyofUser.filter(user => user.id === auth.uid)
+    console.log('CO JE TOTO')
+    console.log(myUserFriends[0].friends)
       
     if (!('friends' in myUserFriends[0])){
       myUserFriends = [];
     } else {
-      myUserFriends = myUserFriends[0].friends.filter(friend => friend)
+      myUserFriends = myUserFriends[0].friends
     }
+    console.log(myUserFriends)
 
 
     // FILTER PICKED USERS FROM MULTICHOICE COMBO BOX
@@ -324,18 +366,26 @@ class friends extends Component {
     for(var i in myUserFriends) {
       newPickedFriends.push(myUserFriends[i])
     }
-    console.log(newPickedFriends)
+    
       
-    firestore.collection('users').doc(auth.uid).set({ friends: newPickedFriends }, { merge: true })
+    firestore.collection('users').doc(auth.uid).set({ friends: newPickedFriends}, { merge: true })
     this.setState({ addFriends: !this.state.addFriends })
     
   }
 
   onSubmitGroups = (e) => {
+   
+  
     const {
       state,
       props: { firestore, history, users, auth}
     } = this;
+
+
+    
+
+// I WILL SET UP HERE NOT NULL VALUE FOR FRIENDSCOUNT IN ORDER TO GET ANOTHER MESSGAE BEFORE COMPONENT IS MOUNTED AGAIN
+  
     
     console.log(' group submitted')
     var groupList = JSON.parse(JSON.stringify(this.state.groupList));
@@ -500,12 +550,13 @@ class friends extends Component {
     var stateForRender = Object.assign({}, this.state);
     var myFriends =  getAllMyFriends(copyofU, auth)
     console.log('-------myFriends---------')
-  
+    console.log(myFriends)
    
 
     // RETURN ALL MY NONFRIENDS
-    var myNonFriends = getMyNonFriends(copyofU,myFriends)
+    var myNonFriends = getMyNonFriends(copyofU, myFriends).filter(user => user.id !== auth.uid)
     console.log('--nonfriends---')
+    //var usersWithoutMe = myNonFriends.filter(user => user.id !== auth.uid)
     console.log(myNonFriends)
    
     // KEY DECLARATION FOR RENAME ALL FIRSTNAME FOR NONFRIENDS IN ORTER TO FIT INTO COMBOMOX
@@ -517,7 +568,9 @@ class friends extends Component {
     console.log(userNames)
     //-------------------------------------------------------------------------------------------------------------------------->
 
-    const friendsForGruop = renameKeys(myFriends, newKeys);
+    var pickedFriends = getMyFriends(copyofU, myFriends).filter(user => user.id !== auth.uid)
+
+    const friendsForGruop = renameKeys(pickedFriends, newKeys);
     console.log('-------------- friends for groups --------------------')
     console.log(friendsForGruop)
   
@@ -538,15 +591,17 @@ class friends extends Component {
                    //                SAME AS IN THE FUNCTION MERGE LATER
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           var debt2 = JSON.parse(JSON.stringify(debt));
-          var userDetailProps2 = getAllRelatedDebtsToMe(debt2,parameter,auth)
+          var allMyDebts = getAllRelatedDebtsToMe(debt2,parameter,auth)
 
           
    
-      console.log(this.state.detailRecordOfFriend)
+     
   }
 
-
-
+// JUST IN CASE,,, EVERYTHING GETS RENDERED
+var friendCount = this.state.friendCount
+console.log('friens==========')
+      console.log(friendCount)
 
 var clickedUserDetailProps = this.state.detailRecordOfFriend
 //-------------------------------------------------------------------------------------------------------------------------->
@@ -629,14 +684,14 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
               </h2>
               <div className="card-body bg-transparent border-primary">
                   
-                {myFriends.map((friend) => (
+                {friendsForGruop.map((friend) => (
                   <React.Fragment>
                     {friend.id && friend.label !== 'none' ?
                       // <tr
                       //   key={friend.id}
                       // >
                         
-                      <Link to={`/Friends/${friend.id}`} >
+                      <Link to={`/client/${friend.id}`} >
                           <div className="logo border-bottom mt-2 mb-2" style={{width: '100%'}}
                         // to={`/client/${client.id}`}
                         onClick={this.showUserDetail.bind(this, friend.id)}
@@ -715,20 +770,21 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
        
             
         
-     <Switch>
+     {/* <Switch>
+         <Route path="/client/Friends/Group/:id"            
+           render={(props) => <Groups 
+              	                   {...props}
+                                   otherProps = {this.state.detailRecordOfGroup} 
+                                   auth={auth} />}/>   
 
-     <Route path="/Friends/Group/:id"            
-        render={(props) => <Groups {...props}   otherProps = {this.state.detailRecordOfGroup} auth={auth} />}
-       />   
-         <Route path="/Friends/:id"            
-        render={(props) => <Table {...props}   otherProps = {this.state.detailRecordOfFriend[0].id === 'null' && this.state.detailRecordOfFriend[0].id !== 'none' ? userDetailProps2: clickedUserDetailProps} auth={auth} />}
-       />       
-      
-    </Switch>
+
+           
+    </Switch> */}
       
 
+        
     
-      { !userDetailProps2
+            {friendCount > 0 && this.state.detailRecordOfFriend[0].id === 'null'
        // userDetailProps[0].id === 'null'
          ? 
         <div className="mt-5 ml-5"> 
@@ -736,54 +792,38 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
           <h5>Plese click on your friends</h5>
         </div>
       
-      :null
-      }
+      : null}
+            {friendCount < 1 ?
+              <div className="mt-5 ml-5">
+                <h3>Please choose your friend below</h3>
+                <h5>Click on green button + </h5>
+              </div>: null}
+
+            {friendCount > 0 && this.state.detailRecordOfFriend[0].id !== 'null' ?
+
+              <React.Fragment>
+               <Route path="/client/:id"
+                 render={(props) => <Table
+                {...props}
+                   otherProps={this.state.detailRecordOfFriend[0].id === 'null'
+                   // && this.state.detailRecordOfFriend[0].id !== 'none' 
+                    ? allMyDebts : clickedUserDetailProps}
+                   auth={auth} />} />  
+              </React.Fragment>
+
+              : null}
+
+
+             
+      
              
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+          
             
             </div>
             
             
           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

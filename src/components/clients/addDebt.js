@@ -24,6 +24,22 @@ import "react-datepicker/dist/react-datepicker.css";
 //   return result
 // }
 
+function getMyFriends(users, friends) {
+  var result = [];
+  for (var i in users) {
+    var matched = false
+    for (var j in friends) {
+      if (users[i].id === friends[j]) {
+        matched = true
+      }
+    }
+    if (matched) {
+      result.push(users[i])
+    }
+  }
+  return result
+}
+
 function compare(selectedOption, listOfUsers) {
   const finalArray = [...listOfUsers];
   listOfUsers.forEach((e1) => selectedOption.forEach((e2) => {
@@ -54,6 +70,7 @@ class addDebt extends Component {
 
     allowExact: false,
     currentId: '',
+    isAnyFriend: '',
 
     valueField: 'id',
     labelField: 'label',
@@ -71,11 +88,11 @@ class addDebt extends Component {
 
     const newKeys = { firstName: "label" };
     // var copyofUsers = users
-    var friendNames = users.filter(user => user.id === auth.uid)[0].friends
-
+    var friendNames0 = users.filter(user => user.id === auth.uid)[0].friends
+   
  
-    
-
+    var friendNames = getMyFriends(users, friendNames0)
+    console.log(friendNames)
 
 
     var usersWithoutMe = renameKeys(friendNames, newKeys);
@@ -138,6 +155,7 @@ class addDebt extends Component {
     // console.log(usersWithoutMe)
     // console.log(newar)
     // console.log('............')
+    this.setState({ isAnyFriend: friendNames })
     this.setState({ usersForPaidBy: userWithMe })
     this.setState({ uersForDebtAssign: usersWithoutMe2})
     console.log(userWithMe)
@@ -172,8 +190,11 @@ class addDebt extends Component {
     };
 
 
-    const { selectedOption, multi, usersForPaidBy, uersForDebtAssign,isPayerChoosen,isDebterChoosen,isBalanceChoosen,valueField,labelField,newDate, 
-      areRequestedArrFilled, currentId, equallButtonClicked, exactButtonClicked, existDebtorAndPayer, allowExact, ...rest } = newDebt
+    const { selectedOption, multi, usersForPaidBy, uersForDebtAssign,isPayerChoosen,
+      isDebterChoosen,isBalanceChoosen,valueField,labelField,newDate, 
+      areRequestedArrFilled, currentId, equallButtonClicked, exactButtonClicked,
+      existDebtorAndPayer, allowExact, isAnyFriend, ...rest } = newDebt
+      
     const nieco = {
       balance: '',
       date: '',
@@ -603,6 +624,9 @@ class addDebt extends Component {
       <div>
         <div className="row mb-0 mt-2 m9">
           
+          {this.state.isAnyFriend?
+
+            <React.Fragment>
           <div className="col-md-5 pl-4 mr-0 ">
             <div className="card">
               {/* <div className="card-header">Add an expense</div> */}
@@ -835,10 +859,25 @@ class addDebt extends Component {
               </div>
           </div>
         </div>
-      ) : <h3>Please choose at least one of your friends</h3>}
+      ) : <h3>We are ready to set up some debts {':)'}</h3>}
       </div>
-     
+              </React.Fragment>
+: 
 
+
+            <div className="col-md-8">
+              <div className="mt-5 ml-5">
+                <h3>You dont have any Friends to share the debt with</h3>
+                <h4>plese click on button bellow and add some</h4>
+                <Link to="/client/Friends" className="nav-link">
+                  <button type="button"
+                    className='btn btn-primary btn-sm '
+                  >
+                    Add Friends
+              </button>
+                </Link>
+              </div>
+            </div>}
 
 
 

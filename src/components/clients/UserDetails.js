@@ -143,7 +143,7 @@ class UserDetails extends Component {
     
                           </span>
                         </td>
-                        <td className='col-md-2 pl-0 pr-0 ' >{w.date.substring(4, 10)}</td>
+                        {/* <td className='col-md-2 pl-0 pr-0 ' >{w.date.substring(4, 10)}</td> */}
                         <td className='col-md-3 pl-0 pr-0 ' >
                           <p className="mx-auto">{w.description}</p>
                         </td>
@@ -198,7 +198,9 @@ class UserDetails extends Component {
 
                        
                         <h4  >{'€'}{' '}{record.balance}</h4>
-                        <small > {'Paid by'}{' '}{record.paidBy.label}{' '}{'on'}{' '}{record.date.substring(4, 10)}</small>
+                        <small > {'Paid by'}{' '}{record.paidBy.label}{' '}{'on'}{' '}
+                        {/* {record.date.substring(4, 10)} */}
+                        </small>
                     
                       </div>
                       {record.debtTo.map( person => 

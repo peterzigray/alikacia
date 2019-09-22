@@ -28,9 +28,55 @@ function getFriendsForCard(users, id) {
   // Arrray with all of my friends but me at the first position
   var allUsers = JSON.parse(JSON.stringify(users));
   var res = allUsers.map(user => user.id === id && user.friends).filter(arr => arr !== false).flat()
-  res.unshift({ id: id, label: 'Me' })
+  res.push(id);
+ // res.unshift({ id })
   // Insert My user at the first position of friends array
   return res
+}
+// 
+
+
+/*
+ * RENAME firstName keys in all array to label for input use
+ * another comment here
+ * ...
+ */
+function renameKeys(copyofU, newKeys) {
+  var newArrOfChngedKeys = [];
+  for (let i = 0; i < copyofU.length; i++) {
+    newArrOfChngedKeys.push(giveBackNewArray(copyofU[i], newKeys))
+  }
+  return newArrOfChngedKeys
+}
+//-------------------------------------------------------------------------------------------------------------------------->
+/*
+* RETURN changed key for every single object in array one by one
+* another comment here
+* ...
+*/
+function giveBackNewArray(copyofU, newKeys) {
+  const keyValues = Object.keys(copyofU).map(key => {
+    const newKey = newKeys[key] || key;
+    return { [newKey]: copyofU[key] };
+  }
+  );
+  return Object.assign({}, ...keyValues);
+}
+
+function getMyFriends(users, friends) {
+  var result = [];
+  for (var i in users) {
+    var matched = false
+    for (var j in friends) {
+      if (users[i].id === friends[j]) {
+        matched = true
+      }
+    }
+    if (matched) {
+      result.push(users[i])
+    }
+  }
+  return result
 }
 
 class dashboard extends Component {
@@ -54,6 +100,7 @@ class dashboard extends Component {
       friendCount: '',
       groups: '',
       showDebts: true,
+      wasSlideClicked : false,
 
     };
   }
@@ -247,28 +294,43 @@ class dashboard extends Component {
   }
   componentDidMount(){
     console.log('-------------------componentDidMount')
-    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, groups } = this.props;
+    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, groups,   } = this.props;
     var stateCopy0 = Object.assign({}, this.state);
 
     // FIND ALL FRIENDS FOR CARD BUT IF THERE IS NO ONE RETURN JUST ME, OTHERWISE APP WILL BE CRUSH DOWN
-    var friends = getFriendsForCard(users, auth.uid).filter(function (el) {
+    var friends0 = getFriendsForCard(users, auth.uid).filter(function (el) {
       return el != null;
     });
+    console.log('=======================ffffirends=================*****')
     
-    var allFriendsWithMe =  friends.map((i) => (
-  //   <Link to={`/Dashboard/${i.id}`} >
-          <div className="card-body text-success text-center" key={i.id}>
-            <div className="UserPicsDash d-flex justify-content-center ">
-              <img className="" src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-            </div>
-            <div className="card-body text-center mt-2">
-              <h3 className="">{i.label} {' '} {i.lastName}</h3>
-            </div>
 
-        
+   
+    
+
+    // const newKeys = { label: "firstName" };
+    // const friends = renameKeys(friends1, newKeys);
+
+
+    // if (!wasClicked){
+  
+      var friends = getMyFriends(users, friends0)
+      var allFriendsWithMe = friends.map((i) => (
+        //   <Link to={`/Dashboard/${i.id}`} >
+        <div className="card-body text-success text-center" key={i.id}>
+          <div className="UserPicsDash d-flex justify-content-center ">
+            <img className="" src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
           </div>
+          <div className="card-body text-center mt-2">
+            <h3 className="">{i.firstName} {' '} {i.lastName}</h3>
+          </div>
+
+
+        </div>
       )
-    )
+      )
+ 
+    
+  
 
     // if (groups) {
     //   var group01 = getGroupsCount(groups, auth.uid)
@@ -281,15 +343,55 @@ class dashboard extends Component {
     stateCopy0.friendCount = friendCount;
     stateCopy0.skuska = allFriendsWithMe;
     stateCopy0.friends = allFriendsWithMe;
- 
+    stateCopy0.wasSlideClicked = true;
     this.setState(stateCopy0)
+  // }
+   
+  }
+
+  clickedFriend = (currentClickedId, g) => {
+    // console.log('-----parent-----')
+    // console.log(currentClickedId)
+    // console.log(g)
+
+
+    // const { users, debt, auth } = this.props;
+    // let stateCopy123 = Object.assign({}, this.state);
+    // var debtLeft = JSON.parse(JSON.stringify(debt));
+
+    // //-----------------------------------------------------left side
+    // // STORE ALL RETURNED DEBTORS WITHOUT ME
+    // var personsIoweTo = listOfUsersIOwe(debtLeft, users, currentClickedId);
+    // // STORE ALL DEBTORS FOR LEFT SIDE
+    // var debtorsLeft = getLeftDebtors(personsIoweTo).filter((object) => object !== null)
+
+    // console.log('---------------------clicked')
+    // console.log(debtLeft)
+
+    // //-----------------------------------------------------right side
+    // var arrOfUsersWhoOweMe = listOfUsersWhoOweMe([...debt], currentClickedId);
+    // var debtors = getRightDebtors(arrOfUsersWhoOweMe)
+
+
+
+
+  //   // stateCopy123.clickedGroup = g
+  //   stateCopy123.debtorsLeft = debtorsLeft
+  //   stateCopy123.debtorsRight = debtors
+
+  //  // stateCopy123.friendHasBeenClicked = true
+  //   this.setState(stateCopy123)
+
 
   }
 
   
   slideNext = () =>{ 
+
     const { users, debt, auth ,onBalanceChange, debtors, debtorsLeft, clickedFriend, groups} = this.props;
     let stateCopy1 = Object.assign({}, this.state);
+
+    stateCopy1.wasSlideClicked = true;
 
     if(stateCopy1.currentIndex === (this.state.friends.length - 1)){
       stateCopy1.currentIndex = this.state.currentIndex + 0
@@ -298,7 +400,7 @@ class dashboard extends Component {
     }
 
   
-    
+    console.log('sem to doslo prve')
     const { key } = stateCopy1.friends[stateCopy1.currentIndex];
     
     // console.log(this.state.friends)
@@ -318,7 +420,8 @@ class dashboard extends Component {
     stateCopy1.friendCount = friendCountAfter
 
     //SEND TO PARENT WHICH USER SHOULD BE DISPALYED
-    clickedFriend(key, groupsCountAfter)
+   var nn = clickedFriend(key, groupsCountAfter)
+   
     this.setState(stateCopy1)
 }
   slidePrev = () => {
@@ -347,7 +450,9 @@ class dashboard extends Component {
     stateCopy2.friendCount = friendCountPrev
   
     //SEND TO PARENT WHICH USER SHOULD BE DISPALYED
-    clickedFriend(key, groupsCountPrev)
+   // clickedFriend(key, groupsCountPrev)
+
+    stateCopy2.wasSlideClicked = true
     this.setState(stateCopy2)
   }
 
@@ -358,13 +463,14 @@ class dashboard extends Component {
   onSlideChanged = (e) => this.setState({ currentIndex: e.item })
   render() {
     console.log('--------Dashboard-----------render')
+  
     const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, currentGroup} = this.props;
-    console.log(debtors)
-    console.log(debtorsLeft)
+    // console.log(debtors)
+    // console.log(debtorsLeft)
     // Arrray with all of my friends but me at the first position
     var allUsers = JSON.parse(JSON.stringify(users));
-  
-    console.log(this.state.friends)
+   
+    // console.log(this.state.friends)
     // SETTING GROUP COUNTER
     // if (!this.state.groupCount)
     // if (groups) {
@@ -378,25 +484,26 @@ class dashboard extends Component {
     //
 
 
-    if (debtors.length < 1 && debtorsLeft < 1) {
-      return (
-        <div className="mt-5 ml-5">
-          <h3>You dont have any Friends to share the debt with</h3>
-          <h4>plese click on button bellow and add some</h4>
-          <Link to="/client/Friends" className="nav-link">
-            <button type="button"
-              className='btn btn-primary btn-sm '
-              >
-                Add Friends
-              </button>
-              </Link>
-        </div>
-      )
+  //   if (debtors.length < 1 && debtorsLeft < 1) {
+  //     return (
+  //       <div className="mt-5 ml-5">
+  //         <h3>You dont have any Friends to share the debt with</h3>
+  //         <h4>plese click on button bellow and add some</h4>
+  //         <Link to="/client/Friends" className="nav-link">
+  //           <button type="button"
+  //             className='btn btn-primary btn-sm '
+  //             >
+  //               Add Friends
+  //             </button>
+  //             </Link>
+  //       </div>
+  //     )
       
-    } 
+  //   } 
 
-    else if (debt && users) {
-
+  //  // else if (debt && users) {
+  //   else 
+  if (users) {
       var myName = users.filter(user => {
         if (user.id === auth.uid) {
           return user
@@ -488,20 +595,41 @@ style={{ "max-width": "100%" }}>
 </div>
       <div className="col-md-2">
             <div className="" style={{"padding-top": "15rem"}}>
-                <button className='btn btn-primary btn-sm ' aria-disabled="true" onClick={() => this.slideNext()}>{">"}</button>
-              </div> 
-        </div> 
+                <button className='btn btn-primary btn-sm ' 
+                        aria-disabled="true" 
+                        onClick={() => this.slideNext()}>{">"}
+                </button>
+            </div> 
+      </div> 
             </div>
              
             </div>
+
+
+          {this.state.friendCount < 1 ?
+            <div className="col-md-8">
+        <div className="mt-5 ml-5">
+          <h3>You dont have any Friends to share the debt with</h3>
+          <h4>plese click on button bellow and add some</h4>
+          <Link to="/client/Friends" className="nav-link">
+            <button type="button"
+              className='btn btn-primary btn-sm '
+              >
+                Add Friends
+              </button>
+              </Link>
+        </div>
+        </div>
+      : null
+
+    } 
            
             
 
-          {this.state.showDebts?
+          {this.state.showDebts && this.state.friendCount >= 1  ?
           
           <React.Fragment>
           <div className="col-md-4">
-
             <table className="table-borderless" style={{ width: '100%' }}>
               <thead className="thead-inverse">
                 <tr >
@@ -617,7 +745,9 @@ style={{ "max-width": "100%" }}>
             </table>
           </div>
           </React.Fragment>
-:
+: null }
+
+          {!this.state.showDebts && this.state.friendCount >= 1   ?
             <div className="col-md-8">
               <table className="table-borderless" style={{ width: '100%' }}>
                 <thead className="thead-inverse">
@@ -669,7 +799,7 @@ style={{ "max-width": "100%" }}>
                 </React.Fragment>
               </table>
             </div>
-          }
+          : null }
 
     
 
@@ -708,7 +838,7 @@ dashboard.propTypes = {
   firestore: PropTypes.object.isRequired,
   clients: PropTypes.array,
   debt: PropTypes.array,
-  clickedFriend:PropTypes.func
+//  clickedFriend:PropTypes.func
 }
 
 export default compose(
