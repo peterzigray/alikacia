@@ -643,15 +643,78 @@ class Clients extends Component {
                 {/* <span className="button__badge">10</span> */}
               </div>
               <div className="btn pl-0" style={{ 'font-size': '1.1rem' }}>
-                <i
-                  style={{ color: '#0069D9' }}
-                  className="btn fas fa-cog fa-lg"
-                  onMouseEnter={() =>
-                    this.setState({ showSettings: !showSettings })}
-                />
+               
+
+                
+
+                  <ul class="nav na</ul>vbar-nav ml-auto">
+                  <li class="nav-item dropdown">
+                    <i class="nav-link  btn fas fa-cog fa-lg" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{ color: '#0069D9' }}>
+                      {/* <i
+                        style={{ color: '#0069D9' }}
+                        className="btn fas fa-cog fa-lg"
+                        onMouseEnter={() =>
+                          this.setState({ showSettings: !showSettings })}
+                      /> */}
+        </i>
+                    <div class="dropdown-menu dropdown-menu-right">
+                   
+                        <a href="#" class="dropdown-item">{auth.email}</a>
+                        <a href="#" class="dropdown-item"> <Link to="/settings" className="nav-link">
+                          Settings
+              </Link></a>
+                        <div class="dropdown-divider"></div>
+                     
+                        <a
+                          href="#!"
+                          className="nav-link dropdown-item"
+                          onClick={this.onLogoutClick}
+                        >
+                          Logout
+                    </a>
+                    </div>
+                 
+                  </li>
+                  </ul>
+
+                  {/* <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Admin</a>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a href="#" class="dropdown-item">Reports</a>
+                        <a href="#" class="dropdown-item">Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">Logout</a>
+                      </div>
+                    </li>
+                  </ul> */}
+
               </div>
 
-              {settingsAndLogout}
+                
+
+
+                {/* <div className="dropdown-menu show ">
+                  <ul className="navbar-nav ml-auto">
+                    <li className="nav-item">
+                      <a href="#!" className="nav-link">
+                        {auth.email}
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <Link to="/settings" className="nav-link">
+                        Settings
+              </Link>
+                    </li>
+                    <li className="nav-item" onClick={this.onLogoutClick}>
+                      <Link to="/" className="nav-link">
+                        LogOut
+              </Link>
+                    </li>
+                  </ul>
+                </div> */}
+
+              {/* {settingsAndLogout} */}
             </div>
           </div>
 
@@ -940,7 +1003,7 @@ class Clients extends Component {
                   debtorsLeft={this.state.debtorsLeft} 
                   group={this.state.clickedGroup}
                
-                  clickedFriend={this.clickedFrienInfo.bind(this)}
+            //      clickedFriend={this.clickedFrienInfo.bind(this)}
                   />}
                      
               /> : null}
@@ -954,7 +1017,7 @@ class Clients extends Component {
                   debtorsLeft={debtorsLeft}  
                   group={clickedGroup}
             
-                  clickedFriend={this.clickedFrienInfo.bind(this)}
+              //    clickedFriend={this.clickedFrienInfo.bind(this)}
                   />}
            
                       />: null }
@@ -968,7 +1031,7 @@ class Clients extends Component {
                           debtorsLeft={debtorsLeft}
                           group={clickedGroup}
                        
-                          clickedFriend={this.clickedFrienInfo.bind(this)} 
+               //           clickedFriend={this.clickedFrienInfo.bind(this)} 
                           />}
 
                       /> : null}

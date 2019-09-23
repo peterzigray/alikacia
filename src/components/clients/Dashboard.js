@@ -13,6 +13,7 @@ import '../../pics/app.jpg';
 // import { Carousel } from 'react-responsive-carousel';
 // import { Carousel } from 'react-customizable-carousel'
 import AliceCarousel from 'react-alice-carousel';
+import PlaceForDebts from './PlaceForDebts';
 import "react-alice-carousel/lib/alice-carousel.css";
 
 
@@ -102,6 +103,8 @@ class dashboard extends Component {
       showDebts: true,
       wasSlideClicked : false,
 
+      slideNextOrPrev: '',
+     
     };
   }
   
@@ -420,7 +423,8 @@ class dashboard extends Component {
     stateCopy1.friendCount = friendCountAfter
 
     //SEND TO PARENT WHICH USER SHOULD BE DISPALYED
-   var nn = clickedFriend(key, groupsCountAfter)
+   //clickedFriend(key, groupsCountAfter)
+    stateCopy1.slideNextOrPrev = key
    
     this.setState(stateCopy1)
 }
@@ -449,9 +453,12 @@ class dashboard extends Component {
     stateCopy2.groupCount = groupsCountPrev.length
     stateCopy2.friendCount = friendCountPrev
   
+    console.log('key')
+    console.log(key)
     //SEND TO PARENT WHICH USER SHOULD BE DISPALYED
    // clickedFriend(key, groupsCountPrev)
 
+    stateCopy2.slideNextOrPrev = key
     stateCopy2.wasSlideClicked = true
     this.setState(stateCopy2)
   }
@@ -606,7 +613,7 @@ style={{ "max-width": "100%" }}>
             </div>
 
 
-          {this.state.friendCount < 1 ?
+          {this.state.friendCount < 1 && !this.state.slideNextOrPrev?
             <div className="col-md-8">
         <div className="mt-5 ml-5">
           <h3>You dont have any Friends to share the debt with</h3>
@@ -626,126 +633,18 @@ style={{ "max-width": "100%" }}>
            
             
 
-          {this.state.showDebts && this.state.friendCount >= 1  ?
-          
-          <React.Fragment>
-          <div className="col-md-4">
-            <table className="table-borderless" style={{ width: '100%' }}>
-              <thead className="thead-inverse">
-                <tr >
-                  <th className="pb-2">You owed</th>
-                  <th />
-                </tr>
-              </thead>
-              <React.Fragment>
-                {debtorsLeft.map((w) => (
-                    <React.Fragment>
-                      <Link to={`/Friends/${w.id}`} >
-                        <div className="card in-left mb-1"
-                        // onClick={this.clickOnCard.bind(this, w)}
-                        style={{cursor: "pointer"}}>
-      
-                          <ul className="list-group list-group-flush">
-                            <li className="list-group-item ">
-                              <div class="card-body">
-                                <div className="photo mr-2 ">
-                                  <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-                                </div> 
-                              {'You owe '}{' '}{w.label}{' '}<span style={{color: 'red'}}>{w.actualDebt}{' '}</span> EUR
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      </Link>
-                    </React.Fragment>                
-                    )
-                  )
-                }
-              </React.Fragment>
-            </table>
-          </div>
-
-          <div className="col-md-4">
-            <table className="table-borderless" style={{width: '100%'}}>
-              <thead className="thead-inverse">
-                <tr>
-                  <th className="pb-2" >You are owed</th>
-                  <th />
-                </tr>
-              </thead>
-              <React.Fragment>
-               
-                {debtors.map((w) => (
-                  <Link to={`/Friends/${w.id}`} >
-                  <React.Fragment>
-                      {/* <tbody >
-                       <div style={{ 'height': '105px' }}>
-                          <tr key={w.id} style={{'line-height': '25px'}}>          
-                            <i class="fas fa-user-circle fa-3x clientAvatar" />
-                              <td>{w.label}{' '}{'owes you'}{' '}{w.actualDebt}</td>
-                              <td>
-                                <button
-                                  // to={`/client/${client.id}`}
-                                  onClick={this.settleUpLoan.bind(this, w.id)}
-                                  className="btn btn-outline-primary btn-sm"
-                                >
-                                <i className="fas fa-arrow-circle-right" />{" "}
-                                  View
-                              </button>
-                            </td>
-                          </tr>
-                        </div>
-                      </tbody> */}
-
-                    <div className="card in-left mb-1">
-   
-   <ul className="list-group list-group-flush">
-     
-
-       <li className="list-group-item ">
-
-
-         {/* <div className="photo">
-           <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-         </div> 
-       {name.label}
-       <div class="input-group">
-           <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"/>
-           <div class="input-group-append">
-             <span class="input-group-text">$</span>
-             <span class="input-group-text">0.00</span>
-           </div>
-         </div> */}
-      
-
-      
-         <div class="card-body">
-
-         <div className="photo mr-2">
-           <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-         </div> 
+          {/* {this.state.showDebts && this.state.friendCount >= 1  ?
+: null} */}
+            <PlaceForDebts 
+              slideNextOrPrev={this.state.slideNextOrPrev}
         
-            {w.label}{' '}{'owes you'}{' '}<span style={{ color: 'green' }}>{w.actualDebt}{' '}</span>EUR
-                                              
-         </div>
-      
+            //  debtorsLeft={debtorsLeft}
+            //  debtors={debtors}
+            >     
+            </PlaceForDebts>
+          
+         
 
-       </li>
-       </ul>
-   </div>
-
-
-
-
-                  </React.Fragment>
-                
-                    </Link>))}
-               
-              </React.Fragment>
-            </table>
-          </div>
-          </React.Fragment>
-: null }
 
           {!this.state.showDebts && this.state.friendCount >= 1   ?
             <div className="col-md-8">
