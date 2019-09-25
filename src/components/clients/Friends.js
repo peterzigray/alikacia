@@ -65,6 +65,7 @@ const Table = (property) => {
       return (<UserDetails otherProps={otherProps} auth={auth} />)
      } 
    }
+
    //----------------------------------------------------------------------------------------
    const Groups = (property, auth) => {
     var {otherProps} = property;
@@ -600,9 +601,13 @@ class friends extends Component {
 
 // JUST IN CASE,,, EVERYTHING GETS RENDERED
 var friendCount = this.state.friendCount
-console.log('friens==========')
-      console.log(friendCount)
-
+console.log('pathname==========')
+   var isClickedOrFromDashboard;
+     if(window.location.pathname.length > 15){
+        isClickedOrFromDashboard = true;
+     } else {
+        isClickedOrFromDashboard = false;
+     }
 var clickedUserDetailProps = this.state.detailRecordOfFriend
 //-------------------------------------------------------------------------------------------------------------------------->
 
@@ -762,7 +767,7 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
 
         {/* <Route path="/:id" component={Table} /> */}
 
-        <div className="col-7">
+          <div className="col-7 text-center">
 
      
          
@@ -784,22 +789,46 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
 
         
     
-            {friendCount > 0 && this.state.detailRecordOfFriend[0].id === 'null'
+            {friendCount > 0 && !isClickedOrFromDashboard
+            //this.state.detailRecordOfFriend[0].id === 'null'
        // userDetailProps[0].id === 'null'
          ? 
-        <div className="mt-5 ml-5"> 
+              <div className="mt-5 ml-5 text-center"> 
+                <div className="photoMessage mx-auto ">
+                  <img src="https://thumbs.dreamstime.com/z/robot-screwdriver-wrench-his-hand-47386532.jpg" />
+                </div>
+        
           <h3>You didn't choose any detail</h3> 
-          <h5>Plese click on your friends</h5>
+          <h5>Plese choose one of your friend</h5>
         </div>
       
       : null}
             {friendCount < 1 ?
+              <React.Fragment>
+              <div className="photoMessage mx-auto ">
+                  <img src={require("../../pics/3649579.jpg")}  />
+              </div>
+              
               <div className="mt-5 ml-5">
                 <h3>Please choose your friend below</h3>
-                <h5>Click on green button + </h5>
-              </div>: null}
+                 <h5>Click on green button</h5> <button
+                 
+                    style={{ opacity: '0.9' }}
+                  
+                    className="btn btn-circle btn-md btn-success waves-effect waves-dark ml-0"
+                  >
 
-            {friendCount > 0 && this.state.detailRecordOfFriend[0].id !== 'null' ?
+                    <i className="fas fa-plus fa-xs " />
+
+
+                  </button> 
+              </div>
+               </React.Fragment>
+               : null}
+
+            {friendCount > 0 && isClickedOrFromDashboard
+            // this.state.detailRecordOfFriend[0].id !== 'null' 
+             ?
 
               <React.Fragment>
                <Route path="/client/:id"

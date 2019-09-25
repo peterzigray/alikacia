@@ -194,7 +194,7 @@ class addDebt extends Component {
       isDebterChoosen,isBalanceChoosen,valueField,labelField,newDate, 
       areRequestedArrFilled, currentId, equallButtonClicked, exactButtonClicked,
       existDebtorAndPayer, allowExact, isAnyFriend, ...rest } = newDebt
-      
+
     const nieco = {
       balance: '',
       date: '',
@@ -859,7 +859,16 @@ class addDebt extends Component {
               </div>
           </div>
         </div>
-      ) : <h3>We are ready to set up some debts {':)'}</h3>}
+      ) : 
+       <React.Fragment>
+                    <div class="col-md-12 text-center mr-0">
+                  <div className="photoMessage mx-auto ">
+                    <img src={require("../../pics/addDebt.jpg")} />
+                  </div>
+                      <h3 className="pt-3">We are ready to set up some debts {':)'}</h3>
+      </div>
+       </React.Fragment>
+      }
       </div>
               </React.Fragment>
 : 

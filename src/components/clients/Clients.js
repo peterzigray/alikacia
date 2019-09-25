@@ -21,20 +21,21 @@ import { UserIsAuthenticated, UserIsNotAuthenticated } from '../../helpers/auth'
 const Child = (path) => {
   console.log('coje to match')
   //console.log(`${match.url}`)
-  const { debt, group, debtors, debtorsLeft, clickedFriend } = path
+  const { debt, group, debtors, debtorsLeft, clickedFriend, balance } = path
   const {pathname} = path.location
 
   console.log('===============path==================')
   console.log(debtors)
   console.log(debtorsLeft)
 
+
  
   if (pathname === '/' || pathname === '/client/Dashboard'  ){
         return (<Dashboard 
-          debtors={debtors} 
+          debtors={debtors.length < 1 ? [{ id: 0 }]: debtors } 
           debtorsLeft={debtorsLeft} 
           currentGroup={group}
-  
+          totalBalance={balance}
           clickedFriend={clickedFriend}
            />)
       }
@@ -649,7 +650,7 @@ class Clients extends Component {
 
                   <ul class="nav na</ul>vbar-nav ml-auto">
                   <li class="nav-item dropdown">
-                    <i class="nav-link  btn fas fa-cog fa-lg" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{ color: '#0069D9' }}>
+                      <i class="nav-link  btn fas fa-cog fa-lg" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{ color: '#0069D9', 'cursor': 'pointer'}}>
                       {/* <i
                         style={{ color: '#0069D9' }}
                         className="btn fas fa-cog fa-lg"
@@ -1002,6 +1003,7 @@ class Clients extends Component {
                   debtors={this.state.debtorsRight}  
                   debtorsLeft={this.state.debtorsLeft} 
                   group={this.state.clickedGroup}
+                  balance={totalBalanceForMe}
                
             //      clickedFriend={this.clickedFrienInfo.bind(this)}
                   />}
@@ -1016,6 +1018,7 @@ class Clients extends Component {
                   debtors={debtors} 
                   debtorsLeft={debtorsLeft}  
                   group={clickedGroup}
+                  balance={totalBalanceForMe}
             
               //    clickedFriend={this.clickedFrienInfo.bind(this)}
                   />}
@@ -1030,6 +1033,7 @@ class Clients extends Component {
                           debtors={debtors}
                           debtorsLeft={debtorsLeft}
                           group={clickedGroup}
+                          balance={totalBalanceForMe}
                        
                //           clickedFriend={this.clickedFrienInfo.bind(this)} 
                           />}

@@ -382,6 +382,7 @@ class dashboard extends Component {
   //   stateCopy123.debtorsLeft = debtorsLeft
   //   stateCopy123.debtorsRight = debtors
 
+
   //  // stateCopy123.friendHasBeenClicked = true
   //   this.setState(stateCopy123)
 
@@ -471,9 +472,19 @@ class dashboard extends Component {
   render() {
     console.log('--------Dashboard-----------render')
   
-    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, currentGroup} = this.props;
+    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, currentGroup, totalBalance} = this.props;
     // console.log(debtors)
-    // console.log(debtorsLeft)
+  
+    var hasFriedDebt = false;
+    if (debtors[0].id === this.state.slideNextOrPrev){
+      
+      hasFriedDebt = true
+      
+    } 
+
+
+    
+    console.log(this.state.slideNextOrPrev)
     // Arrray with all of my friends but me at the first position
     var allUsers = JSON.parse(JSON.stringify(users));
    
@@ -523,17 +534,8 @@ class dashboard extends Component {
           <div className="col-md-4 pt-2">
           <div className="row h-100">
 
-          <div className="col-md-2 ">
-                <div className="" style={{"padding-top": "15rem"}}>
-                  <button
-                    type="button"
-                    className='btn btn-primary btn-sm '
-                    aria-disabled="true"
-                    onClick={() => this.slidePrev()}>{"<"}
-                  </button>
-              </div>
-          </div>
-            <div className="col-md-8" style={{"padding": "0"}}>
+          
+            <div className="col-md-9" style={{"padding": "0"}}>
 
 
 
@@ -541,7 +543,7 @@ class dashboard extends Component {
 
 style={{ "max-width": "100%" }}>
 
-<div>
+<div >
 <AliceCarousel
   dotsDisabled={true}
   buttonsDisabled={true}
@@ -551,10 +553,30 @@ style={{ "max-width": "100%" }}>
   onSlideChanged={this.onSlideChanged}
 />
 
+                    <div className="float-left">
+                      <i
+                      
+                        className="fas fa-chevron-left fa-2x"
+                        style={{ 'padding-left': '10px', 'cursor': 'pointer' }}
+                        onClick={() => this.slidePrev()}>
+                      </i>
+                    </div>
+                    <div className="float-right" >
+                      <i 
+                        className="fas fa-chevron-right fa-2x"
+                        style={{ 'padding-right': '10px', 'cursor': 'pointer'}}
+                        onClick={() => this.slideNext()}
+                      ></i>
+
+                    
+                    </div>
+
                     {this.state.showDebts ?
                       < button
+                        style={{ 'margin-top': '-20px', 'cursor': 'pointer' }}
                         onClick={this.showGroupDetail}
                         className="btn btn-success btn-rounded btn-md btnUserDash align-middle">
+                      
                         <h4 className="">Groups</h4>
                       </button> :
                       < button
@@ -563,11 +585,18 @@ style={{ "max-width": "100%" }}>
                         <h4 className="">Debts</h4>
             </button>}
 
- 
+                  
+                      
+                    
 
 </div>
+               
+                  
+             
 
-<div className="card-body row mt-4">
+
+
+<div className="card-body row mt-4" >
 
 
 <div className="col-4 text-center">
@@ -600,24 +629,44 @@ style={{ "max-width": "100%" }}>
 </div>
 
 </div>
-      <div className="col-md-2">
-            <div className="" style={{"padding-top": "15rem"}}>
-                <button className='btn btn-primary btn-sm ' 
-                        aria-disabled="true" 
-                        onClick={() => this.slideNext()}>{">"}
-                </button>
-            </div> 
-      </div> 
+      
             </div>
              
             </div>
 
 
-          {this.state.friendCount < 1 && !this.state.slideNextOrPrev?
-            <div className="col-md-8">
-        <div className="mt-5 ml-5">
+          {this.state.friendCount < 1 && debtorsLeft.length < 1 && this.state.currentIndex === 0
+          //!this.state.slideNextOrPrev
+          ?
+            <div className="col-md-8 text-center">
+
+              {/* <div className="card" >
+                <div className="photoMessage mr-2 ">
+                  <img src="https://thumbs.dreamstime.com/z/robot-astronaut-magnifier-hand-looking-something-scratches-his-head-lost-trying-to-find-error-page-not-found-92221869.jpg" />
+                </div>
+                  <div class="card-body">
+                  <h3>You dont have any Friends to share the debt with</h3>
+                  <h4>plese click on button bellow and add some</h4>
+                  <Link to="/client/Friends" className="nav-link">
+                    <button type="button"
+                      className='btn btn-primary btn-sm '
+                    >
+                      Add Friends
+              </button>
+                  </Link>
+                  </div>
+              </div> */}
+
+
+
+        <div className="mt-5 ml-5 ">
+                <div className="photoMessage mx-auto ">
+                  <img src="https://thumbs.dreamstime.com/z/robot-screwdriver-wrench-his-hand-47386532.jpg" />
+                </div>
+                
+      
           <h3>You dont have any Friends to share the debt with</h3>
-          <h4>plese click on button bellow and add some</h4>
+          <h4>plese click on button bellow and add someone</h4>
           <Link to="/client/Friends" className="nav-link">
             <button type="button"
               className='btn btn-primary btn-sm '
@@ -625,24 +674,83 @@ style={{ "max-width": "100%" }}>
                 Add Friends
               </button>
               </Link>
-        </div>
+      </div>
         </div>
       : null
 
     } 
+
+          {this.state.friendCount > 0 && totalBalance < 0.1 && this.state.currentIndex === 0
+            //!this.state.slideNextOrPrev
+            ?
+            <div className="col-md-8 text-center">
+              <div className="mt-5 ml-5 ">
+                <div className="photoMessage mx-auto ">
+                  <img src="https://thumbs.dreamstime.com/z/robot-astronaut-magnifier-hand-looking-something-scratches-his-head-lost-trying-to-find-error-page-not-found-92221869.jpg" />
+                </div>
+
+
+                <h3>You dont have any debts with your friends</h3>
+                <h4>plese click on button bellow and add some</h4>
+                <Link to="/client/AddBills" className="nav-link">
+                  <button type="button"
+                    className='btn btn-primary btn-sm '
+                  >
+                    Add debts
+              </button>
+                </Link>
+              </div>
+            </div>
+            : null
+
+          } 
+
+          {debtorsLeft.length < 1 && this.state.currentIndex !== 0 && !hasFriedDebt 
+            //!this.state.slideNextOrPrev
+            ?
+            <div className="col-md-8 text-center">
+              <div className="mt-5 ml-5 ">
+                <div className="photoMessage mx-auto ">
+                  <img src="https://thumbs.dreamstime.com/z/robot-screwdriver-wrench-his-hand-47386532.jpg" />
+                </div>
+
+
+                <h3>Your friend doesn't have any debt</h3>
+                <h4>maybe it is time to make one :)</h4>
+                <Link to="/client/AddBills" className="nav-link">
+                  <button type="button"
+                    className='btn btn-primary btn-sm '
+                  >
+                    Add debts
+              </button>
+                </Link>
+              </div>
+            </div>
+            : null
+
+          } 
+
+          
            
             
 
-          {/* {this.state.showDebts && this.state.friendCount >= 1  ?
-: null} */}
+           {
+             this.state.showDebts
+             && 
+              totalBalance > 0
+              &&
+               this.state.friendCount > 0
+             ?
+
             <PlaceForDebts 
               slideNextOrPrev={this.state.slideNextOrPrev}
+              indexClicked={this.state.currentIndex}
         
             //  debtorsLeft={debtorsLeft}
             //  debtors={debtors}
             >     
             </PlaceForDebts>
-          
+            : null} 
          
 
 

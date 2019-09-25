@@ -286,10 +286,15 @@ class UserDetails extends Component {
       
     } else {
       return (
+        <React.Fragment>
+        <div className="photoMessage mx-auto ">
+          <img src={require("../../pics/robot.jpg")} />
+        </div>
       <div className="mt-5 ml-5">
         <h3>You don't have any debts with this friend</h3>
         <h5>, but you may sattle up one {':)'}</h5>
       </div>
+      </React.Fragment>
         )
     }
   }

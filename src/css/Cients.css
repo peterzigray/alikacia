@@ -370,6 +370,15 @@ width: 100%;
   vertical-align: middle;
   overflow: hidden;
 }
+.photoMessage {
+  display: inline-block;
+  height: 235px;
+  width: 235px;
+  border-radius: 50%;
+  vertical-align: middle;
+  overflow: hidden;
+  margin-left: 50%;
+}
 .photoPopUp {
   display: inline-block;
   height: 100px;
@@ -381,6 +390,10 @@ width: 100%;
   right: 37%;
   top: 25%;
   z-index: 1;
+}
+.photoMessage img{
+    width: 100%;
+    height: 100%;
 }
 
 .photo img {
