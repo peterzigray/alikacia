@@ -17,8 +17,9 @@ width: 400px;
     margin-bottom: 3px;
   }
 .card-body {
-  padding-top: 20px;
+  padding: 25px;
 }
+
 
 {/*
   //////////////////////// ICONS FOR SOCIAL MEDIA
@@ -86,18 +87,12 @@ background-color: white;
 .col-md-12{
   padding-left: 0%;
 }
-.login{
+/* .login{
      padding-top: 15rem;
      padding-left: 5rem;
      padding-right: 5rem;
-}
-.loginCard{
-  background-color:white;
-   /* border: none; */
-}
-.loginHeader{
-    /* background-color: rgb(90, 62, 204); */
-}
+} */
+
 
 {/*Everithing related to RERISTER*/}
 
@@ -107,7 +102,7 @@ background-color: white;
 }
 
 .p-reg{
-  margin-bottom: 0.2rem;
+  margin-bottom: 1rem;
   margin-top: 0.5rem;
   font-weight: 600;
    font-size: 14px;
@@ -129,9 +124,9 @@ background-color: white;
     margin-bottom: 0rem;
 }
 
-.card-body-reg{
-padding-top: 8rem;
-}
+/* .card-body-reg{
+padding-top: 5px;
+} */
 
 .btn-warning-Fp {
  font-family: Helvetica,Arial,sans-serif;

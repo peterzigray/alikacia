@@ -14,7 +14,7 @@ import EditClient from "./components/clients/EditClient";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Settings from './components/settings/Settings';
-import NotAuthenticated from './components/layout/NotAuthenticated';
+//import NotAuthenticated from './components/layout/NotAuthenticated';
 import Clients from './components/clients/Clients';
 
 
@@ -27,8 +27,7 @@ class App extends Component {
         <Router>
           <div className="App">
             {/* <AppNavbar /> */}
-            <div className="container-fluid"
-              style={{ 'background-color': 'rgb(242, 244, 248)'}}>
+            <div className="container-fluid fill">
               <Route exact path="/" component={UserIsAuthenticated(Clients)} />
               {/* <Route exact path="/:id"  component={UserIsAuthenticated(Clients)}/> */}
               {/* <Route  path="/Friends/:id" component={UserIsAuthenticated(Clients)} /> */}
@@ -65,8 +64,13 @@ class App extends Component {
                 <Route
                   exact
                   path="/login"
-                  component={UserIsNotAuthenticated(NotAuthenticated)}
+                  component={UserIsNotAuthenticated(Login)}
                 />
+              <Route
+                exact
+                path="/register"
+                component={UserIsNotAuthenticated(Register)}
+              />
                 <Route
                   exact
                   path="/settings"

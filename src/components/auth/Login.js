@@ -11,8 +11,9 @@ import emailValidation from "../../validations/EmailValidation";
 
 import EmailAlert from '../layout/EmailAlert';
 import PasswordAlert from "../layout/PasswordAlert";
-import '../../css/FirstPage.css';
+import '../../css/LoginCss.css';
 import WOW from 'wowjs';
+
 
 import { firebaseConnect } from "react-redux-firebase";
 
@@ -177,12 +178,26 @@ import { firebaseConnect } from "react-redux-firebase";
      };
 
      return (
-       
+          <div class="container fill login">
+        
+         <div className='logo1 parent'>
+
+           <div className="element one" style={style}>
+             <i className="fas fa-lock fa-3x" style={{ color:'#4d8af0'}} />
+           </div>
+          <h3 className="pl-3 two" style={{ color: 'black' }}>
+          {" "}  Log In{" "}
+          </h3>
+          
+        </div>
+      
      
-             <div className="card loginCard wow slideInLeft"
+       <div className="card shadow bg-white rounded"
              data-wow-duration="2s"
              >
-               <div className="card-header loginHeader">
+
+         
+               {/* <div className="card-header">
                  <h3 style={{color:'black'}}>
                    Sign In{" "}
                    <div className="element" style={style}>
@@ -203,26 +218,27 @@ import { firebaseConnect } from "react-redux-firebase";
                      <i className="fab fa-twitter-square icon" />
                    </span>
                  </div>
-               </div>
+               </div> */}
 
-               <div className="card-body">
+           <div className="card-body cardS1">
                  {!messageType ? (
                  
-                     <h6>Please enter your credentials</h6>
+               <h5 style={{ 'padding-bottom': '1rem'}}>Please enter your credentials</h5>
                   
                  ) : (
                    <EmailAlert />
                  )}
 
                  <form onSubmit={this.onSubmit}>
-                   <div className="input-group form-group">
-                     <div className="input-group-prepend">
+                 
+                     {/* <div className="input-group-prepend">
                        <span className="input-group-text">
                          <i className="fas fa-user" />
                        </span>
-                     </div>
+                     </div> */}
                      <input
-                       type="text"
+                   style={{'border-radius':'1rem', 'margin-bottom':'1.5rem'}}
+                   type="text"
                        className={classnames("form-control", {
                          "is-invalid": messageType === "error",
                          "form-control is-valid":
@@ -234,18 +250,19 @@ import { firebaseConnect } from "react-redux-firebase";
                        value={this.state.email}
                        onChange={this.onEmailChange}
                      />
-                   </div>
+             
 
                    <PasswordAlert />
 
-                   <div className="input-group form-group">
-                     <div className="input-group-prepend">
+              
+                     {/* <div className="input-group-prepend">
                        <span className="input-group-text">
                          <i className="fas fa-key" />
                        </span>
-                     </div>
+                     </div> */}
 
                      <input
+                 style={{ 'border-radius': '1rem' , 'margin-bottom': '1.5rem' }}
                        type="password"
                        className={classnames("form-control", {
                          "is-invalid": messageType === "error",
@@ -259,26 +276,32 @@ import { firebaseConnect } from "react-redux-firebase";
                        value={this.state.password}
                        onChange={this.onPasswordChange}
                      />
-                   </div>
+               
 
-                   <div className="row align-items-center remember rememberMe">
+                   <div className=""
+                        style={{'margin-bottom':'1rem'}}>
                      <input type="checkbox" />
-                     Remember Me
+                     {' '} Remember Me
                    </div>
                    <div className="form-group">
                      <input
                        type="submit"
                        value="Login"
-                       className="btn float-right fp-submit-btn"
+                      className="btn btn-block btn-primary"
                      />
                    </div>
                    <div className="d-flex rememberMe ">
-                     <a href="#">Forgot your password?</a>
+                 <p>  Don't have an account yet? {' '}</p> 
+                 <Link to="/register" >
+
+                   <a style={{ 'padding-left': '4px', 'font-size': '1rem' }}>{' '} Sign Up</a>
+                 </Link>
+                 
                    </div>
                  </form>
                </div>
              </div>
-      
+       </div>
      );
    }
  }

@@ -795,18 +795,18 @@ var clickedUserDetailProps = this.state.detailRecordOfFriend
          ? 
               <div className="mt-5 ml-5 text-center"> 
                 <div className="photoMessage mx-auto ">
-                  <img src="https://thumbs.dreamstime.com/z/robot-screwdriver-wrench-his-hand-47386532.jpg" />
+                  <img src={require("../../pics/robot2.jpg")} />
                 </div>
         
-          <h3>You didn't choose any detail</h3> 
-          <h5>Plese choose one of your friend</h5>
+                <h3 className="pt-3">You didn't choose any detail</h3> 
+          <h5>to do so, click on your friend</h5>
         </div>
       
       : null}
             {friendCount < 1 ?
               <React.Fragment>
               <div className="photoMessage mx-auto ">
-                  <img src={require("../../pics/3649579.jpg")}  />
+                  <img src={require("../../pics/addDebt.jpg")} />
               </div>
               
               <div className="mt-5 ml-5">

@@ -12,12 +12,13 @@ class Alert extends Component {
     const { emailmessage, messageType } = this.props.notify;
    
       return (
-        <div>
+        <div style={{ 'padding-left': '0%', 'padding-right': '0%' }}>
           {messageType === "Emailerror" || messageType ===  "Email&PasswordError" ? (
-            <div className="alert">
-              <p className="errorTitle">
-                {" "}
-                Please type your e-mail address in the format{" "}
+            <div className="alert text-center">
+              <p style={{ color: 'red' }} className="errorTitle">
+                
+                <i className="fas fa-exclamation-circle" />
+                {" "} Please correct your email{" "}
               </p>
               <span style={{ color: emailmessage.style.beforeAt }}>
                 yourname
@@ -36,8 +37,8 @@ class Alert extends Component {
           // </div>
           }
           {messageType !== "Emailerror" && messageType !== "Email&PasswordError" ? (
-            <div className="alert">
-              <p className='errorMessage' style={{ color: "red" }}>
+            <div className="alert text-center">
+              <p className='' style={{ color: "red" }}>
                 <i className="fas fa-exclamation-circle" />{" "}Please correct your password</p>
             </div>
           ) : null

@@ -11,7 +11,7 @@ import emailValidation from "../../validations/EmailValidation";
 
 import EmailAlert from '../layout/EmailAlert';
 import PasswordAlert from "../layout/PasswordAlert";
-// import '../../css/LoginCss.css';
+ import '../../css/LoginCss.css';
 
 import { firebaseConnect } from "react-redux-firebase";
 
@@ -27,7 +27,7 @@ class NotAuthenticated extends Component {
     position: "",
     count: null,
     firstPage :true,
-    login : false,
+    login : true,
     register : false
   };
 
@@ -52,6 +52,8 @@ componentDidMount(){
   //     }
   //   }
   // );
+  console.log(window.location.pathname)
+
 }
 
   onLoginClick = () => {
@@ -63,7 +65,7 @@ componentDidMount(){
     //   });
     // }
     const { firstPage, login, register } = this.state
-    this.setState({firstPage: false, login:true, register:false })
+    this.setState({ login:false, register:true })
   }
 
   onRegistrationClick = () => {
@@ -75,31 +77,36 @@ componentDidMount(){
     //   });
     // }
     const { firstPage, register } = this.state
-    this.setState({ firstPage: false, register: true, login: false })
+    this.setState({  register: false, login: true })
   }
 
   render() {
     const { firstPage, login, register } = this.state
+
     return (
-      <div>
-        <AppNavbar
+      <div class="container fill login">
+        {/* <AppNavbar
           onLoginClickHandler={this.onLoginClick}
           onRegistrationClickHandler={this.onRegistrationClick}
-        ></AppNavbar>
-        <div className="Wrapper">
+        ></AppNavbar> */}
+        {/* <div className="Wrapper">
           <div className="row loginrow ">
             <div className="col-md-6 leftsidelogin" />
             <div className="col-md-6 rightsidelogin">
               <div className="card shadow-none cardInFirstPage">
-                {firstPage ? <FirstPage
-                  onLoginClickHandler={this.onLoginClick}
-                  onRegistrationClickHandler={this.onRegistrationClick} /> : null}
-                {login ? <Login /> : null}
-                {register ? <Register /> : null}
+             
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+
+
+        {/* {firstPage ? <FirstPage
+          onLoginClickHandler={this.onLoginClick}
+          onRegistrationClickHandler={this.onRegistrationClick} /> : null} */}
+
+        { login ? <Login /> : null}
+        { register ? <Register /> : null}
 
         {/* <AppNavbar /> */}
         

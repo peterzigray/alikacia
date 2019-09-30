@@ -7,7 +7,8 @@ import AppNavbar from '../../components/layout/AppNavbar';
 import { firestoreConnect } from "react-redux-firebase";
 import { Link } from "react-router-dom";
 
-import "../../css/FirstPage.css";
+//import "../../css/FirstPage.css";
+import "../../css/LoginCss.css";
 
 import EmailAlert from '../layout/EmailAlert';
 import PasswordAlert from "../layout/PasswordAlert";
@@ -214,25 +215,32 @@ class Register extends Component {
     };
 
     return (
-      
+      <div class="container fill register">
 
-            <div className="card cardRegister shadow-none">
-              <div className="card-body card-body-reg">
-                <h1 className="text-center" style={{color:'black'}}>
-                  <div className="element1" style={style}>
-                    <i className="fas fa-lock" /> Sign Up
-                  </div>
-                </h1>
+        <div className='logo1 parent'>
+
+          <div className="element one" style={style}>
+            <i className="fas fa-lock fa-3x" style={{ color: '#4d8af0' }} />
+          </div>
+          <h3 className="pl-3 two" style={{ color: 'black' }}>
+            {" "} Register {" "}
+          </h3>
+
+        </div>
+
+            <div className="card shadow bg-white rounded ">
+              <div className="card-body">
+                
                 {!messageType ? (
                   
-                    <h4>Create your personal account</h4>
+              <h4 style={{ 'margin-bottom': '3rem' }}>Create your personal account</h4>
                   
                 ) : (
                     null
                   )}
                 
                 <form onSubmit={this.onSubmit}>
-                  <p className='p-reg'>First Name</p>
+              <p className='p-reg'>First Name</p>
                   <div className="input-group form-group form-group-reg">
                     {/* <div className="input-group-prepend">
                       <span className="input-group-text">
@@ -241,6 +249,7 @@ class Register extends Component {
                     </div> */}
 
                     <input
+                  style={{ 'border-radius': '1rem' }}
                       type="text"
                       className="form-control"
                       name="firstName"
@@ -260,6 +269,7 @@ class Register extends Component {
                     </div> */}
                     
                     <input
+                  style={{ 'border-radius': '1rem' }}
                       type="text"
                       className="form-control"
                       name="lastName"
@@ -284,6 +294,7 @@ class Register extends Component {
                     </div> */}
 
                     <input
+                  style={{ 'border-radius': '1rem' }}
                       type="text"
                       className="form-control"
                       name="email"
@@ -343,6 +354,7 @@ class Register extends Component {
                       </span>
                     </div> */}
                     <input
+                  style={{ 'border-radius': '1rem' }}
                       type="password"
                       className="form-control"
                       name="password"
@@ -374,11 +386,20 @@ class Register extends Component {
                     />
                   </div>
                   <span className='span-reg'>Make sure you verified your password</span> */}
-            <Link to="/Dashboard" onClick={this.onLogoutClick}>
+              <div className="d-flex rememberMe ">
+                <p>  Back to login? {' '}</p>
+                <Link to="/login" >
+
+                  <a style={{ 'padding-left': '4px', 'font-size': '1rem' }}>{' '} Log In</a>
+                </Link>
+
+              </div>
+            <Link to="/Dashboard" onClick={this.onLogoutClick} >
               <input
+                  style={{ 'margin-top': '1rem' }}
                 type="submit"
                 value="Sign Up"
-                className="btn login_btn btn-block fp-submit-btn"
+                  className="btn btn-block btn-primary"
                 disabled={this.state.disabled}
                 id='register'
               />
@@ -388,7 +409,7 @@ class Register extends Component {
                 </form>
               </div>
             </div>
-    
+      </div>
     );
   }
 }

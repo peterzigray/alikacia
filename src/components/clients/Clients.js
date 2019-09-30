@@ -389,7 +389,7 @@ class Clients extends Component {
     const { firebase } = this.props;
     firebase.logout();
 
-    // this.props.history.push('/login');
+     this.props.history.push('/login');
   };
 
   onMouseOverHandler = id => {
