@@ -440,8 +440,8 @@ class Clients extends Component {
     const { auth, isAuthenticated } = this.props;
     let settingsAndLogout = "";
 
-    const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block bg-light sidebar transition' : 'col-lg-1half d-block bg-light sidebar transition';
-    const mainClassName = this.state.navbarOn ? 'col-9 transition positions' : 'col-9 transition positions';
+    const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block bg-light sidebar transition sidebar-sticky h-100' : 'col-lg-1half d-block bg-light sidebar transition sidebar-sticky h-100';
+    const mainClassName = this.state.navbarOn ? 'col-9 transition h-100 ' : 'col-10 transition';
     const iconChange = this.state.navbarOn ? 'fas fa-arrow-circle-left fa-2x' : 'fas fa-arrow-circle-right fa-2x';
 
     console.log('------------------------CLIENT----------------------------')
@@ -603,6 +603,7 @@ class Clients extends Component {
 
       
       return (
+        
         <React.Fragment>
 
         
@@ -690,7 +691,7 @@ class Clients extends Component {
                     </li>
                   </ul> */}
 
-              </div>
+     </div>
 
                 
 
@@ -746,24 +747,24 @@ class Clients extends Component {
           {/* <span className="text-primary">
                 ${parseFloat(totalOwed).toFixed(2)}
                </span> */}
-        </nav>
+    </nav>
    
 
         
 
-    <div className="wrapper">
+          <div className="container-fluid h-100" style={{ 'background-color':'#F8F9FA'}}>
 
-              
-              <nav className={navbarClassName} style={{height: '100rem'}}>
+          <div className="row h-100">
+              <nav className={navbarClassName} >
                
-                <div className="sidebar-sticky pl-0 pr-0" style={{'padding-top': '4rem'}}>
-
+                {/* <div className="col-2 sidebar-sticky pl-0 pr-0" style={{'padding-top': '100%'}}></div>
+ */}
 
                   
 
                   {this.state.navbarOn ?
-                   <React.Fragment>
-                     <div className="logo">
+                   <div className='make-me-sticky'>
+                     <div className="logo ">
                   <div className="photo">
                     <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
                   </div>
@@ -805,7 +806,7 @@ class Clients extends Component {
                           <i class="fas fa-plus fa-lg"></i> Add bills
                         </li>
                       </ul>  */}
-                    </React.Fragment>
+                    </div>
                   : 
                  <React.Fragment>
                   
@@ -846,79 +847,162 @@ class Clients extends Component {
                 </div>
 
 
-                </div>
+              
                
                 
 
               </nav>
 
-        <main role="main" className={mainClassName}>
-        
-              <div className="row mb-2 mt-4 mr-2 ml-2 positions" style={{ 'height': '13rem','background-color':'white' }}>
+              <div className={mainClassName}>
+                <div className='row h-25 pt-5 mb-5'>
+                  <div className="col">
+                    <div class="card border-info  mx-sm-1 p-3">
+                      <div class="card border-info shadow text-info p-3 my-card" ><span class="fa fa-euro-sign fa-lg" aria-hidden="true"></span></div>
+                      <div class="text-info text-center mt-3"><h4>Balance</h4></div>
+                      <div class="text-info text-center mt-2"><h1> {totalBalanceForMe >= 0 ? <h1 >
+                        {'€'} <CountUp decimals={2} end={totalBalanceForMe} />
+                      </h1> :
+                        <h2 >
+                          {'€'} <CountUp decimals={2} duration={3.75} end={totalBalanceForMe} />
+                        </h2>}</h1></div>
+                    </div>
+                    </div>
 
-                <div className="col p-5 positions">
-                  <div className="mx-auto border-left pl-2 positions2" style={{width: '100%'}}>             
-              <h6 style={{ color:'grey'}}>Total Balance</h6>
-                    {totalBalanceForMe >= 0 ? <h2 style={{ color: 'rgb(0, 105, 217)' }}>
-                      {'€'} <CountUp decimals={2} end={totalBalanceForMe} />
-                    </h2> : 
-                    <h2 style={{ color: 'red' }}>
-                        {'€'} <CountUp  decimals={2} duration={3.75} end={totalBalanceForMe}/> 
-                    </h2>}
-                
-                <p>View statement ></p>
-              </div>
-            </div> 
+                  <div className="col">
 
-            <div className="col p-5">
-              <div className="mx-auto border-left pl-2" style={{ width: '100%' }}>   
-                <h6 style={{ color: 'grey' }}>You owe</h6>
-                    
-                      <h2 className="withoutML" style={{ color: 'red', width: '70%' }}>
-                      {'€'}{' '}
-                        <CountUp
-                          decimals={2}
-                          end={totalOwedBalance}
-                          duration={3.75}
-                        />
-                    
-                      </h2>
-                    
-                    
-                <p>View statement ></p>
-              </div>
-            </div> 
+                    <div class="card border-success mx-sm-1 p-3">
+                      <div class="card border-success shadow text-success p-3 my-card"><span class="fa fa-arrow-up" aria-hidden="true"></span></div>
+                      <div class="text-success text-center mt-3"><h4>You are owed</h4></div>
+                      <div class="text-success text-center mt-2"><h1>9332</h1></div>
+                    </div>
 
-            <div className="col p-5">
-              <div className="mx-auto border-left pl-2" style={{ width: '100%' }}>   
-                <h6 style={{ color: 'grey' }}>You are owed</h6>
-                {}
-                <h2 style={{ color: 'green' }}>
-                      {'€'} <CountUp decimals={2} duration={3.75} end={totalPaidBalance} /> 
-                </h2>
-                <p>View statement ></p>
-              </div>
-            </div> 
-            
-  </div>
+                   
 
-              <div className="row border-bottom mb-2 mt-4 ml-2 mr-2" >
-                <div className="border-bottom border-primary">
-                  {showAddClient === 0 || !showAddClient ? (
-                    <h5> Dashboard </h5>
-                  ) : null}
-                  {showAddClient === 1 ? (
-                    <h5> Add Debt </h5>
-                  ) : null}
-                  {showAddClient === 2 ? (
-                    <h5> History </h5>
-                  ) : null}
-                  {showAddClient === 3 ? (
-                    <h5> Friends </h5>
-                  ) : null}
+
+
+                  </div>
+
+                  <div className="col">
+
+                    <div class="card border-danger mx-sm-1 p-3">
+                      <div class="card border-danger shadow text-danger p-3 my-card" ><span class="fa fa-arrow-down" aria-hidden="true"></span></div>
+                      <div class="text-danger text-center mt-3"><h4>You owed</h4></div>
+                      <div class="text-danger text-center mt-2"><h1>346</h1></div>
+                    </div>
+
                 </div>
+               
+
               </div>
-            
+
+                <div className='row' style={{height:'10%'}}>
+                  <div className="col-12 mb-2 mr-2" style={{ height: '10%' }} >
+                    <div className="border-bottom " style={{ 'border-color':'#F8F9FA'}}>
+                      {showAddClient === 0 || !showAddClient ? (
+                        <div className='row'>
+
+                        <h5> Dashboard </h5> <h5 classNaame="ml-5"> Dashboard </h5></div>
+                      ) : null}
+                      {showAddClient === 1 ? (
+                        <h5> Add Debt </h5>
+                      ) : null}
+                      {showAddClient === 2 ? (
+                        <h5> History </h5>
+                      ) : null}
+                      {showAddClient === 3 ? (
+                        <h5> Friends </h5>
+                      ) : null}
+
+                    </div>
+                  </div>
+
+                </div>
+
+
+                <div className='row h-50'>
+                  {/* <div className="clientTable">  */}
+
+                {showAddClient === 0 || !showAddClient ? 
+
+                // <Dashboard debtors={debtors} debtorsLeft={debtorsLeft}/>
+               <React.Fragment>
+
+                    {
+                      this.state.friendHasBeenClicked ?
+                        <Route
+                          path='/:id'
+                          render={(props) => <Child
+                            {...props}
+                            debt={debt}
+                            debtors={this.state.debtorsRight}
+                            debtorsLeft={this.state.debtorsLeft}
+                            group={this.state.clickedGroup}
+                            balance={totalBalanceForMe}
+
+                          //      clickedFriend={this.clickedFrienInfo.bind(this)}
+                          />}
+
+                        /> : null
+                    }
+                      {!this.state.friendHasBeenClicked && !this.state.isLoadedFirstTime ?
+                    <Route
+                      path='/:id'
+                      render={(props) => <Child
+                        {...props}
+                        debt={debt}
+                        debtors={debtors}
+                        debtorsLeft={debtorsLeft}
+                        group={clickedGroup}
+                        balance={totalBalanceForMe}
+
+                      //    clickedFriend={this.clickedFrienInfo.bind(this)}
+                      />}
+
+                    /> : null}
+                  {this.state.isLoadedFirstTime ?
+                    <Route
+                      path='/'
+                      render={(props) => <Child
+                        {...props}
+                        debt={debt}
+                        debtors={debtors}
+                        debtorsLeft={debtorsLeft}
+                        group={clickedGroup}
+                        balance={totalBalanceForMe}
+
+                      //           clickedFriend={this.clickedFrienInfo.bind(this)} 
+                      />}
+
+                    /> : null}
+                    </React.Fragment>
+
+                : null}
+
+                {showAddClient === 1 ? <AddDebt /> : null}
+
+                {showAddClient === 2  ? <ClientOverview debt={debt}/> : null}
+
+                {showAddClient === 3 ? <Friends></Friends> : null}
+
+                    {/* <div className='row'> */}
+
+                     
+                      {/* <Route 
+                path='/Friends/o0zm6jC0dbPyjG9ru1Xyy78AUnl1' 
+                render={ (props) => <Child {...props}  debt={debt}  debtors={debtors} debtorsLeft={debtorsLeft}/>}
+              />  */}
+                      {/* </div> */}
+                {/* </div> */}
+
+
+                </div>
+
+
+              </div> 
+          </div>
+     </div>
+
+
   {/* <div className="row mt-4 border-bottom" style={{ 'height': '10rem' }}>
               {cards.map(card => (
                 <div className="col ">
@@ -977,80 +1061,18 @@ class Clients extends Component {
             
             </div> */}
             
-
+            
             
         
 
-          <div className="row pt-4 mt-2" style={{height: 'auto'}}>
+        
+        
+        
         
        
-            <div className="col">
-
-      
-              <div className="clientTable">
-
-                {/* {showAddClient === 0 || !showAddClient ? <Dashboard debtors={debtors} debtorsLeft={debtorsLeft}/> : null}
-                {showAddClient === 1 ? <AddDebt /> : null}
-                {showAddClient === 2  ? <ClientOverview debt={debt}/> : null}
-                {showAddClient === 3 ? <Friends></Friends> : null} */}
-
-               { this.state.friendHasBeenClicked ?
-              <Route 
-                path='/:id' 
-                render={ (props) => <Child 
-                  {...props}  
-                  debt={debt}  
-                  debtors={this.state.debtorsRight}  
-                  debtorsLeft={this.state.debtorsLeft} 
-                  group={this.state.clickedGroup}
-                  balance={totalBalanceForMe}
-               
-            //      clickedFriend={this.clickedFrienInfo.bind(this)}
-                  />}
-                     
-              /> : null}
-                    {!this.state.friendHasBeenClicked && !this.state.isLoadedFirstTime ?
-              <Route 
-                path='/:id' 
-                render={ (props) => <Child 
-                  {...props}  
-                  debt={debt}  
-                  debtors={debtors} 
-                  debtorsLeft={debtorsLeft}  
-                  group={clickedGroup}
-                  balance={totalBalanceForMe}
-            
-              //    clickedFriend={this.clickedFrienInfo.bind(this)}
-                  />}
-           
-                      />: null }
-               {this.state.isLoadedFirstTime ?
-                      <Route
-                        path='/'
-                        render={(props) => <Child
-                          {...props}
-                          debt={debt}
-                          debtors={debtors}
-                          debtorsLeft={debtorsLeft}
-                          group={clickedGroup}
-                          balance={totalBalanceForMe}
-                       
-               //           clickedFriend={this.clickedFrienInfo.bind(this)} 
-                          />}
-
-                      /> : null}
-              {/* <Route 
-                path='/Friends/o0zm6jC0dbPyjG9ru1Xyy78AUnl1' 
-                render={ (props) => <Child {...props}  debt={debt}  debtors={debtors} debtorsLeft={debtorsLeft}/>}
-              />  */}
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
             
     
-        </React.Fragment>
+          </React.Fragment>
       );
     }
 

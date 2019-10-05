@@ -178,7 +178,8 @@ import { firebaseConnect } from "react-redux-firebase";
      };
 
      return (
-          <div class="container fill login">
+       
+          <div class="container-fluid fill login">
         
          <div className='logo1 parent'>
 
@@ -288,6 +289,7 @@ import { firebaseConnect } from "react-redux-firebase";
                        type="submit"
                        value="Login"
                       className="btn btn-block btn-primary"
+                   id='btn'
                      />
                    </div>
                    <div className="d-flex rememberMe ">

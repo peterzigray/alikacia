@@ -27,7 +27,7 @@ class App extends Component {
         <Router>
           <div className="App">
             {/* <AppNavbar /> */}
-            <div className="container-fluid fill">
+            {/* <div className=""> */}
               <Route exact path="/" component={UserIsAuthenticated(Clients)} />
               {/* <Route exact path="/:id"  component={UserIsAuthenticated(Clients)}/> */}
               {/* <Route  path="/Friends/:id" component={UserIsAuthenticated(Clients)} /> */}
@@ -78,7 +78,7 @@ class App extends Component {
                 />
          
             </div>
-          </div>
+          {/* </div> */}
         </Router>
       </Provider>
     );

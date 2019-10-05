@@ -319,8 +319,9 @@ class dashboard extends Component {
       var friends = getMyFriends(users, friends0)
       var allFriendsWithMe = friends.map((i) => (
         //   <Link to={`/Dashboard/${i.id}`} >
-        <div className="card-body text-success text-center" key={i.id}>
-          <div className="UserPicsDash d-flex justify-content-center ">
+        // <div className="card-body text-success text-center" >
+        <div style={{ height: '100%' }} key={i.id}>
+          <div className="UserPicsDash d-flex justify-content-center " >
             <img className="" src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
           </div>
           <div className="card-body text-center mt-2">
@@ -328,7 +329,7 @@ class dashboard extends Component {
           </div>
 
 
-        </div>
+          </div>
       )
       )
  
@@ -530,29 +531,38 @@ class dashboard extends Component {
       const { firstName, lastName } = myName;
 
       return (
-        <div className="row h-100">
-          <div className="col-md-4 pt-2">
-          <div className="row h-100">
+     
+ <React.Fragment >
+          {/* <div className="col-md-4 pt-2">
+          <div className="row h-100"> */}
 
           
-            <div className="col-md-9" style={{"padding": "0"}}>
+          <div className="col-md-4 h-100 " >
 
+   
 
+{/* // overflow-hidden */}
 
-            <div className="card mb-3 shadow-lg bg-white rounded mt-4 text-center"
+            <div className="card mb-3 shadow-lg bg-white rounded mt-4 text-center h-100"
 
-style={{ "max-width": "100%" }}>
-
-<div >
-<AliceCarousel
-  dotsDisabled={true}
-  buttonsDisabled={true}
-  items={this.state.skuska}
-  slideToIndex={this.state.currentIndex}
-  ref={(el) => (this.Carousel = el)}
-  onSlideChanged={this.onSlideChanged}
-/>
-
+                                  // style={{ "max-width": "100%" }}
+                                  >
+              <div className="card-body " style={{ height: '30%' }} >
+                <React.Fragment >
+                                  <AliceCarousel
+                                    dotsDisabled={true}
+                                    buttonsDisabled={true}
+                                    items={this.state.skuska}
+                                    slideToIndex={this.state.currentIndex}
+                                    ref={(el) => (this.Carousel = el)}
+                                    onSlideChanged={this.onSlideChanged}
+                    mouseDragEnabled={true}
+                    // fadeOutAnimation={true}
+                    style={{ height: '100%' }} 
+                                  />
+                </React.Fragment>
+ </div>
+              <div className="card-body"  >
                     <div className="float-left">
                       <i
                       
@@ -585,54 +595,50 @@ style={{ "max-width": "100%" }}>
                         <h4 className="">Debts</h4>
             </button>}
 
-                  
+                </div>  
                       
-                    
-
+    
+  
+                
+            <div className="card-footer">
+                <div className="row h-100">
+                  <div className="col text-center h-100">
+                    <h3>
+                      {this.state.friendCount}
+                    </h3>
+                    <small>
+                      Friends
+                    </small>
+                  </div>
+ 
+                  <div className="col text-center h-100">               
+                    <h3>
+                      {this.state.groupCount}
+                    </h3>
+                    <small>
+                      Groups
+                    </small>
+                  </div>
+ 
+                 <div className="col text-center h-100">             
+                  <h3>
+                    {debtorsLeft.length}
+                  </h3>
+                  <small>
+                    Debts
+                  </small>
+                </div>
+              </div>
+            </div>
+   
+         </div>
+  
 </div>
-               
-                  
-             
-
-
-
-<div className="card-body row mt-4" >
-
-
-<div className="col-4 text-center">
-  <h3 >
-    {this.state.friendCount}
-     </h3>
-  <small>
-    Friends
-     </small>
-</div>
-<div className="col-4 text-center">
-  <h3>
-      {this.state.groupCount}
-     </h3>
-  <small>
-    Groups
-     </small>
-</div>
-<div className="col-4 text-center">
-  <h3>
-    {debtorsLeft.length}
-  </h3>
-  <small>
-    Debts
-     </small>
-</div>
-
-</div>
-
-</div>
-
-</div>
+ 
       
-            </div>
+            {/* </div>
              
-            </div>
+            </div> */}
 
 
           {this.state.friendCount < 1 && debtorsLeft.length < 1 && this.state.currentIndex === 0
@@ -809,11 +815,11 @@ style={{ "max-width": "100%" }}>
           : null }
 
     
-
+ </React.Fragment >
 
 
           
-    </div>
+  
   )
 }
 

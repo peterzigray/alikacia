@@ -215,7 +215,7 @@ class Register extends Component {
     };
 
     return (
-      <div class="container fill register">
+      <div class="container-fluid fill register">
 
         <div className='logo1 parent'>
 
@@ -233,7 +233,7 @@ class Register extends Component {
                 
                 {!messageType ? (
                   
-              <h4 style={{ 'margin-bottom': '3rem' }}>Create your personal account</h4>
+              <h4 style={{ 'margin-bottom': '2rem' }}>Create your personal account</h4>
                   
                 ) : (
                     null
@@ -386,8 +386,8 @@ class Register extends Component {
                     />
                   </div>
                   <span className='span-reg'>Make sure you verified your password</span> */}
-              <div className="d-flex rememberMe ">
-                <p>  Back to login? {' '}</p>
+              <div className="d-flex rememberMe " style={{ 'padding-top': '1rem'}}>
+                <p >  Back to login? {' '}</p>
                 <Link to="/login" >
 
                   <a style={{ 'padding-left': '4px', 'font-size': '1rem' }}>{' '} Log In</a>
@@ -396,12 +396,12 @@ class Register extends Component {
               </div>
             <Link to="/Dashboard" onClick={this.onLogoutClick} >
               <input
-                  style={{ 'margin-top': '1rem' }}
+                  style={{ 'margin-top': '0.2rem' }}
                 type="submit"
                 value="Sign Up"
                   className="btn btn-block btn-primary"
                 disabled={this.state.disabled}
-                id='register'
+                id='btn'
               />
                
               </Link>

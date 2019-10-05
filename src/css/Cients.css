@@ -11,9 +11,10 @@
     background-color: rgb(242, 244, 248);
     }
 
-    /* .container{
-    margin: 0;
-    } */
+    .container {
+    margin-right: 0;
+    margin-left: 0;
+}
 
     .clientTop {
         padding-bottom: 0.5%;
@@ -25,13 +26,13 @@
         position: center;
     }
 
-.sidebar-sticky {
+/* .sidebar-sticky {
   position: -webkit-sticky;
 	position: sticky;
 	top: 0;
     
   padding: 0 15px;
-}
+} */
 
 svg{
     transform: rotate(-90deg)
@@ -276,11 +277,41 @@ width: 100%;
 
 } */
 
-.wrapper {
+/* .wrapper {
     display: flex;
     width: 100%;
     align-items: stretch;
+} */
+
+.sidebar-item {
+	position: absolute;
+	top: 0;
+	left: 0;
+	/* width: 100%;
+  height: 100%; */
+  /* background-color: #dc3545 */
+	
+
 }
+
+
+.make-me-sticky {
+  position: -webkit-sticky;
+	position: sticky;
+	top: 4rem;
+    
+  padding: 0 15px;
+}
+
+.my-card
+{
+    position:absolute;
+    left:43%;
+    top:-20px;
+    border-radius:50%;
+    background-color: #FFFFFF;
+}
+
 .transition{
   transition: 0.4s;
 }
@@ -349,6 +380,13 @@ width: 100%;
     object-fit: cover;
  
 }
+ .container-fluid {
+ width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
 
 .btnUserDash{
   border-radius: 60px;
