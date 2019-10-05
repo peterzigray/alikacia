@@ -300,7 +300,7 @@ width: 100%;
 	position: sticky;
 	top: 4rem;
     
-  padding: 0 15px;
+
 }
 
 .my-card
@@ -309,7 +309,7 @@ width: 100%;
     left:43%;
     top:-20px;
     border-radius:50%;
-    background-color: #FFFFFF;
+    background-color:white;
 }
 
 .transition{
@@ -318,20 +318,46 @@ width: 100%;
 
 .logo {
    transition: 0.4s;
- 
-  padding: .5rem .7rem;
+ color: white;
+  padding: 1rem ;
   z-index: 4;
+  font-size: 20px;
 }
 .logo:hover{
   background-color: rgb(195, 233, 248);
-  border-radius: 5%;
+
 }
 .btn-circle{
   border-radius: 50%;
   margin-left:10%;
 
 }
+.make-me-sticky > ul {
+  list-style-type: none;
+  padding: 10px 0px 5px 0px;
+  color: white;
+}
+.make-me-sticky > ul > .link > li {
+ 
+  padding: 1.8rem;
+  border-top: 1px solid rgba(69, 74, 84, 0.4);
 
+}
+.make-me-sticky > ul > .link > li > i {
+  width: 45px;
+ 
+
+}
+.make-me-sticky > ul > .link {
+ color: white;
+padding-right:0px
+}
+.make-me-sticky > ul > .link :hover {
+  opacity: 0.9;
+ background-color: rgb(255, 231, 231);
+
+
+}
 
 .withoutML{
   margin-right: 0px;

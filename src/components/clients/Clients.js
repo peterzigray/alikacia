@@ -414,10 +414,10 @@ class Clients extends Component {
   onClickButton = id => {
 
   
-    window.scrollTo({
-      top: 165,
-      behavior: "smooth"
-    });
+    // window.scrollTo({
+    //   top: 165,
+    //   behavior: "smooth"
+    // });
 
     let stateCopy = Object.assign({}, this.state);
     stateCopy.isLoadedFirstTime = false
@@ -440,8 +440,8 @@ class Clients extends Component {
     const { auth, isAuthenticated } = this.props;
     let settingsAndLogout = "";
 
-    const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block bg-light sidebar transition sidebar-sticky h-100' : 'col-lg-1half d-block bg-light sidebar transition sidebar-sticky h-100';
-    const mainClassName = this.state.navbarOn ? 'col-9 transition h-100 ' : 'col-10 transition';
+    const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block  sidebar transition sidebar-sticky h-100' : 'col-lg-1half d-block  sidebar transition sidebar-sticky h-100';
+    const mainClassName = this.state.navbarOn ? 'col-9 transition h-100 ' : 'col-11 transition h-100 pl-5';
     const iconChange = this.state.navbarOn ? 'fas fa-arrow-circle-left fa-2x' : 'fas fa-arrow-circle-right fa-2x';
 
     console.log('------------------------CLIENT----------------------------')
@@ -613,10 +613,30 @@ class Clients extends Component {
           <div className="col">
             <div className="mt-1">
               <div style={{ padding: '.375rem .75rem', 'font-size': '1.1rem', color: 'yellow' }}>
-                <i className="fas fa-euro-sign fa-lg"></i>
+                <i className="fas fa-euro-sign fa-lg">{' '} Slicer</i>
               </div>
             </div>
           </div>
+            <div className="col">
+              <div className="mt-1">
+                <div style={{ padding: '.375rem .75rem', 'font-size': '1.1rem', color: 'white' }}>
+                  {showAddClient === 0 || !showAddClient ? (
+                    <div className='row'>
+
+                      <h5> Dashboard </h5> </div>
+                  ) : null}
+                  {showAddClient === 1 ? (
+                    <h5> Add Debt </h5>
+                  ) : null}
+                  {showAddClient === 2 ? (
+                    <h5> History </h5>
+                  ) : null}
+                  {showAddClient === 3 ? (
+                    <h5> Friends </h5>
+                  ) : null}
+                </div>
+              </div>
+            </div>
 
           <div className="col p-1">
             <div className="m-2">
@@ -755,7 +775,7 @@ class Clients extends Component {
           <div className="container-fluid h-100" style={{ 'background-color':'#F8F9FA'}}>
 
           <div className="row h-100">
-              <nav className={navbarClassName} >
+              <nav className={navbarClassName} style={{ 'background-color':'#1d2639', opacity:'1.8'}} >
                
                 {/* <div className="col-2 sidebar-sticky pl-0 pr-0" style={{'padding-top': '100%'}}></div>
  */}
@@ -765,29 +785,91 @@ class Clients extends Component {
                   {this.state.navbarOn ?
                    <div className='make-me-sticky'>
                      <div className="logo ">
-                  <div className="photo">
-                    <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
-                  </div>
-                    {' '}  {firstName + ' ' + lastName}  
-                  </div>
+                        <div className="photo">
+                          <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
+                        </div>
+                          {' '}  {firstName + ' ' + lastName} 
+                      </div>
+                    <ul>
+                      <Link
+                        className="link"
+                        to="/client/Dashboard" debtors={debtors}
+                        debtorsLeft={debtorsLeft} >
+                        <li onClick={this.onClickButton.bind(this, 0)}>
 
-                    <div className="logo pt-3 pb-3 pl-4 " onClick={this.onClickButton.bind(this, 0)}>            
-                      <i class="fas fa-home fa-lg"></i>{' '}{' '}<span><Link to="/client/Dashboard" debtors={debtors}
-                  debtorsLeft={debtorsLeft} >Dashboard</Link></span>               
-                  </div>
 
-                    <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 2)}>              
-                      <i class="fas fa-history fa-lg"></i>{' '}{' '} <Link to="/client/History " debtors={debtors}
-                  debtorsLeft={debtorsLeft} >History</Link>               
-                  </div>
-                    <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 3)}>              
-                      <i class="fas fa-user-friends fa-lg"></i>{' '}{' '} <Link to="/client/Friends" debtors={debtors}
-                  debtorsLeft={debtorsLeft} >friends</Link>             
-                  </div>
-                    <div className="logo pt-3 pb-3 pl-4" onClick={this.onClickButton.bind(this, 1)}>              
-                      <i class="fas fa-plus fa-lg"></i>{' '}{' '} <Link to="/client/AddBills" debtors={debtors}
-                  debtorsLeft={debtorsLeft} >Add Bills</Link>       
-                  </div>
+                          <i className="fas fa-home fa-lg" ></i>
+
+
+
+                          Dashboard
+                        </li>
+                      </Link>
+
+                      <Link
+                        className="link"
+                        to="/client/History " debtors={debtors}
+                        debtorsLeft={debtorsLeft} >
+                        <li onClick={this.onClickButton.bind(this, 2)}> <i className="fas fa-history fa-lg"
+
+                        ></i> History
+                        </li>
+                      </Link>
+
+                      <Link
+                        className="link"
+                        to="/client/Friends" debtors={debtors}
+                        debtorsLeft={debtorsLeft} >
+                        <li onClick={this.onClickButton.bind(this, 3)}><i class="fas fa-user-friends fa-lg"
+
+                        ></i> friends </li>
+                      </Link>
+
+                      <Link
+                        className="link"
+                        to="/client/AddBills" debtors={debtors}
+                        debtorsLeft={debtorsLeft} >
+                        <li onClick={this.onClickButton.bind(this, 1)}><i class="fas fa-plus fa-lg"
+
+                        ></i> Add Bills </li>
+                      </Link>
+
+                      <Link
+                        className="link"
+                        to="/client/AddBills" debtors={debtors}
+                        debtorsLeft={debtorsLeft} >
+                        <li onClick={this.onClickButton.bind(this, 1)}><i class="fas fa-plus fa-lg"></i>{' '}{' '} Reports </li>
+                      </Link>
+
+                      <Link
+                        className="link"
+                        to="/client/AddBills" debtors={debtors}
+                        debtorsLeft={debtorsLeft} >
+                        <li onClick={this.onClickButton.bind(this, 1)}><i class="fas fa-plus fa-lg"></i>{' '}{' '} Charts </li>
+                      </Link>
+
+                      <Link
+                        className="link"
+                        to="/client/AddBills" debtors={debtors}
+                        debtorsLeft={debtorsLeft} >
+                        <li onClick={this.onClickButton.bind(this, 1)}><i class="fas fa-plus fa-lg"></i>{' '}{' '} Nieco </li>
+                      </Link>
+
+                      <Link
+                        className="link"
+                        to="/client/AddBills" debtors={debtors}
+                        debtorsLeft={debtorsLeft} >
+                        <li onClick={this.onClickButton.bind(this, 1)}><i class="fas fa-plus fa-lg"></i>{' '}{' '} Grids</li>
+                      </Link>
+                    </ul>
+
+
+                    <div style={{color:'white', 'padding-left':'40%'}}>
+
+                      <i className={iconChange}
+                        onClick={(e) => this.setState({ navbarOn: !this.state.navbarOn })}
+                      ></i>
+                    </div>
 
                       {/* <ul class="nav flex-column mt-2 mb-3 mt-1 pl-1">
                         <li class="nav-item mt-3">
@@ -816,7 +898,7 @@ class Clients extends Component {
                   </div> 
               
 
-                    <ul class="nav flex-column mt-2 mb-3 mt-1 pl-2 ml-3">
+                    {/* <ul class="nav flex-column mt-2 mb-3 mt-1 pl-2 ml-3">
                         <li class="nav-item mt-3">
                             <i class="fas fa-home fa-lg"></i>
                         </li>
@@ -832,19 +914,94 @@ class Clients extends Component {
                         <li class="nav-item mt-3">
                             <i class="fas fa-plus fa-lg"></i> 
                         </li>
-                      </ul> 
+                      </ul>  */}
+                    <div className='make-me-sticky'>
+                      <ul>
+                        <Link
+                          className="link"
+                          to="/client/Dashboard" debtors={debtors}
+                          debtorsLeft={debtorsLeft} >
+                          <li onClick={this.onClickButton.bind(this, 0)}>
+
+
+                            <i className="fas fa-home fa-lg" ></i>
+
+
+
+                            
+                        </li>
+                        </Link>
+
+                        <Link
+                          className="link"
+                          to="/client/History " debtors={debtors}
+                          debtorsLeft={debtorsLeft} >
+                          <li onClick={this.onClickButton.bind(this, 2)}> <i className="fas fa-history fa-lg"
+
+                          ></i> 
+                        </li>
+                        </Link>
+
+                        <Link
+                          className="link"
+                          to="/client/Friends" debtors={debtors}
+                          debtorsLeft={debtorsLeft} >
+                          <li onClick={this.onClickButton.bind(this, 3)}><i class="fas fa-user-friends fa-lg"
+
+                          ></i>  </li>
+                        </Link>
+
+                        <Link
+                          className="link"
+                          to="/client/AddBills" debtors={debtors}
+                          debtorsLeft={debtorsLeft} >
+                          <li onClick={this.onClickButton.bind(this, 1)}><i class="fas fa-plus fa-lg"
+
+                          ></i>  </li>
+                        </Link>
+
+                        <Link
+                          className="link"
+                          to="/client/AddBills" debtors={debtors}
+                          debtorsLeft={debtorsLeft} >
+                          <li onClick={this.onClickButton.bind(this, 1)}><i class="fas fa-plus fa-lg"></i>{' '} </li>
+                        </Link>
+
+                        <Link
+                          className="link"
+                          to="/client/AddBills" debtors={debtors}
+                          debtorsLeft={debtorsLeft} >
+                          <li onClick={this.onClickButton.bind(this, 1)}><i class="fas fa-plus fa-lg"></i>{' '}{' '}  </li>
+                        </Link>
+
+                        <Link
+                          className="link"
+                          to="/client/AddBills" debtors={debtors}
+                          debtorsLeft={debtorsLeft} >
+                          <li onClick={this.onClickButton.bind(this, 1)}><i class="fas fa-plus fa-lg"></i>{' '}{' '} </li>
+                        </Link>
+
+                        <Link
+                          className="link"
+                          to="/client/AddBills" debtors={debtors}
+                          debtorsLeft={debtorsLeft} >
+                          <li onClick={this.onClickButton.bind(this, 1)}><i class="fas fa-plus fa-lg"></i>{' '}{' '} </li>
+                        </Link>
+                      </ul>
+
+</div>
+                    <div style={{ color: 'white', 'padding-left': '25%' }}>
+
+                      <i className={iconChange}
+                        onClick={(e) => this.setState({ navbarOn: !this.state.navbarOn })}
+                      ></i>
+                    </div>
                  </React.Fragment> 
                   
                 }
 
 
 
-<div className="nav flex-column mt-2 pl-3">
-  
-                  <i className={iconChange}
-                    onClick={(e) => this.setState({ navbarOn: !this.state.navbarOn })}
-                  ></i>
-                </div>
 
 
               
@@ -854,54 +1011,15 @@ class Clients extends Component {
               </nav>
 
               <div className={mainClassName}>
-                <div className='row h-25 pt-5 mb-5'>
-                  <div className="col">
-                    <div class="card border-info  mx-sm-1 p-3">
-                      <div class="card border-info shadow text-info p-3 my-card" ><span class="fa fa-euro-sign fa-lg" aria-hidden="true"></span></div>
-                      <div class="text-info text-center mt-3"><h4>Balance</h4></div>
-                      <div class="text-info text-center mt-2"><h1> {totalBalanceForMe >= 0 ? <h1 >
-                        {'€'} <CountUp decimals={2} end={totalBalanceForMe} />
-                      </h1> :
-                        <h2 >
-                          {'€'} <CountUp decimals={2} duration={3.75} end={totalBalanceForMe} />
-                        </h2>}</h1></div>
-                    </div>
-                    </div>
-
-                  <div className="col">
-
-                    <div class="card border-success mx-sm-1 p-3">
-                      <div class="card border-success shadow text-success p-3 my-card"><span class="fa fa-arrow-up" aria-hidden="true"></span></div>
-                      <div class="text-success text-center mt-3"><h4>You are owed</h4></div>
-                      <div class="text-success text-center mt-2"><h1>9332</h1></div>
-                    </div>
-
-                   
 
 
-
-                  </div>
-
-                  <div className="col">
-
-                    <div class="card border-danger mx-sm-1 p-3">
-                      <div class="card border-danger shadow text-danger p-3 my-card" ><span class="fa fa-arrow-down" aria-hidden="true"></span></div>
-                      <div class="text-danger text-center mt-3"><h4>You owed</h4></div>
-                      <div class="text-danger text-center mt-2"><h1>346</h1></div>
-                    </div>
-
-                </div>
-               
-
-              </div>
-
-                <div className='row' style={{height:'10%'}}>
-                  <div className="col-12 mb-2 mr-2" style={{ height: '10%' }} >
-                    <div className="border-bottom " style={{ 'border-color':'#F8F9FA'}}>
+                {/* <div className='row' style={{ height: '10%' }}>
+                  <div className="col-12 mb-2 mr-2" style={{ height: '20%' }} >
+                    <div className="" style={{ 'border-color': '#F8F9FA' }}>
                       {showAddClient === 0 || !showAddClient ? (
                         <div className='row'>
 
-                        <h5> Dashboard </h5> <h5 classNaame="ml-5"> Dashboard </h5></div>
+                          <h1> Dashboard </h1> </div>
                       ) : null}
                       {showAddClient === 1 ? (
                         <h5> Add Debt </h5>
@@ -916,7 +1034,62 @@ class Clients extends Component {
                     </div>
                   </div>
 
+                </div> */}
+
+
+
+
+                <div className='row h-25 pt-5 mb-5'>
+                  <div className="col">
+                    <div class="card shadow-lg mx-sm-1 p-3" style={{'background-color':'white'}}>
+                      <div class="card border-info shadow text-info p-3 my-card" ><span class="fa fa-euro-sign fa-lg" aria-hidden="true"></span></div>
+                      <div class="text-info text-center mt-3"><h4>Balance</h4></div>
+                      <div class="text-info text-center mt-2"><h1> {totalBalanceForMe >= 0 ? <h1 >
+                        {'€'} <CountUp decimals={2} end={totalBalanceForMe} />
+                      </h1> :
+                        <h2 >
+                          {'€'} <CountUp decimals={2} duration={3.75} end={totalBalanceForMe} />
+                        </h2>}</h1></div>
+                    </div>
+                    </div>
+
+                  <div className="col">
+
+                    <div class="card shadow-lg mx-sm-1 p-3">
+                      <div class="card border-success shadow text-success p-3 my-card"><span class="fa fa-arrow-up" aria-hidden="true"></span></div>
+                      <div class="text-success text-center mt-3"><h4>You are owed</h4></div>
+                      <div class="text-success text-center mt-2"> <h1 >
+                        {'€'} <CountUp decimals={2} duration={3.75} end={totalPaidBalance} />
+                      </h1></div>
+                    </div>
+
+                   
+
+
+
+                  </div>
+
+                  <div className="col">
+
+                    <div class="card shadow-lg mx-sm-1 p-3">
+                      <div class="card border-danger shadow text-danger p-3 my-card" ><span class="fa fa-arrow-down" aria-hidden="true"></span></div>
+                      <div class="text-danger text-center mt-3"><h4>You owed</h4></div>
+                      <div class="text-danger text-center mt-2"><h1 >
+                        {'€'}{' '}
+                        <CountUp
+                          decimals={2}
+                          end={totalOwedBalance}
+                          duration={3.75}
+                        />
+                      </h1></div>
+                    </div>
+
                 </div>
+               
+
+              </div>
+
+               
 
 
                 <div className='row h-50'>

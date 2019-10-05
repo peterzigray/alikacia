@@ -621,14 +621,14 @@ class addDebt extends Component {
  
     const { selectedOption } = this.state;
     return (
-      <div>
-        <div className="row mb-0 mt-2 m9">
+      < React.Fragment>
+     
           
           {this.state.isAnyFriend?
 
             <React.Fragment>
-          <div className="col-md-5 pl-4 mr-0 ">
-            <div className="card">
+          <div className="col-md-4 pl-4 mr-0 ">
+              <div className="card shadow-lg">
               {/* <div className="card-header">Add an expense</div> */}
               <div className="card-body">
                  <form onSubmit={this.onSubmit}>
@@ -778,9 +778,12 @@ class addDebt extends Component {
           </div>
          
        
-      <div className="col-md-7">
+      <div className="col-md-8">
+        <div className='row'>
+
+        
       {this.state.debtTo? this.state.debtTo.map(name => 
-          <div className="card in-left">
+        <div className="card in-left shadow-lg " style={{ 'width': '25rem', height: '10rem'}}>
           <div class="row no-gutters">
             <div className="col-md-4 ">
               
@@ -837,6 +840,7 @@ class addDebt extends Component {
                             </React.Fragment>
                         : null } 
                       </div>
+                      
                     : 
                     <div>
 
@@ -859,6 +863,7 @@ class addDebt extends Component {
               </div>
           </div>
         </div>
+        
       ) : 
        <React.Fragment>
                     <div class="col-md-12 text-center mr-0">
@@ -870,6 +875,7 @@ class addDebt extends Component {
        </React.Fragment>
       }
       </div>
+            </div>
               </React.Fragment>
 : 
 
@@ -896,8 +902,8 @@ class addDebt extends Component {
 
           
         
-        </div>
-      </div>
+       
+     </React.Fragment>
     );
   }
 }

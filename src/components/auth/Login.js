@@ -180,6 +180,9 @@ import { firebaseConnect } from "react-redux-firebase";
      return (
        
           <div class="container-fluid fill login">
+         <div class="container">
+
+            
         
          <div className='logo1 parent'>
 
@@ -303,6 +306,7 @@ import { firebaseConnect } from "react-redux-firebase";
                  </form>
                </div>
              </div>
+         </div>
        </div>
      );
    }

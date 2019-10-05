@@ -600,7 +600,7 @@ class dashboard extends Component {
     
   
                 
-            <div className="card-footer">
+              <div className="card-footer" >
                 <div className="row h-100">
                   <div className="col text-center h-100">
                     <h3>
