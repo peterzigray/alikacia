@@ -298,18 +298,66 @@ width: 100%;
 .make-me-sticky {
   position: -webkit-sticky;
 	position: sticky;
-	top: 4rem;
+  top: 4rem;
+ 
     
 
+}
+
+.secondNavbar > div > div > .sep {
+
+  display: inline-block;
+    border-left: 1px solid #eeeef0;
+    height: 12px;
+    width: 0px;
+    line-height: 1.42857143;
+    overflow: hidden;
+    margin-left: 10px;
+    padding-left: 10%
+
+}
+   
+.secondNavbar{
+
+  border-bottom: 1px solid rgba(69, 74, 84, 0.4);
+  height:10%;
+  margin-bottom:2%;
+
+}
+.secondNavbar > div > div > i {
+  padding-top: 10%;
+  color: grey
+ 
+}
+.card-body{
+  padding:0px
 }
 
 .my-card
 {
     position:absolute;
-    left:43%;
+    left:42%;
     top:-20px;
     border-radius:50%;
     background-color:white;
+    padding-left: 1rem!important;
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+    padding-right: 1rem;
+}
+.my-card-add
+{
+    position:absolute;
+    left: -5%;
+    top:-5px;
+    border-radius:50%;
+    background-color:white;
+  
+ 
+}
+.my-card-add:hover{
+  cursor: pointer;
+  background-color: azure;
 }
 
 .transition{
@@ -321,7 +369,7 @@ width: 100%;
  color: white;
   padding: 1rem ;
   z-index: 4;
-  font-size: 20px;
+  font-size: 18px;
 }
 .logo:hover{
   background-color: rgb(195, 233, 248);
@@ -330,6 +378,7 @@ width: 100%;
 .btn-circle{
   border-radius: 50%;
   margin-left:10%;
+ 
 
 }
 .make-me-sticky > ul {
@@ -339,13 +388,14 @@ width: 100%;
 }
 .make-me-sticky > ul > .link > li {
  
-  padding: 1.8rem;
+  padding: 1rem;
   border-top: 1px solid rgba(69, 74, 84, 0.4);
-
+  font-size: 12px;
 }
 .make-me-sticky > ul > .link > li > i {
-  width: 45px;
- 
+  width: 35px;
+  font-size: 14px;
+  padding-left:14px;
 
 }
 .make-me-sticky > ul > .link {
@@ -468,13 +518,16 @@ padding-right:0px
 }
 
 /* .col-9{
-  padding-left: 15rem;
-  padding-right: 0rem;
+  padding-left: 3rem;
+ 
 } */
 
+.card > div > h4,h2 {
+  color: white
+}
 
 .col-9{
-  padding-left: 8rem;
+  padding-left: 3rem;
   padding-right: 0rem;
 }
 

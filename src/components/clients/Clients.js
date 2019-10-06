@@ -15,13 +15,51 @@ import CountUp from 'react-countup';
 import { ENGINE_METHOD_NONE } from 'constants';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import { UserIsAuthenticated, UserIsNotAuthenticated } from '../../helpers/auth'
+import { Chart } from "react-google-charts";
 
+
+const pieOptions = {
+  title: "",
+  pieHole: 0.6,
+  slices: [
+    {
+      color: "#2BB673"
+    },
+    {
+      color: "#d91e48"
+    },
+    {
+      color: "#007fad"
+    },
+    {
+      color: "#e9a227"
+    }
+  ],
+  legend: {
+    position: "bottom",
+    alignment: "center",
+    textStyle: {
+      color: "233238",
+      fontSize: 14
+    }
+  },
+  tooltip: {
+    showColorCode: true
+  },
+  chartArea: {
+    left: 0,
+    top: 0,
+    width: "100%",
+    height: "80%"
+  },
+  fontName: "Roboto"
+};
 
 
 const Child = (path) => {
   console.log('coje to match')
   //console.log(`${match.url}`)
-  const { debt, group, debtors, debtorsLeft, clickedFriend, balance } = path
+  const { debt, group, debtors, debtorsLeft, clickedFriend, balance, totalPaidBalance, totalOwedBalance } = path
   const {pathname} = path.location
 
   console.log('===============path==================')
@@ -37,6 +75,8 @@ const Child = (path) => {
           currentGroup={group}
           totalBalance={balance}
           clickedFriend={clickedFriend}
+          totalOwedBalance={totalOwedBalance}
+          totalPaidBalance={totalPaidBalance}
            />)
       }
   if (pathname === '/' || pathname === '/client/History' ){
@@ -440,7 +480,7 @@ class Clients extends Component {
     const { auth, isAuthenticated } = this.props;
     let settingsAndLogout = "";
 
-    const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block  sidebar transition sidebar-sticky h-100' : 'col-lg-1half d-block  sidebar transition sidebar-sticky h-100';
+    const navbarClassName = this.state.navbarOn ? 'col-lg-2half d-none d-sm-block  sidebar transition sidebar-sticky h-100' : 'col-lg-1half d-none d-block  sidebar transition sidebar-sticky h-100';
     const mainClassName = this.state.navbarOn ? 'col-9 transition h-100 ' : 'col-11 transition h-100 pl-5';
     const iconChange = this.state.navbarOn ? 'fas fa-arrow-circle-left fa-2x' : 'fas fa-arrow-circle-right fa-2x';
 
@@ -600,7 +640,7 @@ class Clients extends Component {
       // TOTAL BALANCE
       var totalBalanceForMe = totalPaidBalance - totalOwedBalance;
       //<--------------------------------------------------------------------------------------------
-
+console.log('----------------======================urcite to tadeto preslo----------====================')
       
       return (
         
@@ -608,18 +648,18 @@ class Clients extends Component {
 
         
         {/* <div className="row border-bottom mb-0 m9" style={{ 'background-color': '#1D2439' }}> */}
-          <nav className="navbar sticky-top flex-md-nowrap p-0" style={{ 'background-color': '#1D2439' }}>>
+          <nav className="navbar sticky-top flex-md-nowrap p-0" style={{ 'background-color': '#252B33' }}>>
 
           <div className="col">
             <div className="mt-1">
-              <div style={{ padding: '.375rem .75rem', 'font-size': '1.1rem', color: 'yellow' }}>
+              <div style={{ padding: '.375rem .75rem', 'font-size': '14px', color: 'white' }}>
                 <i className="fas fa-euro-sign fa-lg">{' '} Slicer</i>
               </div>
             </div>
           </div>
             <div className="col">
               <div className="mt-1">
-                <div style={{ padding: '.375rem .75rem', 'font-size': '1.1rem', color: 'white' }}>
+                <div style={{ padding: '.375rem .75rem', 'font-size': '14px', color: 'white' }}>
                   {showAddClient === 0 || !showAddClient ? (
                     <div className='row'>
 
@@ -772,10 +812,10 @@ class Clients extends Component {
 
         
 
-          <div className="container-fluid h-100" style={{ 'background-color':'#F8F9FA'}}>
+          <div className="container-fluid h-100" style={{ 'background-color':'white'}}>
 
           <div className="row h-100">
-              <nav className={navbarClassName} style={{ 'background-color':'#1d2639', opacity:'1.8'}} >
+              <nav className={navbarClassName} style={{ 'background-color':'#303641', opacity:'1.8'}} >
                
                 {/* <div className="col-2 sidebar-sticky pl-0 pr-0" style={{'padding-top': '100%'}}></div>
  */}
@@ -790,6 +830,7 @@ class Clients extends Component {
                         </div>
                           {' '}  {firstName + ' ' + lastName} 
                       </div>
+
                     <ul>
                       <Link
                         className="link"
@@ -892,7 +933,7 @@ class Clients extends Component {
                   : 
                  <React.Fragment>
                   
-                  
+                    <div className='make-me-sticky'>
                     <div className="photo ml-3 ">
                     <img src="https://demos.creative-tim.com/black-dashboard/assets/img/anime3.png" />
                   </div> 
@@ -915,7 +956,7 @@ class Clients extends Component {
                             <i class="fas fa-plus fa-lg"></i> 
                         </li>
                       </ul>  */}
-                    <div className='make-me-sticky'>
+                  
                       <ul>
                         <Link
                           className="link"
@@ -989,12 +1030,13 @@ class Clients extends Component {
                         </Link>
                       </ul>
 
-</div>
+
                     <div style={{ color: 'white', 'padding-left': '25%' }}>
 
                       <i className={iconChange}
                         onClick={(e) => this.setState({ navbarOn: !this.state.navbarOn })}
                       ></i>
+                    </div>
                     </div>
                  </React.Fragment> 
                   
@@ -1010,8 +1052,34 @@ class Clients extends Component {
 
               </nav>
 
-              <div className={mainClassName}>
+            
 
+              <div className={mainClassName}>
+                <div className='secondNavbar'>
+                  <div className='row'>
+                    <div className='col '>
+                      <i class="fas fa-exclamation-triangle"></i>
+                      <li className='sep'/>
+
+                      <i class="fas fa-envelope"></i>
+                    </div>
+                 
+                    <div className='col'>
+                      <i class="fas fa-donate"> {' '}{totalBalanceForMe.toFixed(2)} </i>
+                      <li className='sep' />
+                      <i class="fas fa-arrow-up">{totalOwedBalance.toFixed(2)}</i>
+                      <li className='sep' />
+                      <i class="fas fa-arrow-down"> {totalPaidBalance.toFixed(2)} </i>
+                    </div>
+                    <div className='col '>
+                     
+                    
+                      <i class="fas fa-comments float-right"> Chat</i>
+                    </div>
+
+                    
+                  </div>
+                </div>
 
                 {/* <div className='row' style={{ height: '10%' }}>
                   <div className="col-12 mb-2 mr-2" style={{ height: '20%' }} >
@@ -1039,60 +1107,12 @@ class Clients extends Component {
 
 
 
-                <div className='row h-25 pt-5 mb-5'>
-                  <div className="col">
-                    <div class="card shadow-lg mx-sm-1 p-3" style={{'background-color':'white'}}>
-                      <div class="card border-info shadow text-info p-3 my-card" ><span class="fa fa-euro-sign fa-lg" aria-hidden="true"></span></div>
-                      <div class="text-info text-center mt-3"><h4>Balance</h4></div>
-                      <div class="text-info text-center mt-2"><h1> {totalBalanceForMe >= 0 ? <h1 >
-                        {'€'} <CountUp decimals={2} end={totalBalanceForMe} />
-                      </h1> :
-                        <h2 >
-                          {'€'} <CountUp decimals={2} duration={3.75} end={totalBalanceForMe} />
-                        </h2>}</h1></div>
-                    </div>
-                    </div>
-
-                  <div className="col">
-
-                    <div class="card shadow-lg mx-sm-1 p-3">
-                      <div class="card border-success shadow text-success p-3 my-card"><span class="fa fa-arrow-up" aria-hidden="true"></span></div>
-                      <div class="text-success text-center mt-3"><h4>You are owed</h4></div>
-                      <div class="text-success text-center mt-2"> <h1 >
-                        {'€'} <CountUp decimals={2} duration={3.75} end={totalPaidBalance} />
-                      </h1></div>
-                    </div>
-
-                   
-
-
-
-                  </div>
-
-                  <div className="col">
-
-                    <div class="card shadow-lg mx-sm-1 p-3">
-                      <div class="card border-danger shadow text-danger p-3 my-card" ><span class="fa fa-arrow-down" aria-hidden="true"></span></div>
-                      <div class="text-danger text-center mt-3"><h4>You owed</h4></div>
-                      <div class="text-danger text-center mt-2"><h1 >
-                        {'€'}{' '}
-                        <CountUp
-                          decimals={2}
-                          end={totalOwedBalance}
-                          duration={3.75}
-                        />
-                      </h1></div>
-                    </div>
-
-                </div>
                
-
-              </div>
 
                
 
 
-                <div className='row h-50'>
+               
                   {/* <div className="clientTable">  */}
 
                 {showAddClient === 0 || !showAddClient ? 
@@ -1111,6 +1131,9 @@ class Clients extends Component {
                             debtorsLeft={this.state.debtorsLeft}
                             group={this.state.clickedGroup}
                             balance={totalBalanceForMe}
+                        
+                            totalPaidBalance={totalPaidBalance}
+                            totalOwedBalance={totalOwedBalance}
 
                           //      clickedFriend={this.clickedFrienInfo.bind(this)}
                           />}
@@ -1127,6 +1150,9 @@ class Clients extends Component {
                         debtorsLeft={debtorsLeft}
                         group={clickedGroup}
                         balance={totalBalanceForMe}
+                       
+                        totalPaidBalance={totalPaidBalance}
+                        totalOwedBalance={totalOwedBalance}
 
                       //    clickedFriend={this.clickedFrienInfo.bind(this)}
                       />}
@@ -1142,6 +1168,9 @@ class Clients extends Component {
                         debtorsLeft={debtorsLeft}
                         group={clickedGroup}
                         balance={totalBalanceForMe}
+                   
+                        totalPaidBalance={totalPaidBalance}
+                        totalOwedBalance={totalOwedBalance}
 
                       //           clickedFriend={this.clickedFrienInfo.bind(this)} 
                       />}
@@ -1149,9 +1178,16 @@ class Clients extends Component {
                     /> : null}
                     </React.Fragment>
 
-                : null}
+                  : null
+                }
+               
+            
 
-                {showAddClient === 1 ? <AddDebt /> : null}
+                {showAddClient === 1 ?
+                
+                   <AddDebt /> 
+                   
+                   : null}
 
                 {showAddClient === 2  ? <ClientOverview debt={debt}/> : null}
 
@@ -1168,7 +1204,7 @@ class Clients extends Component {
                 {/* </div> */}
 
 
-                </div>
+            
 
 
               </div> 

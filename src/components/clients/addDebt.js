@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom';
 import Select from "react-dropdown-select";
 import { runInNewContext } from 'vm';
 import DatePicker from "react-datepicker";
-
+import '../../css/Cients.css';
 
  
 import "react-datepicker/dist/react-datepicker.css";
@@ -622,72 +622,112 @@ class addDebt extends Component {
     const { selectedOption } = this.state;
     return (
       < React.Fragment>
+       
      
-          
+        <div className='row h-50'>
           {this.state.isAnyFriend?
 
             <React.Fragment>
-          <div className="col-md-4 pl-4 mr-0 ">
-              <div className="card shadow-lg">
-              {/* <div className="card-header">Add an expense</div> */}
-              <div className="card-body">
-                 <form onSubmit={this.onSubmit}>
-                  <div className="form-group">
+          <div className="col-md-3 pl-4 mr-0 ">
 
-                    <label htmlFor="name">Debt assign</label>
+              <div class="card shadow-sm mx-sm-1" style={{ 'background-color': 'white' }}>
+                <div className="card-header" style={{ 'background-color': 'white' }}><p className='pl-4'>{' '}Add an expense for friends</p></div>
+                <div class="card border-primary shadow text-primary p-3 my-card-add" ><span class="fa fa-plus fa-lg" aria-hidden="true"></span></div>
+{/*                 
+                <div class="text-info text-center mt-3"><h4>Balance</h4></div>
+                <div class="text-info text-center mt-2"><h2>55</h2></div> */}
+              </div>
+
+              <div class="card shadow-sm mx-sm-1 mt-5" style={{ 'background-color': 'white' }}>
+                <div className="card-header" style={{ 'background-color': 'white' }}><p className='pl-4'>{' '}Add an expense to group</p></div>
+                <div class="card border-info shadow text-info p-3 my-card-add" ><span class="fa fa-plus fa-lg" aria-hidden="true"></span></div>
+                {/*                 
+                <div class="text-info text-center mt-3"><h4>Balance</h4></div>
+                <div class="text-info text-center mt-2"><h2>55</h2></div> */}
+              </div>
+              <div class="card shadow-sm mx-sm-1 mt-5" style={{ 'background-color': 'white' }}>
+                <div className="card-header" ><p className='pl-4'>{' '}Add spacial expense</p></div>
+                <div class="card border-info shadow text-info p-3 my-card-add" ><span class="fa fa-plus fa-lg" aria-hidden="true"></span></div>
+                {/*                 
+                <div class="text-info text-center mt-3"><h4>Balance</h4></div>
+                <div class="text-info text-center mt-2"><h2>55</h2></div> */}
+              </div>
+              <div class="card shadow-sm mx-sm-1 mt-5" style={{ 'background-color': 'white' }}>
+                <div className="card-header" ><p className='pl-4'>{' '}Add extra expense </p></div>
+                <div class="card border-info shadow text-info p-3 my-card-add" ><span class="fa fa-plus fa-lg" aria-hidden="true"></span></div>
+                {/*                 
+                <div class="text-info text-center mt-3"><h4>Balance</h4></div>
+                <div class="text-info text-center mt-2"><h2>55</h2></div> */}
+              </div>
+
+
+              
+          </div>
+
+            <div className="col-md-3">
+            
+               
+                  <form onSubmit={this.onSubmit}>
+                    <div className="form-group">
+
+                  
                       <Select
-                      labelField={this.state.labelField}
-                      valueField={this.state.valueField}
+                        labelField={this.state.labelField}
+                        valueField={this.state.valueField}
                         value={selectedOption}
+                        placeholder='Debt assign'
                         name="debt"
-                      onChange={this.handleInputChangefromArr.bind(this, "debt")}
-                      //onChange={this.handleInputChange}
-                      //  onChange={this.handleChange.bind(this, 'd')}
+                        onChange={this.handleInputChangefromArr.bind(this, "debt")}
+                        //onChange={this.handleInputChange}
+                        //  onChange={this.handleChange.bind(this, 'd')}
                         options={this.state.uersForDebtAssign}
                         multi={this.state.multi}
                       />
-                  </div>
+                    </div>
 
-            
-                    <label htmlFor="name">Payd by</label>
-                      <Select
-                    labelField={this.state.labelField}
-                    valueField={this.state.valueField}
-                    name="payed"
-                    //onChange={this.handleInputChange}
-                    onChange={this.handleInputChangefromArr.bind(this, "payer")}
+
+                    
+                    <Select
+                      labelField={this.state.labelField}
+                      valueField={this.state.valueField}
+                      name="payed"
+                      placeholder='Payed by'
+                      //onChange={this.handleInputChange}
+                      onChange={this.handleInputChangefromArr.bind(this, "payer")}
                       //onChange={this.onChange3} 
                       value={selectedOption}
                       options={this.state.usersForPaidBy}
                       multi={!this.state.multi}
                     />
 
-              
-   
-                  <div className="form-group">
-                    <label htmlFor="description">Enter a description</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="description"
-                      value={this.state.description}
-                      minLength="2"
-                      required
-                      onChange={this.onDescriptionChange}
-                      // value={this.state.lastName}
-                    />
-                  </div>
 
-                  <div className="form-group">
-                    <label htmlFor="date">Date</label>
+
+                    <div className="form-group">
+                     
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder='Enter a description'
+                        name="description"
+                        value={this.state.description}
+                        minLength="2"
+                        required
+                        onChange={this.onDescriptionChange}
+                      // value={this.state.lastName}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      
                       <DatePicker
-                      selected={this.state.newDate}
+                        placeholder='Date'
+                        selected={this.state.newDate}
                         onChange={this.onDate.bind(this)}
                       />
-                  </div>
+                    </div>
 
 
-                  {/* <div className="form-group">
+                    {/* <div className="form-group">
                     <label htmlFor="paidBy">Paid by</label>
                     <input
                       type="text"
@@ -698,7 +738,7 @@ class addDebt extends Component {
                   />
                   </div> */}
 
-                  {/* <div className="form-group">
+                    {/* <div className="form-group">
                     <label htmlFor="phone">Phone</label>
                     <input
                       type="text"
@@ -710,80 +750,81 @@ class addDebt extends Component {
                     />
                   </div> */}
 
-                  <div className="form-group">
-                    <label htmlFor="balance">Balance</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="balance"
-                      onChange={this.onBalanceChange}
-                      value={this.state.balance}
-                      required
+                    <div className="form-group">
+                      
+                      <input
+                        type="text"
+                        placeholder="Balance"
+                        className="form-control"
+                        name="balance"
+                        onChange={this.onBalanceChange}
+                        value={this.state.balance}
+                        required
                       // disabled={disableBalanceOnAdd}
-                    />
-                  </div>
+                      />
+                    </div>
 
-                  <div className="row mb-3">
+                    <div className="row mb-3">
 
-                  <div className="col">
+                      <div className="col">
 
 
-                      {this.state.areRequestedArrFilled && this.state.existDebtorAndPayer?
-                       <button 
-                        type="button" 
-                        className="btn btn-outline-primary btn-sm btn-block"
-                        onClick={this.onEquallysplit}
-                       >
-                         Equally
+                        {this.state.areRequestedArrFilled && this.state.existDebtorAndPayer ?
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary btn-sm btn-block"
+                            onClick={this.onEquallysplit}
+                          >
+                            Equally
                       </button> :
 
-                      <button 
-                      onClick={(e) => window.alert("Please set up your debt firstly :)")}
-                      type="button" 
-                      className="btn btn-outline-primary btn-sm btn-block"
-             
-                      
-                     >
-                       Equally
+                          <button
+                            onClick={(e) => window.alert("Please set up your debt firstly :)")}
+                            type="button"
+                            className="btn btn-outline-primary btn-sm btn-block"
+
+
+                          >
+                            Equally
                     </button>
-                  }
-                  </div>
+                        }
+                      </div>
 
-                  
-                  <div className="col">
-                      {this.state.areRequestedArrFilled && this.state.existDebtorAndPayer?
 
-                  <button 
-                    type="button" 
-                    className="btn btn-outline-primary btn-sm btn-block"
-                    onClick={this.onExactSplit}>
-                    Exact
+                      <div className="col">
+                        {this.state.areRequestedArrFilled && this.state.existDebtorAndPayer ?
+
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary btn-sm btn-block"
+                            onClick={this.onExactSplit}>
+                            Exact
                   </button> :
-                  <button type="button" className="btn btn-outline-primary btn-sm btn-block" onClick={(e) => window.alert("Please set up your debt firstly :)")}>Exact</button> }
-                  </div>
-                 </div>
+                          <button type="button" className="btn btn-outline-primary btn-sm btn-block" onClick={(e) => window.alert("Please set up your debt firstly :)")}>Exact</button>}
+                      </div>
+                    </div>
 
-                  {
-                    this.state.areRequestedArrFilled && this.state.existDebtorAndPayer ?
-                  <button
-                  type="submit"
-                  value="Submit"
-                  className="btn btn-dark btn-block">submit</button>:
-                  <button className="btn btn-dark btn-block" disabled>submit</button>                    
-                }
+                    {
+                      this.state.areRequestedArrFilled && this.state.existDebtorAndPayer ?
+                        <button
+                          type="submit"
+                          value="Submit"
+                          className="btn btn-dark btn-block">submit</button> :
+                        <button className="btn btn-dark btn-block" disabled>submit</button>
+                    }
 
-                </form>
-              </div>
+                  </form>
+               
+             
             </div>
-          </div>
          
        
-      <div className="col-md-8">
+      <div className="col-md-6">
         <div className='row'>
 
         
       {this.state.debtTo? this.state.debtTo.map(name => 
-        <div className="card in-left shadow-lg " style={{ 'width': '25rem', height: '10rem'}}>
+        <div className="card in-left shadow-lg " style={{ 'width': '5rem', height: '2rem'}}>
           <div class="row no-gutters">
             <div className="col-md-4 ">
               
@@ -901,7 +942,7 @@ class addDebt extends Component {
           </div> */}
 
           
-        
+        </div>
        
      </React.Fragment>
     );

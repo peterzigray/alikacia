@@ -15,6 +15,7 @@ import '../../pics/app.jpg';
 import AliceCarousel from 'react-alice-carousel';
 import PlaceForDebts from './PlaceForDebts';
 import "react-alice-carousel/lib/alice-carousel.css";
+import CountUp from 'react-countup';
 
 
 function getFriendsCount(users, id) {
@@ -473,7 +474,7 @@ class dashboard extends Component {
   render() {
     console.log('--------Dashboard-----------render')
   
-    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, currentGroup, totalBalance} = this.props;
+    const { users, debt, auth, onBalanceChange, debtors, debtorsLeft, currentGroup, totalBalance, totalPaidBalance, totalOwedBalance} = this.props;
     // console.log(debtors)
   
     var hasFriedDebt = false;
@@ -536,8 +537,65 @@ class dashboard extends Component {
           {/* <div className="col-md-4 pt-2">
           <div className="row h-100"> */}
 
-          
-          <div className="col-md-4 h-100 " >
+          <div className='row h-25 pt-5 mb-5'>
+            <div className="col">
+              <div class="card shadow-sm mx-sm-1 p-3" style={{ 'background-color': '#1DA5BA', opacity: '0.9' }}>
+                <div class="card border-info shadow text-info  my-card" ><i class="fa fa-euro-sign fa-lg" aria-hidden="true"></i></div>
+                <div class="text-info text-center mt-3"><h4>Balance</h4></div>
+                <div class="text-info text-center mt-2"><h2> {totalBalance >= 0 ? <h2 >
+                  {'€'} <CountUp decimals={2} end={totalBalance} />
+                </h2> :
+                  <h2 >
+                    {'€'} <CountUp decimals={2} duration={3.75} end={totalBalance} />
+                  </h2>}</h2></div>
+              </div>
+            </div>
+
+            <div className="col">
+
+              <div class="card shadow-sm mx-sm-1 p-3"
+                style={{ 'background-color': '#28A745', opacity: '0.99' }}>
+                <div class="card border-success shadow text-success  my-card"><span class="fa fa-arrow-up" aria-hidden="true"></span></div>
+                <div class=" text-center mt-3"><h4>You are owed</h4></div>
+                <div class=" text-center mt-2"> <h2 >
+                  {'€'} <CountUp decimals={2} duration={3.75} end={totalPaidBalance} />
+                </h2></div>
+              </div>
+
+
+
+
+
+            </div>
+
+            <div className="col">
+
+              <div class="card shadow-sm mx-sm-1 p-3"
+                style={{ 'background-color': '#DC3545', opacity: '0.8' }}>
+                <div class="card border-danger shadow text-danger  my-card" ><span class="fa fa-arrow-down" aria-hidden="true"></span></div>
+                <div class="text-danger text-center mt-3"><h4>You owe</h4></div>
+                <div class="text-danger text-center mt-2"><h2 >
+                  {'€'}{' '}
+                  <CountUp
+                    decimals={2}
+                    end={totalOwedBalance}
+                    duration={3.75}
+                  />
+                </h2></div>
+              </div>
+
+            </div>
+            
+
+
+          </div>
+
+
+
+
+
+          <div className='row h-50'>
+          <div className="col-md-3 h-100 " >
 
    
 
@@ -635,7 +693,7 @@ class dashboard extends Component {
   
 </div>
  
-      
+          </div>
             {/* </div>
              
             </div> */}
